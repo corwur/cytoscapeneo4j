@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>nl.corwur</groupId>
+    <artifactId>cytoscape-neo4j-plugin</artifactId>
+    <version>0.1</version>
+    <name>Cytoscape Neo4j Pllugin</name>
+
+    <properties>
+        <bundle.symbolicName>nl.corwur.cytoscape.neo4j</bundle.symbolicName>
+        <bundle.namespace>nl.corwur.cytoscape.neo4j</bundle.namespace>
+        <cytoscape.version>3.5.0</cytoscape.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <org.osgi.core.version>4.2.0</org.osgi.core.version>
+        <neo4j-java-driver.version>1.4.0</neo4j-java-driver.version>
+        <pax-logging-api.version>1.5.2</pax-logging-api.version>
+        <junit.version>4.12</junit.version>
+        <log4j.version>1.2.17</log4j.version>
+        <maven-compiler-plugin.version>3.6.1</maven-compiler-plugin.version>
+        <maven-bundle-plugin.version>3.3.0</maven-bundle-plugin.version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <!-- Generates the OSGi metadata based on the osgi.bnd file. -->
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>${maven-bundle-plugin.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
+                        <Bundle-Version>${project.version}</Bundle-Version>
+                        <Export-Package>${bundle.namespace}</Export-Package>
+
+                        <Private-Package>${bundle.namespace}.internal.*</Private-Package>
+                        <Bundle-Activator>${bundle.namespace}.internal.CyActivator</Bundle-Activator>
+                        <Embed-Dependency>
+                            neo4j-java-driver;scope=compile|runtime
+                        </Embed-Dependency>
+                        <Embed-Transitive>true</Embed-Transitive>
+
+                    </instructions>
+                    <archive>
+                        <manifestEntries>
+                            <Cytoscape-App-Name>Cypher Queries for Neo4j</Cytoscape-App-Name>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!-- Links to the Cytoscape Maven repositories. -->
+    <repositories>
+        <repository>
+            <id>cytoscape_releases</id>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+            </releases>
+            <name>Cytoscape Releases</name>
+            <url>http://code.cytoscape.org/nexus/content/repositories/releases/</url>
+        </repository>
+    </repositories>
+
+    <!-- Dependencies needed to compile this project. -->
+    <dependencies>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <version>${org.osgi.core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.cytoscape</groupId>
+            <artifactId>service-api</artifactId>
+            <version>${cytoscape.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.cytoscape</groupId>
+            <artifactId>swing-application-api</artifactId>
+            <version>${cytoscape.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.cytoscape</groupId>
+            <artifactId>session-api</artifactId>
+            <version>${cytoscape.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.cytoscape</groupId>
+            <artifactId>work-api</artifactId>
+            <version>${cytoscape.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.cytoscape</groupId>
+            <artifactId>work-swing-api</artifactId>
+            <version>${cytoscape.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.cytoscape</groupId>
+            <artifactId>viewmodel-api</artifactId>
+            <version>${cytoscape.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.cytoscape</groupId>
+            <artifactId>layout-api</artifactId>
+            <version>${cytoscape.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j.driver</groupId>
+            <artifactId>neo4j-java-driver</artifactId>
+            <version>${neo4j-java-driver.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.logging</groupId>
+            <artifactId>pax-logging-api</artifactId>
+            <version>${pax-logging-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+    </dependencies>
+    <packaging>bundle</packaging>
+</project>

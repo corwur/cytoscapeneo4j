@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cytemplate name="test-query">
+    <query><![CDATA[MATCH p=(n:gene) - [r:order*] - (m:gene) WHERE n.geneID=$from AND m.geneID=$to RETURN p]]></query>
+    <parameters>
+        <parameter name="from" type="java.lang.String" />
+        <parameter name="to" type="java.lang.String" />
+    </parameters>
+    <copyall referenceIdColumn="referenceId" network="Copy All Network"/>
+</cytemplate>

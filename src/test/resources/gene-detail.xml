@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cytemplate name="test-query">
+    <query><![CDATA[MATCH p=(n:gene) - [r:order*] - (m:gene) WHERE n.geneID=$from AND m.geneID=$to RETURN p]]></query>
+    <parameters>
+        <parameter name="from" type="java.lang.String" />
+        <parameter name="to" type="java.lang.String" />
+    </parameters>
+    <mapping>
+        <node referenceIdColumn="refid">
+            <column type="java.lang.String" name="name">
+                <expression>node.labels[0] + node.getProperty('geneID')</expression>
+            </column>
+            <column type="java.lang.Long" name="refId">
+                <id/>
+            </column>
+            <column type="java.lang.String" name="geneID">
+                <property key="geneID" />
+            </column>
+            <column type="java.lang.Long" name="start">
+                <property key="start" />
+            </column>
+            <column type="java.lang.Long" name="end">
+                <property key="end" />
+            </column>
+            <column type="java.lang.String" name="nodeType">
+                <label match=".*"/>
+            </column>
+        </node>
+        <edge referenceIdColumn="refid">
+            <column type="java.lang.Long" name="refid" >
+                <id/>
+            </column>
+            <column type="java.lang.String" name="linkType">
+                <edgeType/>
+            </column>
+        </edge>
+    </mapping>
+</cytemplate>
