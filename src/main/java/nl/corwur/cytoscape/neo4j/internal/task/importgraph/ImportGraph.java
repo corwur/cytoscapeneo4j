@@ -58,10 +58,12 @@ public class ImportGraph implements GraphVisitor {
 
     @Override
     public void visit(GraphLong graphLong) {
+        /* No action defined for long */
     }
 
     @Override
     public void visit(GraphUnspecifiedType unspecifiedType) {
+        /* No action defined for unspecifiedType */
     }
 
     private void cancel() {

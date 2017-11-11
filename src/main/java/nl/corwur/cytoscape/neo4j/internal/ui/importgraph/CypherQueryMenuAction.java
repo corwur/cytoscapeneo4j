@@ -3,7 +3,7 @@ package nl.corwur.cytoscape.neo4j.internal.ui.importgraph;
 import nl.corwur.cytoscape.neo4j.internal.Services;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
 import nl.corwur.cytoscape.neo4j.internal.task.importgraph.ImportGraphTask;
-import nl.corwur.cytoscape.neo4j.internal.ui.connect.ConnectToNeo4j;
+import nl.corwur.cytoscape.neo4j.internal.ui.DialogMethods;
 import org.cytoscape.application.swing.AbstractCyAction;
 import org.cytoscape.view.vizmap.VisualStyle;
 
@@ -13,10 +13,10 @@ import java.util.stream.Collectors;
 
 public class CypherQueryMenuAction extends AbstractCyAction {
 
-    private final static String MENU_TITLE = "Import Cypher Query";
-    private final static String MENU_LOC = "Apps.Cypher Queries";
+    private static final String MENU_TITLE = "Import Cypher Query";
+    private static final String MENU_LOC = "Apps.Cypher Queries";
 
-    private final Services services;
+    private final transient Services services;
 
     public static CypherQueryMenuAction create(Services services) {
         return new CypherQueryMenuAction(services);
@@ -33,12 +33,9 @@ public class CypherQueryMenuAction extends AbstractCyAction {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        ConnectToNeo4j connectToNeo4j = ConnectToNeo4j.create(services);
-        if(!connectToNeo4j.connect()) {
-            JOptionPane.showMessageDialog(services.getCySwingApplication().getJFrame(), "Not connected");;
+        if(!DialogMethods.connect(services)) {
             return;
         }
-
         CypherQueryDialog cypherQueryDialog = new CypherQueryDialog(services.getCySwingApplication().getJFrame(), getAllVisualStyleTitle());
         cypherQueryDialog.showDialog();
         if(!cypherQueryDialog.isExecuteQuery()) {

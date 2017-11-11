@@ -5,9 +5,7 @@ import nl.corwur.cytoscape.neo4j.internal.cypher.querytemplate.CypherQueryTempla
 import nl.corwur.cytoscape.neo4j.internal.cypher.querytemplate.mapping.GraphMapping;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class ReaderTest {
 

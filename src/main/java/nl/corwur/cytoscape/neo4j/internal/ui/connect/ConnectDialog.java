@@ -5,10 +5,9 @@ import nl.corwur.cytoscape.neo4j.internal.ui.DialogMethods;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.util.function.Predicate;
 
-class ConnectDialog extends JDialog {
+class ConnectDialog extends JDialog { //NOSONAR , hierarchy level > 5
 
     private static final String CANCEL_CMD = "cancel";
     private static final String OK_CMD = "ok";
@@ -16,7 +15,7 @@ class ConnectDialog extends JDialog {
     private JTextField hostnameField = new JTextField("localhost");
     private JPasswordField password = new JPasswordField();
     private boolean ok = false;
-    private final Predicate<ConnectionParameter> connectionCheck;
+    private final transient Predicate<ConnectionParameter> connectionCheck;
 
     ConnectDialog(JFrame jFrame, Predicate<ConnectionParameter> connectionCheck, String hostname, String username) {
         super(jFrame);
@@ -61,7 +60,7 @@ class ConnectDialog extends JDialog {
 
 
         JButton okButton = new JButton("Connect");
-        okButton.addActionListener(this::ok);
+        okButton.addActionListener(e -> ok());
         okButton.setActionCommand(OK_CMD);
 
         JButton cancelButton = new JButton("Cancel");
@@ -118,7 +117,7 @@ class ConnectDialog extends JDialog {
 
     }
 
-    private void ok(ActionEvent ae) {
+    private void ok() {
         if(connectionCheck.test(getParameters())) {
             ok = true;
             dispose();

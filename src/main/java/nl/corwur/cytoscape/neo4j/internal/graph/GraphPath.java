@@ -3,7 +3,7 @@ package nl.corwur.cytoscape.neo4j.internal.graph;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GraphPath extends GraphObject {
+public class GraphPath implements GraphObject {
     private List<GraphNode> nodes;
     private List<GraphEdge> edges;
 

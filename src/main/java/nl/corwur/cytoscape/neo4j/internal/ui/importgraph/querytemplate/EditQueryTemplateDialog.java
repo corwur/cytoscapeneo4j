@@ -14,8 +14,12 @@ import java.util.Map;
 
 import static java.awt.BorderLayout.*;
 
-public class EditQueryTemplateDialog extends JDialog {
+public class EditQueryTemplateDialog extends JDialog { //NOSONAR, hierarchy > 5
 
+    public static final String STRING = "String";
+    public static final String INTEGER = "Integer";
+    public static final String LONG = "Long";
+    public static final String DOUBLE = "Double";
     private final Map<String, Class<?>> parameterTypes;
     private String networkName;
     private String referenceColumn;
@@ -51,7 +55,7 @@ public class EditQueryTemplateDialog extends JDialog {
         editQueryPanel = new EditQueryPanel(cypherQuery);
 
         parametersPanel = new ParametersPanel(parameterTypes);
-        ButtonPanel buttonPanel = new ButtonPanel((ev) -> setOk(), (ev) -> this.dispose());
+        ButtonPanel buttonPanel = new ButtonPanel(ev -> setOk(), ev -> this.dispose());
 
         JPanel panel = new JPanel();
         setLayout(new FlowLayout());
@@ -92,12 +96,12 @@ public class EditQueryTemplateDialog extends JDialog {
     private final class ButtonPanel extends JPanel {
 
         ButtonPanel(ActionListener okHandler, ActionListener cancelHandler) {
-            JButton cancel = new JButton("Cancel");
-            JButton ok = new JButton("Ok");
-            ok.addActionListener(okHandler);
-            cancel.addActionListener(cancelHandler);
-            add(cancel);
-            add(ok);
+            JButton cancelButton = new JButton("Cancel");
+            JButton okButton = new JButton("Ok");
+            okButton.addActionListener(okHandler);
+            cancelButton.addActionListener(cancelHandler);
+            add(cancelButton);
+            add(okButton);
         }
     }
 
@@ -153,10 +157,10 @@ public class EditQueryTemplateDialog extends JDialog {
 
             TableColumn column = jTable.getColumnModel().getColumn(1);
             JComboBox comboBox = new JComboBox();
-            comboBox.addItem("String");
-            comboBox.addItem("Integer");
-            comboBox.addItem("Long");
-            comboBox.addItem("Double");
+            comboBox.addItem(STRING);
+            comboBox.addItem(INTEGER);
+            comboBox.addItem(LONG);
+            comboBox.addItem(DOUBLE);
             column.setCellEditor(new DefaultCellEditor(comboBox));
 
             JLabel label = new JLabel("Parameters");
@@ -197,24 +201,20 @@ public class EditQueryTemplateDialog extends JDialog {
 
 
             public void addRow(String key, Class<?> value) {
-                addRow(new Object[] {key, getTypeAsString(value)});
+                super.addRow(new Object[] {key, getTypeAsString(value)});
             }
 
             private String getTypeAsString(Class<?> clz) {
-                if(clz.equals(String.class)) return  "String";
-                if(clz.equals(Integer.class)) return  "Integer";
-                if(clz.equals(Long.class)) return  "Long";
-                if(clz.equals(Double.class)) return  "Double";
+                if(clz.equals(String.class)) return STRING;
+                if(clz.equals(Integer.class)) return INTEGER;
+                if(clz.equals(Long.class)) return LONG;
+                if(clz.equals(Double.class)) return DOUBLE;
                 return null;
             }
         }
 
         private int getRowCount() {
             return parameterTableModel.getRowCount();
-        }
-
-        private void addRow() {
-            parameterTableModel.addRow(new Object[] {"param", "String"});
         }
 
          private String getParameter(int row) {
@@ -228,14 +228,13 @@ public class EditQueryTemplateDialog extends JDialog {
         private Class<?> getType(String type) {
             if(type == null) return null;
             switch(type) {
-                case "String" : return String.class;
-                case "Integer" : return Integer.class;
-                case "Long" : return Long.class;
-                case "Double" : return Double.class;
+                case STRING: return String.class;
+                case INTEGER: return Integer.class;
+                case LONG: return Long.class;
+                case DOUBLE: return Double.class;
                 default: return null;
             }
         }
-
     }
 
     public static void main(String[] args) {

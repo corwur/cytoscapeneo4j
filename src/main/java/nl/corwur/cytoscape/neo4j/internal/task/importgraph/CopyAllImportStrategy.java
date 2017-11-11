@@ -4,10 +4,8 @@ import nl.corwur.cytoscape.neo4j.internal.graph.GraphEdge;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphNode;
 import org.cytoscape.model.*;
 
-import java.util.*;
-import java.util.function.Function;
-
-import static java.util.stream.Collectors.toSet;
+import java.util.List;
+import java.util.Map;
 
 public class CopyAllImportStrategy implements ImportGraphStrategy {
 
@@ -105,23 +103,4 @@ public class CopyAllImportStrategy implements ImportGraphStrategy {
     private void setEntry(CyTable cyTable, CyIdentifiable cyId, String key, Object value) {
         cyTable.getRow(cyId.getSUID()).set(key, value);
     }
-
-    private Optional<CyNode> getNodeById(CyNetwork network, Long id) {
-        return getNodesWithValue(network, network.getDefaultNodeTable(), id).stream().findFirst();
-    }
-
-    private Set<CyNode> getNodesWithValue(CyNetwork net, CyTable table, Object value) {
-        String primaryKeyColname = table.getPrimaryKey().getName();
-        return getValueFromRows(table.getMatchingRows(COLUMN_REFERENCEID, value), primaryKeyColname, net::getNode);
-    }
-
-    private <T> Set<T> getValueFromRows(Collection<CyRow> matchingRows, String primaryKeyColname, Function<Long, T> mapper) {
-        return matchingRows.stream()
-            .map(cyRow -> cyRow.get(primaryKeyColname, Long.class))
-            .filter(Objects::nonNull)
-            .map(mapper)
-            .filter(Objects::nonNull)
-            .collect(toSet());
-    }
-
 }

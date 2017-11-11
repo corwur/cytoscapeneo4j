@@ -11,6 +11,7 @@ import org.neo4j.driver.v1.exceptions.ServiceUnavailableException;
 import java.util.List;
 
 public class Neo4jClient {
+    private static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(Neo4jClient.class);
 
     private Driver driver;
     private Neo4jGraphFactory neo4JGraphFactory = new Neo4jGraphFactory();
@@ -27,7 +28,7 @@ public class Neo4jClient {
             );
             return true;
         } catch (AuthenticationException | ServiceUnavailableException e) {
-            e.printStackTrace();
+            logger.warn("Cannot connect to Neo4j", e);
             return false;
         }
     }

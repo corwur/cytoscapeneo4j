@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GraphResult extends GraphObject {
+public class GraphResult implements GraphObject {
 
     private Map<String, GraphObject> results = new HashMap<>();
 

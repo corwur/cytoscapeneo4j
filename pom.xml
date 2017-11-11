@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>nl.corwur</groupId>
     <artifactId>cytoscape-neo4j-plugin</artifactId>
-    <version>0.1</version>
-    <name>Cytoscape Neo4j Pllugin</name>
+    <version>0.1.1</version>
+    <name>Cytoscape Neo4j Plugin</name>
 
     <properties>
         <bundle.symbolicName>nl.corwur.cytoscape.neo4j</bundle.symbolicName>
@@ -20,6 +20,8 @@
         <log4j.version>1.2.17</log4j.version>
         <maven-compiler-plugin.version>3.6.1</maven-compiler-plugin.version>
         <maven-bundle-plugin.version>3.3.0</maven-bundle-plugin.version>
+        <mockito-core.version>2.11.0</mockito-core.version>
+        <pitest-maven.version>1.2.4</pitest-maven.version>
     </properties>
 
     <build>
@@ -58,6 +60,17 @@
                             <Cytoscape-App-Name>Cypher Queries for Neo4j</Cytoscape-App-Name>
                         </manifestEntries>
                     </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>${pitest-maven.version}</version>
+                <configuration>
+                    <timestampedReports>false</timestampedReports>
+                    <excludedClasses>
+                        <excludedClass>nl.corwur.cytoscape.neo4j.internal.Services</excludedClass>
+                    </excludedClasses>
                 </configuration>
             </plugin>
         </plugins>
@@ -131,15 +144,21 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>${log4j.version}</version>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito-core.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <packaging>bundle</packaging>

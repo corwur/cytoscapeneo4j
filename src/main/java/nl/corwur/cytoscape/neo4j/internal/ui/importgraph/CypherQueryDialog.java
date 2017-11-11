@@ -5,9 +5,9 @@ import nl.corwur.cytoscape.neo4j.internal.ui.DialogMethods;
 import javax.swing.*;
 import java.awt.*;
 
-public class CypherQueryDialog extends JDialog {
+public class CypherQueryDialog extends JDialog { //NOSONAR, hierarchy > 5
 
-    private final static String INITIAL_QUERY = "match (n)-[r]->(m) return n,r,m LIMIT 25";
+    private static final String INITIAL_QUERY = "match (n)-[r]->(m) return n,r,m LIMIT 25";
     private String cypherQuery;
     private boolean executeQuery;
     private final String[] visualStyles;

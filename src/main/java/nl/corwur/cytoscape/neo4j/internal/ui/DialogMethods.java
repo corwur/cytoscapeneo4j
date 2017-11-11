@@ -8,6 +8,8 @@ import java.awt.*;
 
 public class DialogMethods {
 
+    private DialogMethods() {}
+
     public static void centerAndShow(JDialog jDialog) {
         center(jDialog);
         jDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -24,10 +26,13 @@ public class DialogMethods {
         jDialog.setLocation(new Point(cyLocation.x + (width / 4), cyLocation.y + (height / 4)));
     }
 
-    public static void connect(Services services) {
-        if (!services.getNeo4jClient().isConnected()) {
-            ConnectToNeo4j connectToNeo4j = ConnectToNeo4j.create(services);
-            connectToNeo4j.connect();
+    public static boolean connect(Services services) {
+        ConnectToNeo4j connectToNeo4j = ConnectToNeo4j.create(services);
+        if(!connectToNeo4j.connect()) {
+            JOptionPane.showMessageDialog(services.getCySwingApplication().getJFrame(), "Not connected");
+            return false;
         }
+        return true;
+
     }
 }

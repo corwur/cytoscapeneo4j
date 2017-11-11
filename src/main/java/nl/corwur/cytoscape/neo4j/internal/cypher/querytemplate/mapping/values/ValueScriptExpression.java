@@ -1,10 +1,15 @@
 package nl.corwur.cytoscape.neo4j.internal.cypher.querytemplate.mapping.values;
 
+import org.apache.log4j.Logger;
+
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 public abstract class ValueScriptExpression<T,V> implements ValueExpression<T,V> {
+
+    private Logger logger = Logger.getLogger(ValueScriptExpression.class);
+
     private final String script;
     private final String varName;
     private final Class<V> type;
@@ -20,11 +25,9 @@ public abstract class ValueScriptExpression<T,V> implements ValueExpression<T,V>
         ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
         engine.put(varName, val);
         try {
-            V result = type.cast(engine.eval(script));
-            return result;
-        } catch (ScriptException e) {
-            return null;
-        } catch (ClassCastException e) {
+            return type.cast(engine.eval(script));
+        } catch (ScriptException | ClassCastException e) {
+            logger.error(e);
             return null;
         }
     }

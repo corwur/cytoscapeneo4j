@@ -1,6 +1,6 @@
 package nl.corwur.cytoscape.neo4j.internal.graph;
 
-public class GraphLong extends GraphObject {
+public class GraphLong implements GraphObject {
 
     private final long value;
 
@@ -11,5 +11,9 @@ public class GraphLong extends GraphObject {
     @Override
     public void accept(GraphVisitor graphVisitor) {
         graphVisitor.visit(this);
+    }
+
+    public long getValue() {
+        return value;
     }
 }

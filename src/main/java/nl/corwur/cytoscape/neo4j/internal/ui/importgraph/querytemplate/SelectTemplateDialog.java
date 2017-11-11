@@ -15,16 +15,18 @@ import java.nio.file.Paths;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class SelectTemplateDialog extends JDialog {
+public class SelectTemplateDialog extends JDialog {  //NOSONAR, hierarchy > 5
 
 
     private static final class TemplateQueryListEntry {
         final String id;
         final String name;
+
         private TemplateQueryListEntry(String id, String name) {
             this.id = id;
             this.name = name;
         }
+
         @Override
         public String toString() {
             return name;
@@ -32,9 +34,9 @@ public class SelectTemplateDialog extends JDialog {
     }
 
     private final String[] visualStyles;
-    private final CypherQueryTemplateDirectoryProvider provider;
+    private final transient CypherQueryTemplateDirectoryProvider provider;
     private String templateDir;
-    private final Consumer<String> templateDirectoryListener;
+    private final transient Consumer<String> templateDirectoryListener;
     private boolean ok;
     private String networkName;
     private String visualStyle;
@@ -65,16 +67,16 @@ public class SelectTemplateDialog extends JDialog {
 
         okButton.addActionListener(e -> {
             networkName = networkNameField.getText();
-            if(visualStyleComboBox.getSelectedIndex()== -1) {
+            if (visualStyleComboBox.getSelectedIndex() == -1) {
                 JOptionPane.showMessageDialog(this, "No visualstyle selected", "Warning", JOptionPane.WARNING_MESSAGE);
                 return;
             }
             visualStyle = visualStyleComboBox.getSelectedItem().toString();
-            if(queryListPanel.getQueryList().getSelectedIndex() == -1) {
+            if (queryListPanel.getQueryList().getSelectedIndex() == -1) {
                 JOptionPane.showMessageDialog(this, "No query selected", "Warning", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            cypherQueryTemplateId = ((TemplateQueryListEntry)queryListPanel.getQueryList().getSelectedValue()).id;
+            cypherQueryTemplateId = ((TemplateQueryListEntry) queryListPanel.getQueryList().getSelectedValue()).id;
             ok = true;
             SelectTemplateDialog.this.dispose();
         });
@@ -95,7 +97,7 @@ public class SelectTemplateDialog extends JDialog {
         gbc.gridy = 0;
         gbc.fill = GridBagConstraints.NONE;
         gbc.weightx = 0;
-        topPanel.add(networkNameLabel,gbc);
+        topPanel.add(networkNameLabel, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -128,7 +130,7 @@ public class SelectTemplateDialog extends JDialog {
         topPanel.add(queryListPanel, gbc);
 
         add(topPanel);
-        add(buttonPanel,  BorderLayout.SOUTH);
+        add(buttonPanel, BorderLayout.SOUTH);
 
         DialogMethods.centerAndShow(this);
     }
@@ -156,10 +158,10 @@ public class SelectTemplateDialog extends JDialog {
 
     private TemplateQueryListEntry[] getQueryTemplatesFromDir() {
 
-        if(templateDir == null || templateDir.isEmpty()) {
+        if (templateDir == null || templateDir.isEmpty()) {
             templateDir = selectQueryFolder();
         }
-        if(templateDir == null || templateDir.isEmpty()) {
+        if (templateDir == null || templateDir.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No template directory selected");
             return new TemplateQueryListEntry[0];
         }
@@ -167,11 +169,11 @@ public class SelectTemplateDialog extends JDialog {
         provider.readDirectory(templateDirectory);
 
         TemplateQueryListEntry[] items = getAllTemplates();
-        if(items == null || items.length == 0 ) {
+        if (items == null || items.length == 0) {
             JOptionPane.showMessageDialog(this, "No queries found in the directory");
-            return new TemplateQueryListEntry[] {};
+            return new TemplateQueryListEntry[]{};
         }
-        if(templateDirectoryListener != null) {
+        if (templateDirectoryListener != null) {
             templateDirectoryListener.accept(templateDir);
         }
         return items;
@@ -181,7 +183,7 @@ public class SelectTemplateDialog extends JDialog {
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int returnVal = chooser.showOpenDialog(this);
-        if(returnVal == JFileChooser.APPROVE_OPTION) {
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
             return chooser.getSelectedFile().getAbsolutePath();
 
         } else {
@@ -198,7 +200,6 @@ public class SelectTemplateDialog extends JDialog {
     }
 
     private final class SelectQueryPanel extends JPanel {
-
         JList queryList;
 
         public SelectQueryPanel(TemplateQueryListEntry[] templateQueryListEntries) {
@@ -209,79 +210,87 @@ public class SelectTemplateDialog extends JDialog {
             queryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             queryListPane.setViewportView(queryList);
             JPanel queryListButtonPanel = new JPanel();
+
             JButton newQueryButton = new JButton("New");
-
-            newQueryButton.addActionListener(e -> {
-                EditQueryTemplateDialog editQueryTemplateDialog = new EditQueryTemplateDialog();
-                editQueryTemplateDialog.showDialog();
-
-                if(editQueryTemplateDialog.isOk()) {
-                    CypherQueryTemplate cypherQueryTemplate = editQueryTemplateDialog.createCypherQuery();
-
-                    JFileChooser fileChooser = new JFileChooser();
-                    if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-                        File file = fileChooser.getSelectedFile();
-                        try {
-                            provider.addCypherQueryTemplate(
-                                    file.toPath(), cypherQueryTemplate
-                            );
-                            reloadList();
-                        } catch (IOException | JAXBException ex) {
-                            JOptionPane.showMessageDialog(this, "Error saving file", "Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                }
-            });
+            newQueryButton.addActionListener(e -> newQueryAction());
 
             JButton editQueryButton = new JButton("Edit");
-            editQueryButton.addActionListener(e -> {
-                int selected = queryList.getSelectedIndex();
-                if(selected >= 0) {
-                    TemplateQueryListEntry templateQueryListEntry = (TemplateQueryListEntry) queryList.getSelectedValue();
-                    CypherQueryTemplate cypherQueryTemplate = provider.getCypherQueryTemplate(Long.valueOf(templateQueryListEntry.id)).orElse(null);
-                    if(cypherQueryTemplate != null) {
-                        if(cypherQueryTemplate.getMapping() instanceof CopyAllMappingStrategy) {
-
-                           CopyAllMappingStrategy copyAllMappingStrategy = (CopyAllMappingStrategy) cypherQueryTemplate.getMapping();
-                            EditQueryTemplateDialog editQueryTemplateDialog = new EditQueryTemplateDialog(
-                                    cypherQueryTemplate.getName(),
-                                    cypherQueryTemplate.getCypherQuery(),
-                                    cypherQueryTemplate.getParameterTypes(),
-                                    copyAllMappingStrategy.getReferenceColumn(),
-                                    copyAllMappingStrategy.getNetworkName()
-                            );
-                            editQueryTemplateDialog.showDialog();
-                            if(editQueryTemplateDialog.isOk()) {
-                                try {
-                                    provider.putCypherQueryTemplate(
-                                            Long.valueOf(templateQueryListEntry.id),
-                                            editQueryTemplateDialog.createCypherQuery()
-                                    );
-                                    reloadList();
-                                } catch (IOException | JAXBException ex) {
-                                    JOptionPane.showMessageDialog(this, "Error saving query", "Error", JOptionPane.ERROR_MESSAGE);
-                                }
-                            }
-
-                        } else {
-                            JOptionPane.showMessageDialog(this, "The mapping strategy is not supported by the editor, use a text editor to edit this query");
-                        }
-                    }
-                }
-            });
+            editQueryButton.addActionListener(e -> editQueryAction());
 
             JButton selectFolderButton = new JButton("Select Folder");
             selectFolderButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
-            selectFolderButton.addActionListener(e -> {
-                templateDir = selectQueryFolder();
-                TemplateQueryListEntry[] items = getQueryTemplatesFromDir();
-                queryList.setListData(items);
-            });
+            selectFolderButton.addActionListener(e -> selectFolderAction());
+
             add(queryListPane);
             queryListButtonPanel.add(newQueryButton);
             queryListButtonPanel.add(editQueryButton);
             queryListButtonPanel.add(selectFolderButton);
             add(queryListButtonPanel);
+        }
+
+        private void selectFolderAction() {
+            templateDir = selectQueryFolder();
+            TemplateQueryListEntry[] items = getQueryTemplatesFromDir();
+            queryList.setListData(items);
+        }
+
+        private void editQueryAction() {
+            int selected = queryList.getSelectedIndex();
+            if (selected >= 0) {
+                TemplateQueryListEntry templateQueryListEntry = (TemplateQueryListEntry) queryList.getSelectedValue();
+                CypherQueryTemplate cypherQueryTemplate = provider.getCypherQueryTemplate(Long.valueOf(templateQueryListEntry.id)).orElse(null);
+                if (cypherQueryTemplate != null && (cypherQueryTemplate.getMapping() instanceof CopyAllMappingStrategy)) {
+                        CopyAllMappingStrategy copyAllMappingStrategy = (CopyAllMappingStrategy) cypherQueryTemplate.getMapping();
+                        EditQueryTemplateDialog editQueryTemplateDialog = new EditQueryTemplateDialog(
+                                cypherQueryTemplate.getName(),
+                                cypherQueryTemplate.getCypherQuery(),
+                                cypherQueryTemplate.getParameterTypes(),
+                                copyAllMappingStrategy.getReferenceColumn(),
+                                copyAllMappingStrategy.getNetworkName()
+                        );
+                        editQueryTemplateDialog.showDialog();
+                        if (editQueryTemplateDialog.isOk()) {
+                            updateCypherQueryTemplate(templateQueryListEntry, editQueryTemplateDialog);
+                        }
+
+                    } else {
+                        JOptionPane.showMessageDialog(this, "The mapping strategy is not supported by the editor, use a text editor to edit this query");
+                    }
+                }
+            }
+
+        private void updateCypherQueryTemplate(TemplateQueryListEntry templateQueryListEntry, EditQueryTemplateDialog editQueryTemplateDialog) {
+            try {
+                provider.putCypherQueryTemplate(
+                        Long.valueOf(templateQueryListEntry.id),
+                        editQueryTemplateDialog.createCypherQuery()
+                );
+                reloadList();
+            } catch (IOException | JAXBException ex) {
+                JOptionPane.showMessageDialog(this, "Error saving query", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+        private void newQueryAction() {
+            EditQueryTemplateDialog editQueryTemplateDialog = new EditQueryTemplateDialog();
+            editQueryTemplateDialog.showDialog();
+
+            if (editQueryTemplateDialog.isOk()) {
+                CypherQueryTemplate cypherQueryTemplate = editQueryTemplateDialog.createCypherQuery();
+
+                JFileChooser fileChooser = new JFileChooser();
+                if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile();
+                    try {
+                        provider.addCypherQueryTemplate(
+                                file.toPath(), cypherQueryTemplate
+                        );
+                        reloadList();
+                    } catch (IOException | JAXBException ex) {
+                        JOptionPane.showMessageDialog(this, "Error saving file", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
         }
 
         JList getQueryList() {
@@ -295,16 +304,12 @@ public class SelectTemplateDialog extends JDialog {
 
     }
 
-
-
-
     public static void main(String[] args) {
         SelectTemplateDialog dialog = new SelectTemplateDialog(null,
-                new String[]{"v1","v2"},
+                new String[]{"v1", "v2"},
                 null,
-                templateDir -> System.out.println(templateDir)
-                );
+                System.out::println //NOSONAR, ignore 'Standard outputs should not be used directly to log anything'
+        );
         dialog.showDialog();
     }
-
 }

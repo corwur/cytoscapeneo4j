@@ -12,8 +12,6 @@ import nl.corwur.cytoscape.neo4j.internal.cypher.querytemplate.mapping.values.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class Writer {
@@ -22,8 +20,7 @@ public class Writer {
 
     private static JAXBContext createJaxbContext() {
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(QueryTemplate.class);
-            return jaxbContext;
+            return JAXBContext.newInstance(QueryTemplate.class);
         } catch (JAXBException e) {
             throw new IllegalStateException("Cannot queryTemplate jaxb context for reading cyNeo4j query template files");
         }
@@ -31,7 +28,7 @@ public class Writer {
 
     public void write(CypherQueryTemplate template, OutputStream outputStream) throws JAXBException {
         QueryTemplate queryTemplate = queryTemplate(template);
-        jaxbContext.createMarshaller().marshal(queryTemplate,outputStream);
+        jaxbContext.createMarshaller().marshal(queryTemplate, outputStream);
     }
 
     private QueryTemplate queryTemplate(CypherQueryTemplate cypherQueryTemplate) {
@@ -46,7 +43,7 @@ public class Writer {
 
     private Parameters parameters(CypherQueryTemplate template) {
         Parameters parameters = new Parameters();
-        for(Map.Entry<String, Class<?>> entry : template.getParameterTypes().entrySet()) {
+        for (Map.Entry<String, Class<?>> entry : template.getParameterTypes().entrySet()) {
             Parameter parameter = new Parameter();
             parameter.setName(entry.getKey());
             parameter.setType(entry.getValue().getName());
@@ -62,7 +59,7 @@ public class Writer {
         return visitor.getMapping();
     }
 
-    private static class  ToMappingVisitor implements MappingStrategyVisitor {
+    private static class ToMappingVisitor implements MappingStrategyVisitor {
         Mapping mapping;
 
         public Mapping getMapping() {
@@ -75,8 +72,7 @@ public class Writer {
 
             NodeMapping nodeMapping = new NodeMapping();
             nodeMapping.setReferenceIdColumn(graphMapping.getNodeReferenceIdColumn());
-            List<NodeColumn> nodeColumnList = new ArrayList<>();
-            for(NodeColumnMapping nodeColumnMapping : graphMapping.getNodeColumnMapping()) {
+            for (NodeColumnMapping nodeColumnMapping : graphMapping.getNodeColumnMapping()) {
                 NodeColumn nodeColumn = new NodeColumn();
 
                 nodeColumn.setName(nodeColumnMapping.getColumnName());
@@ -91,7 +87,7 @@ public class Writer {
             EdgeMapping edgeMapping = new EdgeMapping();
             edgeMapping.setReferenceIdColumn(graphMapping.getEdgeReferenceIdColumn());
             columnMapping.setEdgeMapping(edgeMapping);
-            for(EdgeColumnMapping edgeColumnMapping: graphMapping.getEdgeColumnMapping()) {
+            for (EdgeColumnMapping edgeColumnMapping : graphMapping.getEdgeColumnMapping()) {
                 EdgeColumn edgeColumn = new EdgeColumn();
 
                 edgeColumn.setName(edgeColumnMapping.getColumnName());
@@ -115,6 +111,7 @@ public class Writer {
 
     private static class ToNodeVisitor implements ValueExpressionVisitor {
         private NodeColumn nodeColumn;
+
         public ToNodeVisitor(NodeColumn nodeColumn) {
             this.nodeColumn = nodeColumn;
         }
@@ -126,17 +123,17 @@ public class Writer {
 
         @Override
         public void visit(EdgeId edgeId) {
-
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public <T> void visit(EdgePropertyValue<T> edgePropertyValue) {
-
+            throw new UnsupportedOperationException();
         }
 
         @Override
-        public <V> void visit(EdgeScriptExpression vEdgeScriptExpression) {
-
+        public void visit(EdgeScriptExpression vEdgeScriptExpression) {
+            throw new UnsupportedOperationException();
         }
 
         @Override
@@ -156,20 +153,21 @@ public class Writer {
         @Override
         public <T> void visit(NodeScriptExpression<T> tNodeScriptExpression) {
             Expression expression = new Expression();
-            expression.setExpression(tNodeScriptExpression.getScript());
+            expression.setValue(tNodeScriptExpression.getScript());
             nodeColumn.setExpression(expression);
         }
     }
 
     private static class ToEdgeVisitor implements ValueExpressionVisitor {
         private EdgeColumn edgeColumn;
+
         public ToEdgeVisitor(EdgeColumn edgeColumn) {
             this.edgeColumn = edgeColumn;
         }
 
         @Override
         public void visit(NodeId nodeId) {
-
+            throw new UnsupportedOperationException();
         }
 
         @Override
@@ -185,24 +183,26 @@ public class Writer {
         }
 
         @Override
-        public <V> void visit(EdgeScriptExpression vEdgeScriptExpression) {
+        public void visit(EdgeScriptExpression vEdgeScriptExpression) {
             Expression expression = new Expression();
-            expression.setExpression(vEdgeScriptExpression.getScript());
+            expression.setValue(vEdgeScriptExpression.getScript());
             edgeColumn.setExpression(expression);
 
         }
 
         @Override
         public void visit(LabelValue labelValue) {
-
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public <T> void visit(NodePropertyValue<T> tNodePropertyValue) {
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public <T> void visit(NodeScriptExpression<T> tNodeScriptExpression) {
+            throw new UnsupportedOperationException();
         }
     }
 }

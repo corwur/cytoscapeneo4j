@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CopyAll extends Mapping {
+public class CopyAll implements Mapping {
 
     @XmlAttribute(name="referenceIdColumn")
     private String referenceIdColumn;
@@ -30,7 +30,7 @@ public class CopyAll extends Mapping {
     }
 
     @Override
-    void accept(MappingVisitor visitor) {
+    public void accept(MappingVisitor visitor) {
         visitor.visit(this);
     }
 }

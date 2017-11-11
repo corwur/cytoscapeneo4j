@@ -9,10 +9,10 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ParameterDialog extends JDialog {
+public class ParameterDialog extends JDialog {  //NOSONAR, hierarchy > 5
 
-    private Map<String, Class<?>> parameterTypes;
-    private Map<String, Object> parameters;
+    private transient Map<String, Class<?>> parameterTypes;
+    private transient Map<String, Object> parameters;
     private boolean ok;
 
     public ParameterDialog(Frame owner, Map<String, Class<?>> parameterTypes) {

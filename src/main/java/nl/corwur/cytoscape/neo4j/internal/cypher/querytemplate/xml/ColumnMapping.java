@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-class ColumnMapping extends Mapping {
+class ColumnMapping implements Mapping {
 
     @XmlElement(name = "node")
     private NodeMapping nodeMapping;
@@ -31,7 +31,8 @@ class ColumnMapping extends Mapping {
     }
 
     @Override
-    void accept(MappingVisitor visitor) {
+
+    public void accept(MappingVisitor visitor) {
         visitor.visit(this);
     }
 }

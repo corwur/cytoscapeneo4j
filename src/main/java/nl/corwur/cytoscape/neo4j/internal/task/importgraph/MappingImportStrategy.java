@@ -68,10 +68,10 @@ public class MappingImportStrategy implements ImportGraphStrategy {
 
     private boolean edgeExists(CyNetwork network, long id) {
         String edgeRefereceIdColumn = graphMapping.getEdgeReferenceIdColumn();
-        return network
+        return ! network
                 .getDefaultEdgeTable()
                 .getMatchingRows(edgeRefereceIdColumn , id)
-                .size() > 0;
+                .isEmpty();
     }
 
     private CyNode getNodeByIdOrElseCreate(CyNetwork currNet, Long id) {

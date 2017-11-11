@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class GraphNode extends GraphObject {
+public class GraphNode implements GraphObject {
 
     private Map<String, Object> properties;
     private List<String> labels = new ArrayList<>();

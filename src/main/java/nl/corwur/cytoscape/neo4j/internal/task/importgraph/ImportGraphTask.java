@@ -40,13 +40,7 @@ public class ImportGraphTask extends AbstractTask {
         try {
 
             taskMonitor.setStatusMessage("Execute query");
-            CompletableFuture<List<GraphObject>> result = CompletableFuture.supplyAsync(() -> {
-                try {
-                    return executeQuery(cypherQuery);
-                } catch (Neo4jClientException e) {
-                    throw new IllegalStateException(e.getMessage(), e);
-                }
-            });
+            CompletableFuture<List<GraphObject>> result = CompletableFuture.supplyAsync(() -> executeQuery(cypherQuery));
 
             while(!result.isDone()) {
                 if(this.cancelled) {
@@ -96,8 +90,12 @@ public class ImportGraphTask extends AbstractTask {
         }
     }
 
-    private List<GraphObject> executeQuery(CypherQuery query) throws Neo4jClientException {
-        return services.getNeo4jClient().executeQuery(query);
+    private List<GraphObject> executeQuery(CypherQuery query) {
+        try {
+            return services.getNeo4jClient().executeQuery(query);
+        } catch (Neo4jClientException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
     }
 
 }

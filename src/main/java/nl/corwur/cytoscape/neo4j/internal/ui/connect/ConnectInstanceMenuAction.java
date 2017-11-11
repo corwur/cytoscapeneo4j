@@ -8,9 +8,9 @@ import java.awt.event.ActionEvent;
 @SuppressWarnings("serial")
 public class ConnectInstanceMenuAction extends AbstractCyAction {
 
-    private final static String MENU_TITLE = "Connect to Neo4j Instance";
-    private final static String MENU_LOC = "Apps.Cypher Queries";
-    private final ConnectToNeo4j connectToNeo4j;
+    private static final String MENU_TITLE = "Connect to Neo4j Instance";
+    private static final String MENU_LOC = "Apps.Cypher Queries";
+    private final transient ConnectToNeo4j connectToNeo4j;
 
     public static ConnectInstanceMenuAction create(Services services) {
         return new ConnectInstanceMenuAction(ConnectToNeo4j.create(services));

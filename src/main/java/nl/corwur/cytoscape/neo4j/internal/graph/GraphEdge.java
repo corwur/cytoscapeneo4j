@@ -3,7 +3,7 @@ package nl.corwur.cytoscape.neo4j.internal.graph;
 import java.util.Map;
 import java.util.Optional;
 
-public class GraphEdge extends GraphObject {
+public class GraphEdge implements GraphObject {
     private long start;
     private long end;
     private Map<String, Object> properties;

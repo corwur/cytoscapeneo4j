@@ -20,7 +20,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class CypherQueryTemplateDirectoryProvider {
-    private static Logger LOG = Logger.getLogger(CypherQueryTemplateDirectoryProvider.class);
+
+    private static Logger logger = Logger.getLogger(CypherQueryTemplateDirectoryProvider.class);
 
     private Map<Long, TemplateMapEntry> cypherQueryTemplateMap = new HashMap<>();
 
@@ -28,12 +29,11 @@ public class CypherQueryTemplateDirectoryProvider {
         return new CypherQueryTemplateDirectoryProvider();
     }
 
-
     private CypherQueryTemplateDirectoryProvider() {
     }
 
     public Map<Long, CypherQueryTemplate> getCypherQueryTemplateMap() {
-        return cypherQueryTemplateMap.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().queryTemplate));
+        return cypherQueryTemplateMap.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().queryTemplate));
     }
 
     public Optional<CypherQueryTemplate> getCypherQueryTemplate(Long id) {
@@ -56,21 +56,18 @@ public class CypherQueryTemplateDirectoryProvider {
                 }
             }
         } catch (IOException e) {
-            LOG.warn("Cannot read file: " + e.getMessage());
+            logger.warn("Cannot read file: " + e.getMessage());
         }
     }
 
     private CypherQueryTemplate parseTemplateQueryXml(Reader reader, Path filePath) throws IOException {
         InputStream in = Files.newInputStream(filePath, StandardOpenOption.READ);
-        if(in != null) {
-            try {
-                return reader.read(in);
-            } catch (ReaderException e) {
-                LOG.warn("Cannot parse query template file: " + filePath.toAbsolutePath().toString() + " : " + e.getMessage());
-            }
+        try {
+            return reader.read(in);
+        } catch (ReaderException e) {
+            logger.warn("Cannot parse query template file: " + filePath.toAbsolutePath().toString() + " : " + e.getMessage());
+            return null;
         }
-        LOG.warn("Cannot read file: " + filePath.toAbsolutePath().toString());
-        return null;
     }
 
     public long addCypherQueryTemplate(Path path, CypherQueryTemplate cypherQuery) throws IOException, JAXBException {

@@ -8,13 +8,13 @@ import javax.xml.bind.annotation.XmlValue;
 class Expression {
 
     @XmlValue
-    private String expression;
+    private String value;
 
-    public String getExpression() {
-        return expression;
+    public String getValue() {
+        return value;
     }
 
-    public void setExpression(String expression) {
-        this.expression = expression;
+    public void setValue(String value) {
+        this.value = value;
     }
 }

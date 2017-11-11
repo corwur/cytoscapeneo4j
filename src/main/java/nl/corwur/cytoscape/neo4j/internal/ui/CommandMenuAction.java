@@ -11,10 +11,10 @@ import java.util.function.Supplier;
 
 public class CommandMenuAction extends AbstractCyAction {
 
-    private final static String MENU_LOC = "Apps.Cypher Queries";
-    private final ConnectToNeo4j connectToNeo4j;
-    private final CommandRunner commandRunner;
-    private final Supplier<AbstractTask> taskSupplier;
+    private static final String MENU_LOC = "Apps.Cypher Queries";
+    private final transient ConnectToNeo4j connectToNeo4j;
+    private final transient CommandRunner commandRunner;
+    private final transient Supplier<AbstractTask> taskSupplier;
 
     public static CommandMenuAction create(String menuTitle, Services services, Supplier<AbstractTask> taskSupplier) {
         return new CommandMenuAction(menuTitle, services, taskSupplier);

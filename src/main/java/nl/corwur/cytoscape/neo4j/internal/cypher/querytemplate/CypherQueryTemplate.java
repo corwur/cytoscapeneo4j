@@ -95,13 +95,12 @@ public class CypherQueryTemplate {
         }
 
         public CypherQueryTemplate build() {
-            CypherQueryTemplate cypherQueryTemplate = new CypherQueryTemplate(
+            return new CypherQueryTemplate(
                     name,
                     query,
                     parameterTypes,
                     mappingStrategy
             );
-            return cypherQueryTemplate;
         }
     }
 }

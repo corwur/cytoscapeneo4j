@@ -11,7 +11,11 @@ import java.awt.event.ActionListener;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.PAGE_START;
 
-public class EditQueryTemplateWithMappingStrategyDialog extends JDialog {
+public class EditQueryTemplateWithMappingStrategyDialog extends JDialog {  //NOSONAR, hierarchy > 5
+
+    public static final String STRING = "String";
+    public static final String LONG = "Long";
+    public static final String DOUBLE = "Double";
 
     public void showDialog() {
         setTitle("Edit Query");
@@ -20,7 +24,7 @@ public class EditQueryTemplateWithMappingStrategyDialog extends JDialog {
         ParametersPanel parametersPanel = new ParametersPanel();
         NodeMappingPanel nodeMappingPanel = new NodeMappingPanel();
         EdgeMappingPanel edgeMappingPanel = new EdgeMappingPanel();
-        ButtonPanel buttonPanel = new ButtonPanel((ev) -> this.dispose(), (ev) -> this.dispose());
+        ButtonPanel buttonPanel = new ButtonPanel(ev -> this.dispose(), ev -> this.dispose());
 
         JPanel panel = new JPanel();
         setLayout(new FlowLayout());
@@ -65,10 +69,10 @@ public class EditQueryTemplateWithMappingStrategyDialog extends JDialog {
 
             TableColumn column = jTable.getColumnModel().getColumn(1);
             JComboBox comboBox = new JComboBox();
-            comboBox.addItem("String");
+            comboBox.addItem(STRING);
             comboBox.addItem("Integer");
-            comboBox.addItem("Long");
-            comboBox.addItem("Double");
+            comboBox.addItem(LONG);
+            comboBox.addItem(DOUBLE);
             column.setCellEditor(new DefaultCellEditor(comboBox));
 
             JLabel label = new JLabel("Parameters");
@@ -101,9 +105,9 @@ public class EditQueryTemplateWithMappingStrategyDialog extends JDialog {
 
             TableColumn columnTypeColumn = jTable.getColumnModel().getColumn(1);
             JComboBox comboBoxColumnType = new JComboBox();
-            comboBoxColumnType.addItem("String");
-            comboBoxColumnType.addItem("Long");
-            comboBoxColumnType.addItem("Double");
+            comboBoxColumnType.addItem(STRING);
+            comboBoxColumnType.addItem(LONG);
+            comboBoxColumnType.addItem(DOUBLE);
             columnTypeColumn.setCellEditor(new DefaultCellEditor(comboBoxColumnType));
 
             TableColumn mappingTypeColumn = jTable.getColumnModel().getColumn(2);
@@ -132,9 +136,9 @@ public class EditQueryTemplateWithMappingStrategyDialog extends JDialog {
 
             TableColumn columnTypeColumn = jTable.getColumnModel().getColumn(1);
             JComboBox comboBoxColumnType = new JComboBox();
-            comboBoxColumnType.addItem("String");
-            comboBoxColumnType.addItem("Long");
-            comboBoxColumnType.addItem("Double");
+            comboBoxColumnType.addItem(STRING);
+            comboBoxColumnType.addItem(LONG);
+            comboBoxColumnType.addItem(DOUBLE);
             columnTypeColumn.setCellEditor(new DefaultCellEditor(comboBoxColumnType));
 
             TableColumn mappingTypeColumn = jTable.getColumnModel().getColumn(2);
@@ -149,14 +153,6 @@ public class EditQueryTemplateWithMappingStrategyDialog extends JDialog {
             add(jTable, CENTER);
         }
     }
-
-    private static final class HeaderTableModel extends DefaultTableModel {
-        @Override
-        public boolean isCellEditable(int row, int column) {
-            return row == 0 ? false : super.isCellEditable(row, column);
-        }
-    }
-
 
     public static void main(String[] args) {
         EditQueryTemplateWithMappingStrategyDialog dialog = new EditQueryTemplateWithMappingStrategyDialog();

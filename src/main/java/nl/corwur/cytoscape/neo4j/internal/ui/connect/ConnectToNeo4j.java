@@ -29,17 +29,15 @@ public class ConnectToNeo4j {
 
 
     public boolean connect() {
-        if (!neo4jClient.isConnected()) {
-            ConnectDialog connectDialog = new ConnectDialog(cySwingApplication.getJFrame(), neo4jClient::connect,
-                    appConfiguration.getNeo4jHost(),
-                    appConfiguration.getNeo4jUsername()
-            );
-            connectDialog.showConnectDialog();
-            if (connectDialog.isOk()) {
-                appConfiguration.setConnectionParameters(connectDialog.getHostname(), connectDialog.getUsername());
-                appConfiguration.save();
-                JOptionPane.showMessageDialog(this.cySwingApplication.getJFrame(), "Connected");
-            }
+        ConnectDialog connectDialog = new ConnectDialog(cySwingApplication.getJFrame(), neo4jClient::connect,
+                appConfiguration.getNeo4jHost(),
+                appConfiguration.getNeo4jUsername()
+        );
+        connectDialog.showConnectDialog();
+        if (connectDialog.isOk()) {
+            appConfiguration.setConnectionParameters(connectDialog.getHostname(), connectDialog.getUsername());
+            appConfiguration.save();
+            JOptionPane.showMessageDialog(this.cySwingApplication.getJFrame(), "Connected");
         }
         return neo4jClient.isConnected();
     }

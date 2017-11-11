@@ -25,8 +25,8 @@ class Neo4jGraphFactory {
             case "PATH" : return create(value.asPath());
             case "BOOLEAN" : return create(value.asRelationship());
             case "INTEGER" : return create(value.asLong());
+            default: return new GraphUnspecifiedType();
         }
-        return new GraphUnspecifiedType();
     }
 
     private GraphObject create(Path path) {
