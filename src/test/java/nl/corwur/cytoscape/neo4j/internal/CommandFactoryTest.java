@@ -1,8 +1,8 @@
 package nl.corwur.cytoscape.neo4j.internal;
 
-import nl.corwur.cytoscape.neo4j.internal.cypher.querytemplate.CypherQueryTemplate;
-import nl.corwur.cytoscape.neo4j.internal.cypher.querytemplate.MappingStrategy;
-import nl.corwur.cytoscape.neo4j.internal.cypher.querytemplate.xml.Mapping;
+import nl.corwur.cytoscape.neo4j.internal.exportneo4j.ExportNetworkConfiguration;
+import nl.corwur.cytoscape.neo4j.internal.importneo4j.CypherQueryTemplate;
+import nl.corwur.cytoscape.neo4j.internal.importneo4j.MappingStrategy;
 import nl.corwur.cytoscape.neo4j.internal.graph.NodeLabel;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
 import nl.corwur.cytoscape.neo4j.internal.task.exportnetwork.ExportNetworkToNeo4jTask;
@@ -47,8 +47,8 @@ public class CommandFactoryTest {
     @Test
     public void createExportNetworkToNeo4jTask() throws Exception {
         CommandFactory commandFactory = CommandFactory.create(services);
-        NodeLabel nodeLabel = mock(NodeLabel.class);
-        ExportNetworkToNeo4jTask task = commandFactory.createExportNetworkToNeo4jTask(nodeLabel);
+        ExportNetworkConfiguration exportNetworkConfiguration = mock(ExportNetworkConfiguration.class);
+        ExportNetworkToNeo4jTask task = commandFactory.createExportNetworkToNeo4jTask(exportNetworkConfiguration);
         assertNotNull("create export network to Neo4j should not return null",task);
     }
 

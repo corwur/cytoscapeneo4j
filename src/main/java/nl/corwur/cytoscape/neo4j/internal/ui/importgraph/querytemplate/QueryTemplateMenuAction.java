@@ -1,7 +1,7 @@
 package nl.corwur.cytoscape.neo4j.internal.ui.importgraph.querytemplate;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
-import nl.corwur.cytoscape.neo4j.internal.cypher.querytemplate.CypherQueryTemplate;
+import nl.corwur.cytoscape.neo4j.internal.importneo4j.CypherQueryTemplate;
 import nl.corwur.cytoscape.neo4j.internal.task.importgraph.ImportGraphTask;
 import nl.corwur.cytoscape.neo4j.internal.ui.DialogMethods;
 import org.cytoscape.application.swing.AbstractCyAction;
@@ -59,7 +59,7 @@ public class QueryTemplateMenuAction extends AbstractCyAction {
                                     query,
                                     visualStyle
                             );
-                    services.getCommandRunner().execute(retrieveDataTask);
+                    services.getCommandExecutor().execute(retrieveDataTask);
                 }
             } else {
                 JOptionPane.showMessageDialog(services.getCySwingApplication().getJFrame(), "Query not found");

@@ -1,6 +1,6 @@
 package nl.corwur.cytoscape.neo4j.internal.ui;
 
-import nl.corwur.cytoscape.neo4j.internal.CommandRunner;
+import nl.corwur.cytoscape.neo4j.internal.CommandExecutor;
 import nl.corwur.cytoscape.neo4j.internal.Services;
 import nl.corwur.cytoscape.neo4j.internal.ui.connect.ConnectToNeo4j;
 import org.cytoscape.application.swing.AbstractCyAction;
@@ -13,7 +13,7 @@ public class CommandMenuAction extends AbstractCyAction {
 
     private static final String MENU_LOC = "Apps.Cypher Queries";
     private final transient ConnectToNeo4j connectToNeo4j;
-    private final transient CommandRunner commandRunner;
+    private final transient CommandExecutor commandExecutor;
     private final transient Supplier<AbstractTask> taskSupplier;
 
     public static CommandMenuAction create(String menuTitle, Services services, Supplier<AbstractTask> taskSupplier) {
@@ -23,7 +23,7 @@ public class CommandMenuAction extends AbstractCyAction {
     private CommandMenuAction(String menuTitle, Services services, Supplier<AbstractTask> taskSupplier) {
         super(menuTitle);
         this.taskSupplier = taskSupplier;
-        this.commandRunner = services.getCommandRunner();
+        this.commandExecutor = services.getCommandExecutor();
         this.connectToNeo4j = ConnectToNeo4j.create(services);
         setPreferredMenu(MENU_LOC);
         setEnabled(false);
@@ -34,7 +34,7 @@ public class CommandMenuAction extends AbstractCyAction {
     public void actionPerformed(ActionEvent e) {
         if(connectToNeo4j.connect()) {
             AbstractTask abstractTask = taskSupplier.get();
-            commandRunner.execute(abstractTask);
+            commandExecutor.execute(abstractTask);
         }
     }
 }

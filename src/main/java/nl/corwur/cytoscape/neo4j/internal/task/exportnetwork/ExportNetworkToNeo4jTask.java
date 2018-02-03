@@ -1,6 +1,7 @@
 package nl.corwur.cytoscape.neo4j.internal.task.exportnetwork;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
+import nl.corwur.cytoscape.neo4j.internal.exportneo4j.ExportNetworkConfiguration;
 import nl.corwur.cytoscape.neo4j.internal.graph.AddEdgeCommand;
 import nl.corwur.cytoscape.neo4j.internal.graph.AddNodeCommand;
 import nl.corwur.cytoscape.neo4j.internal.graph.NodeLabel;
@@ -15,11 +16,11 @@ import org.cytoscape.work.TaskMonitor;
 public class ExportNetworkToNeo4jTask extends AbstractTask {
 
     private final Services services;
-    private final NodeLabel nodeLabel;
+    private final ExportNetworkConfiguration exportNetworkConfiguration;
 
-    public ExportNetworkToNeo4jTask(Services services, NodeLabel nodeLabel) {
+    public ExportNetworkToNeo4jTask(Services services, ExportNetworkConfiguration exportNetworkConfiguration) {
         this.services = services;
-        this.nodeLabel = nodeLabel;
+        this.exportNetworkConfiguration = exportNetworkConfiguration;
     }
 
     @Override
@@ -34,7 +35,7 @@ public class ExportNetworkToNeo4jTask extends AbstractTask {
                 taskMonitor.setStatusMessage("Exporting nodes");
                 cyNetwork.getNodeList().forEach(node -> copyNodeToNeo4j(cyNetwork, node));
                 taskMonitor.setStatusMessage("Exporting edges");
-                cyNetwork.getEdgeList().forEach(edge -> copyEdgeToNeo4j(cyNetwork, edge));
+                cyNetwork.getEdgeList().forEach(edge -> copyEdgeToNeo4j(cyNetwork, edge, exportNetworkConfiguration.getRelationship()));
             }
 
         } catch (Exception e) {
@@ -42,17 +43,16 @@ public class ExportNetworkToNeo4jTask extends AbstractTask {
         }
     }
 
-    private void copyEdgeToNeo4j(CyNetwork cyNetwork, CyEdge cyEdge)  {
+    private void copyEdgeToNeo4j(CyNetwork cyNetwork, CyEdge cyEdge, String relationship)  {
         try {
-
             AddEdgeCommand cmd = new AddEdgeCommand();
             CyRow cyRow=cyNetwork.getDefaultNodeTable().getRow(cyEdge.getSUID());
             cmd.setEdgeProperties(cyRow.getAllValues());
             cmd.setStartId(cyEdge.getSource().getSUID());
             cmd.setEndId(cyEdge.getTarget().getSUID());
-            cmd.setRelationship("links");
+            cmd.setRelationship(relationship);
             cmd.setDirected(cyEdge.isDirected());
-            cmd.setNodeLabel(nodeLabel);
+            cmd.setNodeLabel(exportNetworkConfiguration.getNodeLabel());
             services.getNeo4jClient().executeCommand(cmd);
         } catch (Neo4jClientException e) {
             throw new IllegalStateException("Error copying to Neo4j", e);
@@ -62,7 +62,7 @@ public class ExportNetworkToNeo4jTask extends AbstractTask {
     private void copyNodeToNeo4j(CyNetwork cyNetwork, CyNode cyNode)  {
         try {
             AddNodeCommand cmd = new AddNodeCommand();
-            cmd.setNodeLabel(nodeLabel);
+            cmd.setNodeLabel(exportNetworkConfiguration.getNodeLabel());
             CyRow cyRow = cyNetwork.getDefaultNodeTable().getRow(cyNode.getSUID());
             cmd.setNodeProperties(cyRow.getAllValues());
             cmd.setNodeId(cyNode.getSUID());

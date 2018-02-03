@@ -1,6 +1,7 @@
 package nl.corwur.cytoscape.neo4j.internal.ui.exportnetwork;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
+import nl.corwur.cytoscape.neo4j.internal.exportneo4j.ExportNetworkConfiguration;
 import nl.corwur.cytoscape.neo4j.internal.graph.NodeLabel;
 import nl.corwur.cytoscape.neo4j.internal.task.exportnetwork.ExportNetworkToNeo4jTask;
 import nl.corwur.cytoscape.neo4j.internal.ui.DialogMethods;
@@ -37,9 +38,10 @@ public class ExportNetworkMenuAction extends AbstractCyAction {
         }
 
         NodeLabel nodeLabel = getNodeLabel();
+        ExportNetworkConfiguration exportNetworkConfiguration = ExportNetworkConfiguration.create(nodeLabel, "link");
         if (nodeLabel != null) {
-            ExportNetworkToNeo4jTask task = services.getCommandFactory().createExportNetworkToNeo4jTask(nodeLabel);
-            services.getCommandRunner().execute(task);
+            ExportNetworkToNeo4jTask task = services.getCommandFactory().createExportNetworkToNeo4jTask(exportNetworkConfiguration);
+            services.getCommandExecutor().execute(task);
         }
     }
 

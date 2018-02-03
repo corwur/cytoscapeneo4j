@@ -61,7 +61,7 @@ public class CyActivator extends AbstractCyActivator  {
         services.setVisualStyleFactory(getService(context, VisualStyleFactory.class));
         services.setNeo4jClient(new Neo4jClient());
         services.setCommandFactory(CommandFactory.create(services));
-        services.setCommandRunner(CommandRunner.create(services));
+        services.setCommandExecutor(CommandExecutor.create(services));
         return services;
     }
 

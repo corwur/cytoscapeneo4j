@@ -1,8 +1,8 @@
 package nl.corwur.cytoscape.neo4j.internal.task.importgraph;
 
-import nl.corwur.cytoscape.neo4j.internal.cypher.querytemplate.mapping.EdgeColumnMapping;
-import nl.corwur.cytoscape.neo4j.internal.cypher.querytemplate.mapping.GraphMapping;
-import nl.corwur.cytoscape.neo4j.internal.cypher.querytemplate.mapping.NodeColumnMapping;
+import nl.corwur.cytoscape.neo4j.internal.importneo4j.mapping.EdgeColumnMapping;
+import nl.corwur.cytoscape.neo4j.internal.importneo4j.mapping.GraphMapping;
+import nl.corwur.cytoscape.neo4j.internal.importneo4j.mapping.NodeColumnMapping;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphEdge;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphNode;
 import org.cytoscape.model.*;

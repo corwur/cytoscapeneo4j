@@ -1,8 +1,8 @@
 package nl.corwur.cytoscape.neo4j.internal;
 
-import nl.corwur.cytoscape.neo4j.internal.cypher.querytemplate.CopyAllMappingStrategy;
-import nl.corwur.cytoscape.neo4j.internal.cypher.querytemplate.MappingStrategyVisitor;
-import nl.corwur.cytoscape.neo4j.internal.cypher.querytemplate.mapping.GraphMapping;
+import nl.corwur.cytoscape.neo4j.internal.importneo4j.CopyAllMappingStrategy;
+import nl.corwur.cytoscape.neo4j.internal.importneo4j.MappingStrategyVisitor;
+import nl.corwur.cytoscape.neo4j.internal.importneo4j.mapping.GraphMapping;
 import nl.corwur.cytoscape.neo4j.internal.task.importgraph.CopyAllImportStrategy;
 import nl.corwur.cytoscape.neo4j.internal.task.importgraph.ImportGraphStrategy;
 import nl.corwur.cytoscape.neo4j.internal.task.importgraph.MappingImportStrategy;

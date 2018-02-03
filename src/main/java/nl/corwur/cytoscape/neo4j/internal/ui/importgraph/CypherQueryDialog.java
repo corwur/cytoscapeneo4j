@@ -22,13 +22,10 @@ public class CypherQueryDialog extends JDialog { //NOSONAR, hierarchy > 5
     public void showDialog() {
 
         setTitle("Execute Cypher Query");
-
         JTextArea queryText = new JTextArea(20,80);
         queryText.setText(INITIAL_QUERY);
-
         JComboBox visualStyleComboBox = new JComboBox(visualStyles);
         JLabel visualStyleLabel = new JLabel("Visual Style");
-
         JTextField networkNameField = new JTextField("",30);
         JLabel networkNameLabel = new JLabel("network");
 

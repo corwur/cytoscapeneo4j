@@ -27,7 +27,7 @@ public class Services {
     private VisualMappingManager visualMappingManager;
     private Neo4jClient neo4jClient;
     private CommandFactory commandFactory;
-    private CommandRunner commandRunner;
+    private CommandExecutor commandExecutor;
     private CyEventHelper cyEventHelper;
     private VisualStyleFactory visualStyleFactory;
     private AppConfiguration appConfiguration;
@@ -120,12 +120,12 @@ public class Services {
         return commandFactory;
     }
 
-    void setCommandRunner(CommandRunner commandRunner) {
-        this.commandRunner = commandRunner;
+    void setCommandExecutor(CommandExecutor commandExecutor) {
+        this.commandExecutor = commandExecutor;
     }
 
-    public CommandRunner getCommandRunner() {
-        return commandRunner;
+    public CommandExecutor getCommandExecutor() {
+        return commandExecutor;
     }
 
     public void setCyEventHelper(CyEventHelper cyEventHelper) {

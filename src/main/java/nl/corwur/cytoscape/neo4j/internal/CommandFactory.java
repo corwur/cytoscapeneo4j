@@ -1,6 +1,7 @@
 package nl.corwur.cytoscape.neo4j.internal;
 
-import nl.corwur.cytoscape.neo4j.internal.cypher.querytemplate.CypherQueryTemplate;
+import nl.corwur.cytoscape.neo4j.internal.exportneo4j.ExportNetworkConfiguration;
+import nl.corwur.cytoscape.neo4j.internal.importneo4j.CypherQueryTemplate;
 import nl.corwur.cytoscape.neo4j.internal.graph.NodeLabel;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
 import nl.corwur.cytoscape.neo4j.internal.task.exportnetwork.ExportNetworkToNeo4jTask;
@@ -28,8 +29,8 @@ public class CommandFactory {
                 new CopyAllImportStrategy(),
                 cypherQuery);
     }
-    public ExportNetworkToNeo4jTask createExportNetworkToNeo4jTask(NodeLabel nodeLabel) {
-        return new ExportNetworkToNeo4jTask(services, nodeLabel);
+    public ExportNetworkToNeo4jTask createExportNetworkToNeo4jTask(ExportNetworkConfiguration exportNetworkConfiguration) {
+        return new ExportNetworkToNeo4jTask(services, exportNetworkConfiguration);
     }
 
     public ImportGraphTask createRetrieveDataFromQueryTemplateTask(String networkName, CypherQueryTemplate query, String visualStyle) {

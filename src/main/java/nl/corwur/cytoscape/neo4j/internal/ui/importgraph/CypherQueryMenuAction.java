@@ -53,7 +53,7 @@ public class CypherQueryMenuAction extends AbstractCyAction {
                         CypherQuery.builder().query(query).build(),
                         cypherQueryDialog.getVisualStyleTitle()
                 );
-        services.getCommandRunner().execute(executeCypherQueryTask);
+        services.getCommandExecutor().execute(executeCypherQueryTask);
     }
 
     private String[] getAllVisualStyleTitle() {
