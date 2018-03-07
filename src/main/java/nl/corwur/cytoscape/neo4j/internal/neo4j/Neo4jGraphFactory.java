@@ -3,10 +3,14 @@ package nl.corwur.cytoscape.neo4j.internal.neo4j;
 import nl.corwur.cytoscape.neo4j.internal.graph.*;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.Value;
+import org.neo4j.driver.v1.types.Entity;
 import org.neo4j.driver.v1.types.Node;
 import org.neo4j.driver.v1.types.Path;
 import org.neo4j.driver.v1.types.Relationship;
 import org.neo4j.driver.v1.util.Pair;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 class Neo4jGraphFactory {
 
@@ -25,8 +29,25 @@ class Neo4jGraphFactory {
             case "PATH" : return create(value.asPath());
             case "BOOLEAN" : return create(value.asRelationship());
             case "INTEGER" : return create(value.asLong());
+            case "LIST OF ANY?" : return create(value.asList());
             default: return new GraphUnspecifiedType();
         }
+    }
+
+    private GraphObject create(List<Object> objects) {
+        return objects.stream()
+                .filter(o -> o instanceof Entity)
+                .map(o -> this.create((Entity) o))
+                .collect(GraphObjectList::new, (list, o) -> list.add(o), (list1,list2) -> list1.addAll(list2));
+    }
+
+    private GraphObject create(Entity entity) {
+        if(entity instanceof Relationship) {
+            return create((Relationship)entity);
+        } else if (entity instanceof Node) {
+            return create((Node)entity);
+        }
+        throw new IllegalStateException();
     }
 
     private GraphObject create(Path path) {

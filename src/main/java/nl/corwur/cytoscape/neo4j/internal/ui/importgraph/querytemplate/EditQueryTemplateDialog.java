@@ -132,10 +132,11 @@ public class EditQueryTemplateDialog extends JDialog { //NOSONAR, hierarchy > 5
         EditQueryPanel(String cypherQuery) {
             textArea = new JTextArea(20,40);
             textArea.setText(cypherQuery);
+            JScrollPane textAreaScrollPane = new JScrollPane(textArea);
             JLabel label = new JLabel("Cypher Query");
             setLayout(new BorderLayout());
             add(label, PAGE_START);
-            add(textArea, CENTER);
+            add(textAreaScrollPane, CENTER);
         }
 
     }

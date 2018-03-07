@@ -7,4 +7,5 @@ public interface GraphVisitor {
     void visit(GraphLong neo4jLong);
     void visit(GraphUnspecifiedType neo4jUnspecifiedType);
     void visit(GraphPath graphPath);
+    void visit(GraphObjectList graphObjectList);
 }

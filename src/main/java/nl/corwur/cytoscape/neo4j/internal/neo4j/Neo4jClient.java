@@ -41,6 +41,14 @@ public class Neo4jClient {
         }
     }
 
+    public void explainQuery(CypherQuery cypherQuery) throws Neo4jClientException {
+        try (Session session = driver.session()) {
+            session.run(cypherQuery.getExplainQuery(), cypherQuery.getParams());
+        } catch (Exception e) {
+            throw new Neo4jClientException(e.getMessage(), e);
+        }
+    }
+
     public boolean isConnected() {
         return driver != null && driver.session().isOpen();
     }

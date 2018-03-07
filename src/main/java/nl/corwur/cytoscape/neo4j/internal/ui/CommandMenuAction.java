@@ -32,7 +32,7 @@ public class CommandMenuAction extends AbstractCyAction {
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(connectToNeo4j.connect()) {
+        if(connectToNeo4j.openConnectDialogIfNotConnected()) {
             AbstractTask abstractTask = taskSupplier.get();
             commandExecutor.execute(abstractTask);
         }

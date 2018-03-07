@@ -51,6 +51,13 @@ public class ImportGraph implements GraphVisitor {
     }
 
     @Override
+    public void visit(GraphObjectList graphObjectList) {
+        for (GraphObject graphObject : graphObjectList.getList()) {
+            graphObject.accept(this);
+        }
+    }
+
+    @Override
     public void visit(GraphResult result) {
         cancel();
         result.getAll().forEach(graphObject -> graphObject.accept(this));

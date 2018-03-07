@@ -222,8 +222,8 @@ public class SelectTemplateDialog extends JDialog {  //NOSONAR, hierarchy > 5
             selectFolderButton.addActionListener(e -> selectFolderAction());
 
             add(queryListPane);
-            queryListButtonPanel.add(newQueryButton);
-            queryListButtonPanel.add(editQueryButton);
+//            queryListButtonPanel.add(newQueryButton);
+//            queryListButtonPanel.add(editQueryButton);
             queryListButtonPanel.add(selectFolderButton);
             add(queryListButtonPanel);
         }

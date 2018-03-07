@@ -21,7 +21,7 @@ public class CommandFactory {
     }
 
     public ImportGraphTask createImportGraphTask() {
-        CypherQuery cypherQuery = CypherQuery.builder().query("MATCH (n)-[r]->(m) RETURN n,r,m").build();
+        CypherQuery cypherQuery = CypherQuery.builder().query("match (n)-[r*0..]-(m) RETURN n,r,m").build();
         return new ImportGraphTask(
                 services,
                 "Network",

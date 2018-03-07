@@ -21,6 +21,10 @@ public class CypherQuery {
         return query;
     }
 
+    String getExplainQuery() {
+        return "EXPLAIN " + query;
+    }
+
     public static final class Builder {
 
         private String query;

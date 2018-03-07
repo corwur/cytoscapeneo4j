@@ -28,7 +28,7 @@ public class DialogMethods {
 
     public static boolean connect(Services services) {
         ConnectToNeo4j connectToNeo4j = ConnectToNeo4j.create(services);
-        if(!connectToNeo4j.connect()) {
+        if(!connectToNeo4j.openConnectDialogIfNotConnected()) {
             JOptionPane.showMessageDialog(services.getCySwingApplication().getJFrame(), "Not connected");
             return false;
         }

@@ -40,6 +40,7 @@ public class ImportGraphTask extends AbstractTask {
         try {
 
             taskMonitor.setStatusMessage("Execute query");
+            explainQuery(cypherQuery);
             CompletableFuture<List<GraphObject>> result = CompletableFuture.supplyAsync(() -> executeQuery(cypherQuery));
 
             while(!result.isDone()) {
@@ -62,7 +63,6 @@ public class ImportGraphTask extends AbstractTask {
             services.getCyNetworkManager().addNetwork(network);
 
             ImportGraph cypherParser = new ImportGraph(network, importGraphStrategy, () -> this.cancelled);
-
 
             taskMonitor.setStatusMessage("Importing graph");
             cypherParser.importGraph(graphObjects);
@@ -88,6 +88,10 @@ public class ImportGraphTask extends AbstractTask {
         } catch (Exception e) {
             taskMonitor.showMessage(TaskMonitor.Level.ERROR, e.getMessage());
         }
+    }
+
+    private void explainQuery(CypherQuery cypherQuery) throws Neo4jClientException {
+        services.getNeo4jClient().explainQuery(cypherQuery);
     }
 
     private List<GraphObject> executeQuery(CypherQuery query) {

@@ -2,6 +2,7 @@ package nl.corwur.cytoscape.neo4j.internal.ui.importgraph;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
+import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClientException;
 import nl.corwur.cytoscape.neo4j.internal.task.importgraph.ImportGraphTask;
 import nl.corwur.cytoscape.neo4j.internal.ui.DialogMethods;
 import org.cytoscape.application.swing.AbstractCyAction;
@@ -36,24 +37,42 @@ public class CypherQueryMenuAction extends AbstractCyAction {
         if(!DialogMethods.connect(services)) {
             return;
         }
+        boolean finished = false;
         CypherQueryDialog cypherQueryDialog = new CypherQueryDialog(services.getCySwingApplication().getJFrame(), getAllVisualStyleTitle());
-        cypherQueryDialog.showDialog();
-        if(!cypherQueryDialog.isExecuteQuery()) {
-            return;
-        }
-        String query = cypherQueryDialog.getCypherQuery();
-        if (query.isEmpty()) {
-            JOptionPane.showMessageDialog(services.getCySwingApplication().getJFrame(), "Query is empty");
-            return;
-        }
-
-        ImportGraphTask executeCypherQueryTask  =
-                services.getCommandFactory().createExecuteCypherQueryTask(
-                        cypherQueryDialog.getNetwork(),
-                        CypherQuery.builder().query(query).build(),
-                        cypherQueryDialog.getVisualStyleTitle()
+        do {
+            cypherQueryDialog.showDialog();
+            if (!cypherQueryDialog.isExecuteQuery()) {
+                finished = true;
+                break;
+            }
+            String query = cypherQueryDialog.getCypherQuery();
+            if (query.isEmpty()) {
+                JOptionPane.showMessageDialog(services.getCySwingApplication().getJFrame(), "Query is empty");
+                break;
+            }
+            CypherQuery cypherQuery = CypherQuery.builder().query(query).build();
+            try {
+                services.getNeo4jClient().explainQuery(cypherQuery);
+                ImportGraphTask executeCypherQueryTask =
+                        services.getCommandFactory().createExecuteCypherQueryTask(
+                                cypherQueryDialog.getNetwork(),
+                                cypherQuery,
+                                cypherQueryDialog.getVisualStyleTitle()
+                        );
+                services.getCommandExecutor().execute(executeCypherQueryTask);
+                finished = true;
+            } catch (Neo4jClientException e1) {
+                JOptionPane.showMessageDialog(services.getCySwingApplication().getJFrame(), e1.getMessage());
+            }
+            if(!finished) {
+                cypherQueryDialog = new CypherQueryDialog(
+                        services.getCySwingApplication().getJFrame(),
+                        getAllVisualStyleTitle(),
+                        cypherQueryDialog.getCypherQuery(),
+                        cypherQueryDialog.getNetwork()
                 );
-        services.getCommandExecutor().execute(executeCypherQueryTask);
+            }
+        }while (!finished);
     }
 
     private String[] getAllVisualStyleTitle() {
