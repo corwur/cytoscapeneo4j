@@ -55,6 +55,11 @@ public class SelectTemplateDialog extends JDialog {  //NOSONAR, hierarchy > 5
         setTitle("Select Query");
 
         TemplateQueryListEntry[] templateQueryListEntries = getQueryTemplatesFromDir();
+        if(templateQueryListEntries == null) {
+            this.dispose();
+            return;
+        }
+
 
         JButton okButton = new JButton("Ok");
         JButton cancelButton = new JButton("Cancel");
@@ -163,7 +168,7 @@ public class SelectTemplateDialog extends JDialog {  //NOSONAR, hierarchy > 5
         }
         if (templateDir == null || templateDir.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No template directory selected");
-            return new TemplateQueryListEntry[0];
+            return null;
         }
         Path templateDirectory = Paths.get(templateDir);
         provider.readDirectory(templateDirectory);
