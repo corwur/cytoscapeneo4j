@@ -1,8 +1,8 @@
 package nl.corwur.cytoscape.neo4j.internal.ui.importgraph.querytemplate;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
-import nl.corwur.cytoscape.neo4j.internal.importneo4j.CypherQueryTemplate;
-import nl.corwur.cytoscape.neo4j.internal.task.importgraph.ImportGraphTask;
+import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.CypherQueryTemplate;
+import nl.corwur.cytoscape.neo4j.internal.commands.tasks.AbstractImportTask;
 import nl.corwur.cytoscape.neo4j.internal.ui.DialogMethods;
 import org.cytoscape.application.swing.AbstractCyAction;
 import org.cytoscape.view.vizmap.VisualStyle;
@@ -53,8 +53,8 @@ public class QueryTemplateMenuAction extends AbstractCyAction {
                 parameterDialog.showDialog();
                 if (parameterDialog.isOk()) {
                     query.setParameters(parameterDialog.getParameters());
-                    ImportGraphTask retrieveDataTask =
-                            services.getCommandFactory().createRetrieveDataFromQueryTemplateTask(
+                    AbstractImportTask retrieveDataTask =
+                            services.getCommandFactory().createImportQueryTemplateTask(
                                     networkName,
                                     query,
                                     visualStyle

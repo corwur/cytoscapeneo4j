@@ -10,6 +10,10 @@ import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.util.Properties;
 
+/**
+ * This clas stores data that is used by the plugin.
+ * The settings are stored in a property file the temporary directory (java.io.tmpdir).
+ */
 public class AppConfiguration {
 
     private static final Logger LOG = Logger.getLogger(AppConfiguration.class);

@@ -1,5 +1,8 @@
 package nl.corwur.cytoscape.neo4j.internal.graph;
 
+/**
+ * This class represents a long value in a graph.
+ */
 public class GraphLong implements GraphObject {
 
     private final long value;

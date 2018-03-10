@@ -3,6 +3,9 @@ package nl.corwur.cytoscape.neo4j.internal.graph;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represents a path in a graph.
+ */
 public class GraphPath implements GraphObject {
     private List<GraphNode> nodes;
     private List<GraphEdge> edges;

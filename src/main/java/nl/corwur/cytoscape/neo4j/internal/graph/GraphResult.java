@@ -5,6 +5,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class represents a ditionary withgraph objects that are part of a graph.
+ */
 public class GraphResult implements GraphObject {
 
     private Map<String, GraphObject> results = new HashMap<>();

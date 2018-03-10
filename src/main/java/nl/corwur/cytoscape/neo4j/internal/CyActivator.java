@@ -1,5 +1,7 @@
 package nl.corwur.cytoscape.neo4j.internal;
 
+import nl.corwur.cytoscape.neo4j.internal.commands.CommandExecutor;
+import nl.corwur.cytoscape.neo4j.internal.commands.CommandFactory;
 import nl.corwur.cytoscape.neo4j.internal.configuration.AppConfiguration;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClient;
 import nl.corwur.cytoscape.neo4j.internal.ui.CommandMenuAction;
@@ -23,6 +25,12 @@ import org.osgi.framework.BundleContext;
 
 import java.util.Properties;
 
+/**
+ * This class is the entrypoint of the application,
+ * it loads the configuration,
+ * creates an object that holds references to cytoscape classes,
+ * adds menu items.
+ */
 public class CyActivator extends AbstractCyActivator  {
 
     private AppConfiguration appConfiguration = new AppConfiguration();
@@ -35,7 +43,7 @@ public class CyActivator extends AbstractCyActivator  {
         ConnectInstanceMenuAction connectAction = ConnectInstanceMenuAction.create(services);
         CypherQueryMenuAction cypherQueryMenuAction = CypherQueryMenuAction.create(services);
         QueryTemplateMenuAction queryTemplateMenuAction = QueryTemplateMenuAction.create(services);
-        CommandMenuAction importGraphMenuAction = CommandMenuAction.create("Import all nodes and edges from Neo4j",services, () -> services.getCommandFactory().createImportGraphTask());
+        CommandMenuAction importGraphMenuAction = CommandMenuAction.create("Import all nodes and edges from Neo4j",services, () -> services.getCommandFactory().createImportAllNodesAndEdgesFromNeo4jTask());
         ExportNetworkMenuAction exportNetworkToNeo4jMenuAction = ExportNetworkMenuAction.create(services);
 
         registerAllServices(context, connectAction, new Properties());

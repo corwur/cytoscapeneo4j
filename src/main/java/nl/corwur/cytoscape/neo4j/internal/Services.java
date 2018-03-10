@@ -1,5 +1,7 @@
 package nl.corwur.cytoscape.neo4j.internal;
 
+import nl.corwur.cytoscape.neo4j.internal.commands.CommandExecutor;
+import nl.corwur.cytoscape.neo4j.internal.commands.CommandFactory;
 import nl.corwur.cytoscape.neo4j.internal.configuration.AppConfiguration;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClient;
 import org.cytoscape.application.CyApplicationManager;
@@ -14,6 +16,9 @@ import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.view.vizmap.VisualStyleFactory;
 import org.cytoscape.work.swing.DialogTaskManager;
 
+/**
+ * This class holds references to cytoscape services and services used by the plugin.
+ */
 public class Services {
 
     private CySwingApplication cySwingApplication;
@@ -72,7 +77,7 @@ public class Services {
         this.cyNetworkViewManager = cyNetworkViewManager;
     }
 
-    DialogTaskManager getDialogTaskManager() {
+    public DialogTaskManager getDialogTaskManager() {
         return dialogTaskManager;
     }
 

@@ -3,6 +3,9 @@ package nl.corwur.cytoscape.neo4j.internal.graph;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * This class represents an edge in a graph.
+ */
 public class GraphEdge implements GraphObject {
     private long start;
     private long end;

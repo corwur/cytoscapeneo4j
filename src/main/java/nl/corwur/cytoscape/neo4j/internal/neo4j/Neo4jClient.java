@@ -1,9 +1,9 @@
 package nl.corwur.cytoscape.neo4j.internal.neo4j;
 
-import nl.corwur.cytoscape.neo4j.internal.graph.AddEdgeCommand;
-import nl.corwur.cytoscape.neo4j.internal.graph.AddNodeCommand;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.AddEdgeCommand;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.AddNodeCommand;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphObject;
-import nl.corwur.cytoscape.neo4j.internal.graph.NodeLabel;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.NodeLabel;
 import org.neo4j.driver.v1.*;
 import org.neo4j.driver.v1.exceptions.AuthenticationException;
 import org.neo4j.driver.v1.exceptions.ServiceUnavailableException;

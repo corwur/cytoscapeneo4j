@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * This class represents a list of objects that are art of a graph.
+ */
 public class GraphObjectList implements GraphObject {
 
     private List<GraphObject> list = new ArrayList<>();

@@ -7,6 +7,9 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+/**
+ * This class represents a node in a graph.
+ */
 public class GraphNode implements GraphObject {
 
     private Map<String, Object> properties;

@@ -1,12 +1,13 @@
 package nl.corwur.cytoscape.neo4j.internal;
 
-import nl.corwur.cytoscape.neo4j.internal.exportneo4j.ExportNetworkConfiguration;
-import nl.corwur.cytoscape.neo4j.internal.importneo4j.CypherQueryTemplate;
-import nl.corwur.cytoscape.neo4j.internal.importneo4j.MappingStrategy;
-import nl.corwur.cytoscape.neo4j.internal.graph.NodeLabel;
+import nl.corwur.cytoscape.neo4j.internal.commands.CommandFactory;
+import nl.corwur.cytoscape.neo4j.internal.commands.tasks.ImportQueryTemplateTask;
+import nl.corwur.cytoscape.neo4j.internal.commands.tasks.exportneo4j.ExportNetworkConfiguration;
+import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.CypherQueryTemplate;
+import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.mapping.MappingStrategy;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
-import nl.corwur.cytoscape.neo4j.internal.task.exportnetwork.ExportNetworkToNeo4jTask;
-import nl.corwur.cytoscape.neo4j.internal.task.importgraph.ImportGraphTask;
+import nl.corwur.cytoscape.neo4j.internal.commands.tasks.ExportNetworkToNeo4jTask;
+import nl.corwur.cytoscape.neo4j.internal.commands.tasks.AbstractImportTask;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.view.vizmap.VisualStyle;
 import org.junit.Test;
@@ -40,7 +41,7 @@ public class CommandFactoryTest {
         when(visualMappingManager.getDefaultVisualStyle()).thenReturn(visualStyle);
         when(services.getVisualMappingManager()).thenReturn(visualMappingManager);
         CommandFactory commandFactory = CommandFactory.create(services);
-        ImportGraphTask task = commandFactory.createImportGraphTask();
+        AbstractImportTask task = commandFactory.createImportAllNodesAndEdgesFromNeo4jTask();
         assertNotNull("create import graph should not return null",task);
     }
 
@@ -56,18 +57,15 @@ public class CommandFactoryTest {
     public void createRetrieveDataFromQueryTemplateTask() throws Exception {
         CommandFactory commandFactory = CommandFactory.create(services);
         CypherQueryTemplate query = mock(CypherQueryTemplate.class);
-        MappingStrategy mappingStrategy = mock(MappingStrategy.class);
-        when(query.getMapping()).thenReturn(mappingStrategy);
-        ImportGraphTask task = commandFactory.createRetrieveDataFromQueryTemplateTask("Networkname", query, "visualStyle");
+        ImportQueryTemplateTask task = commandFactory.createImportQueryTemplateTask("Networkname", query, "visualStyle");
         assertNotNull("create retrieve data from query-template should not return null",task);
-        verify(mappingStrategy).accept(any());
     }
 
     @Test
     public void createExecuteCypherQueryTask() throws Exception {
         CommandFactory commandFactory = CommandFactory.create(services);
         CypherQuery query = mock(CypherQuery.class);
-        ImportGraphTask task = commandFactory.createExecuteCypherQueryTask("Networkname", query, "visualStyle");
+        AbstractImportTask task = commandFactory.createImportQueryTask("Networkname", query, "visualStyle");
         assertNotNull("create execute cypher-query should not return null",task);
     }
 }

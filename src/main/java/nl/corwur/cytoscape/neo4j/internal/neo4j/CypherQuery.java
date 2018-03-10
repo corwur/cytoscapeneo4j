@@ -3,6 +3,9 @@ package nl.corwur.cytoscape.neo4j.internal.neo4j;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class represents a Neo4j Cypher query.
+ */
 public class CypherQuery {
 
     private final String query;

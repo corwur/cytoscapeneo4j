@@ -1,7 +1,7 @@
 package nl.corwur.cytoscape.neo4j.internal.ui.importgraph.querytemplate;
 
-import nl.corwur.cytoscape.neo4j.internal.importneo4j.CopyAllMappingStrategy;
-import nl.corwur.cytoscape.neo4j.internal.importneo4j.CypherQueryTemplate;
+import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.mapping.CopyAllMappingStrategy;
+import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.CypherQueryTemplate;
 import nl.corwur.cytoscape.neo4j.internal.ui.DialogMethods;
 
 import javax.swing.*;

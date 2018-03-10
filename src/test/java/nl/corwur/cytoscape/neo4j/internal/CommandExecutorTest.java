@@ -1,5 +1,6 @@
 package nl.corwur.cytoscape.neo4j.internal;
 
+import nl.corwur.cytoscape.neo4j.internal.commands.CommandExecutor;
 import org.cytoscape.work.Task;
 import org.cytoscape.work.swing.DialogTaskManager;
 import org.junit.Test;

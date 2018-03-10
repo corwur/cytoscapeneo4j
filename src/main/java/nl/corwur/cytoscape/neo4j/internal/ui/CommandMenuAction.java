@@ -1,6 +1,6 @@
 package nl.corwur.cytoscape.neo4j.internal.ui;
 
-import nl.corwur.cytoscape.neo4j.internal.CommandExecutor;
+import nl.corwur.cytoscape.neo4j.internal.commands.CommandExecutor;
 import nl.corwur.cytoscape.neo4j.internal.Services;
 import nl.corwur.cytoscape.neo4j.internal.ui.connect.ConnectToNeo4j;
 import org.cytoscape.application.swing.AbstractCyAction;
