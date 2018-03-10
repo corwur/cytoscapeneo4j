@@ -1,10 +1,10 @@
-package nl.corwur.cytoscape.neo4j.internal.importneo4j.xml;
+package nl.corwur.cytoscape.neo4j.internal.importneo4j.template.xml;
 
 import javax.xml.bind.annotation.*;
 
 @XmlRootElement(name = "cytemplate")
 @XmlAccessorType(XmlAccessType.FIELD)
-class QueryTemplate {
+public class QueryTemplate {
 
     @XmlAttribute(name="name")
     private String name;

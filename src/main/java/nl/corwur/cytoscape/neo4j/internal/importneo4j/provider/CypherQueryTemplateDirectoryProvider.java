@@ -1,9 +1,9 @@
 package nl.corwur.cytoscape.neo4j.internal.importneo4j.provider;
 
 import nl.corwur.cytoscape.neo4j.internal.importneo4j.CypherQueryTemplate;
-import nl.corwur.cytoscape.neo4j.internal.importneo4j.xml.Reader;
-import nl.corwur.cytoscape.neo4j.internal.importneo4j.xml.ReaderException;
-import nl.corwur.cytoscape.neo4j.internal.importneo4j.xml.Writer;
+import nl.corwur.cytoscape.neo4j.internal.importneo4j.template.Reader;
+import nl.corwur.cytoscape.neo4j.internal.importneo4j.template.ReaderException;
+import nl.corwur.cytoscape.neo4j.internal.importneo4j.template.Writer;
 import org.apache.log4j.Logger;
 
 import javax.xml.bind.JAXBException;

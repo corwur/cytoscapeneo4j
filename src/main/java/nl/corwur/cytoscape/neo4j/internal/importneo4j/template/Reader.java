@@ -1,9 +1,13 @@
-package nl.corwur.cytoscape.neo4j.internal.importneo4j.xml;
+package nl.corwur.cytoscape.neo4j.internal.importneo4j.template;
 
 import nl.corwur.cytoscape.neo4j.internal.importneo4j.CopyAllMappingStrategy;
 import nl.corwur.cytoscape.neo4j.internal.importneo4j.CypherQueryTemplate;
 import nl.corwur.cytoscape.neo4j.internal.importneo4j.mapping.GraphMapping;
 import nl.corwur.cytoscape.neo4j.internal.importneo4j.mapping.values.*;
+import nl.corwur.cytoscape.neo4j.internal.importneo4j.template.xml.ColumnMapping;
+import nl.corwur.cytoscape.neo4j.internal.importneo4j.template.xml.CopyAll;
+import nl.corwur.cytoscape.neo4j.internal.importneo4j.template.xml.MappingVisitor;
+import nl.corwur.cytoscape.neo4j.internal.importneo4j.template.xml.QueryTemplate;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;

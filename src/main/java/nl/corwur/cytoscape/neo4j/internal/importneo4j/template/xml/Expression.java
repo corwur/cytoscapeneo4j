@@ -1,11 +1,11 @@
-package nl.corwur.cytoscape.neo4j.internal.importneo4j.xml;
+package nl.corwur.cytoscape.neo4j.internal.importneo4j.template.xml;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlValue;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-class Expression {
+public class Expression {
 
     @XmlValue
     private String value;

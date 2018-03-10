@@ -1,4 +1,4 @@
-package nl.corwur.cytoscape.neo4j.internal.importneo4j.xml;
+package nl.corwur.cytoscape.neo4j.internal.importneo4j.template;
 
 public class ReaderException extends Exception {
     public ReaderException(String msg) {

@@ -1,4 +1,4 @@
-package nl.corwur.cytoscape.neo4j.internal.importneo4j.xml;
+package nl.corwur.cytoscape.neo4j.internal.importneo4j.template.xml;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-class EdgeColumn {
+public class EdgeColumn {
 
     @XmlAttribute(name = "type")
     private String type;

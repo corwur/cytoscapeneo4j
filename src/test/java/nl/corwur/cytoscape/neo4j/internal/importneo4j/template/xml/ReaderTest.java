@@ -1,8 +1,9 @@
-package nl.corwur.cytoscape.neo4j.internal.importneo4j.xml;
+package nl.corwur.cytoscape.neo4j.internal.importneo4j.template.xml;
 
 import nl.corwur.cytoscape.neo4j.internal.importneo4j.CopyAllMappingStrategy;
 import nl.corwur.cytoscape.neo4j.internal.importneo4j.CypherQueryTemplate;
 import nl.corwur.cytoscape.neo4j.internal.importneo4j.mapping.GraphMapping;
+import nl.corwur.cytoscape.neo4j.internal.importneo4j.template.Reader;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
