@@ -86,6 +86,7 @@ public class CypherQueryDialog extends JDialog { //NOSONAR, hierarchy > 5
         add(queryPanel);
         add(buttonPanel,  BorderLayout.SOUTH);
 
+        setMinimumSize(new Dimension(400,300));
         DialogMethods.center(this);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setModal(true);
