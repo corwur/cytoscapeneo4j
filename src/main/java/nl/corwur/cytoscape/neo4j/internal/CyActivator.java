@@ -45,7 +45,6 @@ public class CyActivator extends AbstractCyActivator  {
         QueryTemplateMenuAction queryTemplateMenuAction = QueryTemplateMenuAction.create(services);
         CommandMenuAction importGraphMenuAction = CommandMenuAction.create("Import all nodes and edges from Neo4j",services, () -> services.getCommandFactory().createImportAllNodesAndEdgesFromNeo4jTask());
         ExportNetworkMenuAction exportNetworkToNeo4jMenuAction = ExportNetworkMenuAction.create(services);
-
         registerAllServices(context, connectAction, new Properties());
         registerAllServices(context, cypherQueryMenuAction, new Properties());
         registerAllServices(context, importGraphMenuAction, new Properties());

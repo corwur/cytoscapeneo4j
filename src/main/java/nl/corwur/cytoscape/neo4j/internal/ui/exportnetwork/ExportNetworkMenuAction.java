@@ -2,7 +2,7 @@ package nl.corwur.cytoscape.neo4j.internal.ui.exportnetwork;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
 import nl.corwur.cytoscape.neo4j.internal.commands.tasks.exportneo4j.ExportNetworkConfiguration;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.NodeLabel;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.NetworkLabel;
 import nl.corwur.cytoscape.neo4j.internal.commands.tasks.ExportNetworkToNeo4jTask;
 import nl.corwur.cytoscape.neo4j.internal.ui.DialogMethods;
 import org.cytoscape.application.swing.AbstractCyAction;
@@ -13,7 +13,11 @@ import java.awt.event.ActionEvent;
 
 public class ExportNetworkMenuAction extends AbstractCyAction {
 
-    private static final String MENU_TITLE = "Export Network to Neo4j";
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3105483618300742403L;
+	private static final String MENU_TITLE = "Export Network to Neo4j";
     private static final String MENU_LOC = "Apps.Cypher Queries";
 
     private final transient Services services;
@@ -37,16 +41,16 @@ public class ExportNetworkMenuAction extends AbstractCyAction {
             return;
         }
 
-        NodeLabel nodeLabel = getNodeLabel();
-        ExportNetworkConfiguration exportNetworkConfiguration = ExportNetworkConfiguration.create(nodeLabel, "link");
-        if (nodeLabel != null) {
+        NetworkLabel networkLabel = getNetworkLabel();
+        ExportNetworkConfiguration exportNetworkConfiguration = ExportNetworkConfiguration.create(networkLabel);
+        if (networkLabel != null) {
             ExportNetworkToNeo4jTask task = services.getCommandFactory().createExportNetworkToNeo4jTask(exportNetworkConfiguration);
             services.getCommandExecutor().execute(task);
         }
     }
 
-    private NodeLabel getNodeLabel() {
-        String message = "Enter node label for this network";
+    private NetworkLabel getNetworkLabel() {
+        String message = "Enter label for this network";
         CyNetwork currentNetwork = services.getCyApplicationManager().getCurrentNetwork();
         String initialValue = currentNetwork.getRow(currentNetwork).get(CyNetwork.NAME, String.class);
 
@@ -54,9 +58,9 @@ public class ExportNetworkMenuAction extends AbstractCyAction {
             String label = JOptionPane.showInputDialog(services.getCySwingApplication().getJFrame(), message, initialValue);
             if (label != null) {
                 try {
-                    return NodeLabel.create(label);
+                    return (NetworkLabel) NetworkLabel.create(label);
                 } catch (Exception e) {
-                    message = "Error in node label ([A-Za-z0-9])";
+                    message = "Error in network label ([A-Za-z0-9 ])";
                 }
             } else {
                 return null;
