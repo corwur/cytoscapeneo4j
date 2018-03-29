@@ -1,26 +1,21 @@
 package nl.corwur.cytoscape.neo4j.internal.commands.tasks.exportneo4j;
 
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.NodeLabel;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.NetworkLabel;
 
 public class ExportNetworkConfiguration {
-    private final NodeLabel nodeLabel;
-    private final String relationship;
+    private final NetworkLabel networkLabel;
+    
 
-    public ExportNetworkConfiguration(NodeLabel nodeLabel, String relationship) {
-        this.nodeLabel = nodeLabel;
-        this.relationship = relationship;
+    public ExportNetworkConfiguration(NetworkLabel networkLabel) {
+        this.networkLabel = networkLabel;
     }
 
-    public NodeLabel getNodeLabel() {
-        return nodeLabel;
-    }
-
-    public String getRelationship() {
-        return relationship;
+    public NetworkLabel getNetworkLabel() {
+        return networkLabel;
     }
 
 
-    public static ExportNetworkConfiguration create(NodeLabel nodeLabel, String relationship) {
-        return new ExportNetworkConfiguration(nodeLabel, relationship);
+    public static ExportNetworkConfiguration create(NetworkLabel networkLabel) {
+        return new ExportNetworkConfiguration(networkLabel);
     }
 }

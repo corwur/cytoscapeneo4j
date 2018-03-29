@@ -10,7 +10,7 @@ public class AddNodeCommand {
     private Map<String, Object> nodeProperties;
     private Long nodeId;
     private NodeLabel label = null;
-    
+
     public void setNodeProperties(Map<String, Object> nodeProperties) {
         this.nodeProperties = nodeProperties;
     }
@@ -33,4 +33,8 @@ public class AddNodeCommand {
     public void setNodeLabel(NodeLabel label) {
     	this.label = label;
     }
+
+	public void setNetworkLabel(NetworkLabel label) {
+		this.nodeProperties.put("_cytoscape_network", label.getLabel());
+	}
 }

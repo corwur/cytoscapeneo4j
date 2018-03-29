@@ -37,7 +37,7 @@ public class Neo4jClient {
             StatementResult statementResult = session.run(cypherQuery.getQuery(), cypherQuery.getParams());
             return statementResult.list( neo4JGraphFactory::create);
         } catch (Exception e) {
-            throw new Neo4jClientException();
+            throw new Neo4jClientException(e.getMessage(), e);
         }
     }
 
@@ -55,22 +55,21 @@ public class Neo4jClient {
 
     public void executeCommand(AddEdgeCommand cmd) throws Neo4jClientException {
         CypherQuery cypherQuery = CypherQuery.builder()
-                .query("MATCH (s:" + cmd.getNodeLabel().getLabel() + " {suid:$startNodeId}), (e:" + cmd.getNodeLabel().getLabel() + " {suid:$endNodeId}) CREATE (s) -[:LINK]-> (e)")
+                .query("MATCH (s {suid:$startNodeId}), (e {suid:$endNodeId}) CREATE (s) -[:`" + cmd.getRelationship() + "` $props]-> (e)")
                 .params("startNodeId", cmd.getStartId())
                 .params("endNodeId", cmd.getEndId())
-                .params("relationship", cmd.getRelationship())
-                .params(cmd.getEdgeProperties())
+                .params("props", cmd.getEdgeProperties())
                 .build();
         executeQuery(cypherQuery);
     }
 
     public void executeCommand(AddNodeCommand cmd) throws Neo4jClientException {
     	NodeLabel nodeName = cmd.getNodeLabel();
-        CypherQuery removerQuery = CypherQuery.builder().query("MATCH(n {suid:$suid}) DELETE n")
+        CypherQuery removerQuery = CypherQuery.builder().query("MATCH(n {suid:$suid}) DETACH DELETE n")
                 .params("suid", cmd.getNodeId())
                 .build();
         executeQuery(removerQuery);
-        CypherQuery insertQuery = CypherQuery.builder().query("CREATE(n:" + nodeName.getLabel() + " $props) SET n.suid=$suid")
+        CypherQuery insertQuery = CypherQuery.builder().query("CREATE(n:`" + nodeName.getLabel() + "` $props) SET n.suid=$suid")
                 .params("props",cmd.getNodeProperties())
                 .params("suid", cmd.getNodeId())
                 .build();
