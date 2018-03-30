@@ -1,6 +1,7 @@
 package nl.corwur.cytoscape.neo4j.internal.commands.tasks.exportneo4j;
 
 import nl.corwur.cytoscape.neo4j.internal.graph.commands.NodeLabel;
+import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyRow;
@@ -27,11 +28,18 @@ public class ExportNetworkConfigurationTest {
     private CyNode cyNode;
 
     @Mock
+    private CyEdge cyEdge;
+
+    @Mock
     private CyRow cyRow;
+
+    @Mock
+    private CyRow cyEdgeRow;
 
     @Before
     public void before() {
         when(cyNetwork.getRow(cyNode)).thenReturn(cyRow);
+        when(cyNetwork.getRow(cyEdge)).thenReturn(cyEdgeRow);
     }
 
     @Test
@@ -47,9 +55,20 @@ public class ExportNetworkConfigurationTest {
 
         when(cyRow.get("shared name", String.class)).thenReturn("name");
 
-        ExportNetworkConfiguration exportNetworkConfiguration = ExportNetworkConfiguration.create(NodeLabel.create("label"), "relationship", "refId", "label", "props");
+        when(cyEdgeRow.isSet("shared name")).thenReturn(true);
+        when(cyEdgeRow.getRaw("shared name")).thenReturn("link");
+        when(cyEdgeRow.get("shared name", String.class)).thenReturn("link");
+
+        ExportNetworkConfiguration exportNetworkConfiguration =
+                ExportNetworkConfiguration.create(
+                        NodeLabel.create("label"),
+                        "shared name",
+                        "refId",
+                        "label",
+                        "props"
+                );
         assertEquals("label", exportNetworkConfiguration.getNodeLabel().getLabel());
-        assertEquals("relationship", exportNetworkConfiguration.getRelationship());
+        assertEquals("link", exportNetworkConfiguration.getRelationship(cyNetwork, cyEdge));
         assertEquals("refId", exportNetworkConfiguration.getNodeReferenceIdColumn());
         assertEquals("props", exportNetworkConfiguration.getNodePropertiesColumnName());
         assertEquals(2, exportNetworkConfiguration.getNodeLabels(cyNode, cyNetwork).size());
@@ -67,6 +86,16 @@ public class ExportNetworkConfigurationTest {
         ExportNetworkConfiguration exportNetworkConfiguration = ExportNetworkConfiguration.create(NodeLabel.create("label"), "relationship", "refId", "label", "props");
         assertEquals(1l, exportNetworkConfiguration.getNodeReferenceId(cyNode, cyNetwork));
         verify(cyNode).getSUID();
+    }
+
+    @Test
+    public void relationshipDefault() {
+
+        when(cyEdgeRow.isSet("relationship")).thenReturn(false);
+        ExportNetworkConfiguration exportNetworkConfiguration =
+                ExportNetworkConfiguration.create(
+                        NodeLabel.create("label"), "relationship", "refId", "label", "props");
+        assertEquals("relationship", exportNetworkConfiguration.getRelationship(cyNetwork, cyEdge));
     }
 
 }

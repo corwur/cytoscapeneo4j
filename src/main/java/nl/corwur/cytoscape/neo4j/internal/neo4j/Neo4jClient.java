@@ -3,6 +3,7 @@ package nl.corwur.cytoscape.neo4j.internal.neo4j;
 import nl.corwur.cytoscape.neo4j.internal.graph.commands.AddEdgeCommand;
 import nl.corwur.cytoscape.neo4j.internal.graph.commands.AddNodeCommand;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphObject;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.Label;
 import nl.corwur.cytoscape.neo4j.internal.graph.commands.NodeLabel;
 import org.neo4j.driver.v1.*;
 import org.neo4j.driver.v1.exceptions.AuthenticationException;
@@ -65,7 +66,7 @@ public class Neo4jClient {
     }
 
     public void executeCommand(AddNodeCommand cmd) throws Neo4jClientException {
-    	NodeLabel nodeName = cmd.getNodeLabel();
+    	Label nodeName = cmd.getNodeLabel();
     	String nodeIdMatchClause = cmd.getNodeIdPropertyName()+ ":$" + cmd.getNodeIdPropertyName();
         String nodeIdSetClause = "n." + cmd.getNodeIdPropertyName()+ "=$" + cmd.getNodeIdPropertyName();
         String nodeNameSetClause = "n.name ='" + cmd.getNodeName() + "'";

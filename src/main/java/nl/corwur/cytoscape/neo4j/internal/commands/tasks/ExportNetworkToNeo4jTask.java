@@ -41,7 +41,7 @@ public class ExportNetworkToNeo4jTask extends AbstractTask {
                 taskMonitor.setStatusMessage("Exporting nodes");
                 cyNetwork.getNodeList().forEach(node -> copyNodeToNeo4j(cyNetwork, node));
                 taskMonitor.setStatusMessage("Exporting edges");
-                cyNetwork.getEdgeList().forEach(edge -> copyEdgeToNeo4j(cyNetwork, edge, exportNetworkConfiguration.getRelationship()));
+                cyNetwork.getEdgeList().forEach(edge -> copyEdgeToNeo4j(cyNetwork, edge));
             }
 
         } catch (Exception e) {
@@ -49,7 +49,7 @@ public class ExportNetworkToNeo4jTask extends AbstractTask {
         }
     }
 
-    private void copyEdgeToNeo4j(CyNetwork cyNetwork, CyEdge cyEdge, String relationship)  {
+    private void copyEdgeToNeo4j(CyNetwork cyNetwork, CyEdge cyEdge)  {
         try {
             CyRow edgeRow = cyNetwork.getRow(cyEdge);
 
@@ -59,7 +59,7 @@ public class ExportNetworkToNeo4jTask extends AbstractTask {
             AddEdgeCommand cmd = new AddEdgeCommand();
             cmd.setStartId(startId);
             cmd.setEndId(endId);
-            cmd.setRelationship(exportNetworkConfiguration.getRelationship(cyNetwork));//(String)cyRow.get("shared name", cyNetwork.getDefaultEdgeTable().getColumn("shared name").getType()
+            cmd.setRelationship(exportNetworkConfiguration.getRelationship(cyNetwork, cyEdge));
             cmd.setRelationshipName("_neo4j_link");
             cmd.setEndNodeIdProperty(exportNetworkConfiguration.getNodeReferenceIdColumn());
             cmd.setEndNodeIdParameter("end_id");

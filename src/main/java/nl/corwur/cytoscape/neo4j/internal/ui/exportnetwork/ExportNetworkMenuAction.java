@@ -2,6 +2,7 @@ package nl.corwur.cytoscape.neo4j.internal.ui.exportnetwork;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
 import nl.corwur.cytoscape.neo4j.internal.commands.tasks.exportneo4j.ExportNetworkConfiguration;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.Label;
 import nl.corwur.cytoscape.neo4j.internal.graph.commands.NodeLabel;
 import nl.corwur.cytoscape.neo4j.internal.commands.tasks.ExportNetworkToNeo4jTask;
 import nl.corwur.cytoscape.neo4j.internal.ui.DialogMethods;
@@ -41,15 +42,21 @@ public class ExportNetworkMenuAction extends AbstractCyAction {
             return;
         }
 
-        NodeLabel nodeLabel = getNodeLabel();
-        ExportNetworkConfiguration exportNetworkConfiguration = ExportNetworkConfiguration.create(nodeLabel, "link", "refid", "_neo4j_labels", "_neo4j_properties");
-        if (nodeLabel != null) {
+        Label label = getNodeLabel();
+        ExportNetworkConfiguration exportNetworkConfiguration = ExportNetworkConfiguration.create(
+                label,
+                "shared name",
+                "refid",
+                "_neo4j_labels",
+                "_neo4j_properties"
+        );
+        if (label != null) {
             ExportNetworkToNeo4jTask task = services.getCommandFactory().createExportNetworkToNeo4jTask(exportNetworkConfiguration);
             services.getCommandExecutor().execute(task);
         }
     }
 
-    private NodeLabel getNodeLabel() {
+    private Label getNodeLabel() {
         String message = "Enter node label for this network";
         CyNetwork currentNetwork = services.getCyApplicationManager().getCurrentNetwork();
         String initialValue = currentNetwork.getRow(currentNetwork).get(CyNetwork.NAME, String.class);
