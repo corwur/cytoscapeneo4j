@@ -37,7 +37,7 @@ public class Neo4jClient {
             StatementResult statementResult = session.run(cypherQuery.getQuery(), cypherQuery.getParams());
             return statementResult.list( neo4JGraphFactory::create);
         } catch (Exception e) {
-            throw new Neo4jClientException();
+            throw new Neo4jClientException(e.getMessage(), e);
         }
     }
 

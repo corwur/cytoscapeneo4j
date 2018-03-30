@@ -37,6 +37,7 @@ public class ExportNetworkToNeo4jTask extends AbstractTask {
             if(cyNetwork == null) {
                 taskMonitor.showMessage(TaskMonitor.Level.WARN, "No network selected");
             } else {
+            	// @TODO proper export: Label names from shared names and correct edge names and properties
                 taskMonitor.setStatusMessage("Exporting nodes");
                 cyNetwork.getNodeList().forEach(node -> copyNodeToNeo4j(cyNetwork, node));
                 taskMonitor.setStatusMessage("Exporting edges");
@@ -58,7 +59,7 @@ public class ExportNetworkToNeo4jTask extends AbstractTask {
             AddEdgeCommand cmd = new AddEdgeCommand();
             cmd.setStartId(startId);
             cmd.setEndId(endId);
-            cmd.setRelationship(relationship);
+            cmd.setRelationship(exportNetworkConfiguration.getRelationship(cyNetwork));//(String)cyRow.get("shared name", cyNetwork.getDefaultEdgeTable().getColumn("shared name").getType()
             cmd.setRelationshipName("_neo4j_link");
             cmd.setEndNodeIdProperty(exportNetworkConfiguration.getNodeReferenceIdColumn());
             cmd.setEndNodeIdParameter("end_id");
@@ -70,7 +71,7 @@ public class ExportNetworkToNeo4jTask extends AbstractTask {
             cmd.setNodeLabel(exportNetworkConfiguration.getNodeLabel());
             services.getNeo4jClient().executeCommand(cmd);
         } catch (Neo4jClientException e) {
-            throw new IllegalStateException("Error copying to Neo4j", e);
+            throw new IllegalStateException("Error copying edges to Neo4j: " + e.getMessage(), e);
         }
     }
 
@@ -91,7 +92,7 @@ public class ExportNetworkToNeo4jTask extends AbstractTask {
             cmd.setNodeName(exportNetworkConfiguration.getNodeName(cyNetwork, cyNode));
             services.getNeo4jClient().executeCommand(cmd);
         } catch (Neo4jClientException e) {
-            throw new IllegalStateException("Error copying to Neo4j", e);
+            throw new IllegalStateException("Error copying nodes to Neo4j:" + e.getMessage(), e);
         }
     }
 }

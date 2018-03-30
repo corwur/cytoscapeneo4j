@@ -7,7 +7,7 @@ The plugin can be downloaded form the [Cytoscape App Store](http://apps.cytoscap
 
 ##Features
 - Connect to Neo4j with a username/password
-- Import all nodes and edges from Neo4j into Cystoscape
+- Import all nodes and edges from Neo4j into Cytoscape
 - Import a cypher query into Cystoscape
 - Import a stored query ([template](doc/template.md)) into Cytoscape
 - Export a Cytoscape Network to Neo4j

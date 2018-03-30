@@ -13,7 +13,11 @@ import java.awt.event.ActionEvent;
 
 public class ExportNetworkMenuAction extends AbstractCyAction {
 
-    private static final String MENU_TITLE = "Export Network to Neo4j";
+    /**
+	 *
+	 */
+	private static final long serialVersionUID = -3105483618300742403L;
+	private static final String MENU_TITLE = "Export Network to Neo4j";
     private static final String MENU_LOC = "Apps.Cypher Queries";
 
     private final transient Services services;
