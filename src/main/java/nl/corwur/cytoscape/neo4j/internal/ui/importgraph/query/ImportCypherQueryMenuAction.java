@@ -1,4 +1,4 @@
-package nl.corwur.cytoscape.neo4j.internal.ui.importgraph;
+package nl.corwur.cytoscape.neo4j.internal.ui.importgraph.query;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
@@ -12,18 +12,18 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.stream.Collectors;
 
-public class CypherQueryMenuAction extends AbstractCyAction {
+public class ImportCypherQueryMenuAction extends AbstractCyAction {
 
     private static final String MENU_TITLE = "Import Cypher Query";
     private static final String MENU_LOC = "Apps.Cypher Queries";
 
     private final transient Services services;
 
-    public static CypherQueryMenuAction create(Services services) {
-        return new CypherQueryMenuAction(services);
+    public static ImportCypherQueryMenuAction create(Services services) {
+        return new ImportCypherQueryMenuAction(services);
     }
 
-    private CypherQueryMenuAction(Services services) {
+    private ImportCypherQueryMenuAction(Services services) {
         super(MENU_TITLE);
         this.services = services;
         setPreferredMenu(MENU_LOC);

@@ -35,13 +35,8 @@ public class CommandFactoryTest {
 
     @Test
     public void createImportGraphTask() throws Exception {
-        VisualMappingManager visualMappingManager = mock(VisualMappingManager.class);
-        VisualStyle visualStyle = mock(VisualStyle.class);
-        when(visualStyle.getTitle()).thenReturn("Default Style");
-        when(visualMappingManager.getDefaultVisualStyle()).thenReturn(visualStyle);
-        when(services.getVisualMappingManager()).thenReturn(visualMappingManager);
         CommandFactory commandFactory = CommandFactory.create(services);
-        AbstractImportTask task = commandFactory.createImportAllNodesAndEdgesFromNeo4jTask();
+        AbstractImportTask task = commandFactory.createImportAllNodesAndEdgesFromNeo4jTask("Network", "default");
         assertNotNull("create import graph should not return null",task);
     }
 

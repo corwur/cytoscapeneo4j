@@ -55,24 +55,36 @@ public class Neo4jClient {
 
     public void executeCommand(AddEdgeCommand cmd) throws Neo4jClientException {
         CypherQuery cypherQuery = CypherQuery.builder()
-                .query("MATCH (s:" + cmd.getNodeLabel().getLabel() + " {suid:$startNodeId}), (e:" + cmd.getNodeLabel().getLabel() + " {suid:$endNodeId}) CREATE (s) -[:LINK]-> (e)")
-                .params("startNodeId", cmd.getStartId())
-                .params("endNodeId", cmd.getEndId())
-                .params("relationship", cmd.getRelationship())
-                .params(cmd.getEdgeProperties())
+                .query("MATCH (s:" + cmd.getNodeLabel().getLabel() + " {"+cmd.getStartNodeIdProperty()+":$"+cmd.getStartNodeIdParameter()+"}), (e:" + cmd.getNodeLabel().getLabel() + " {"+cmd.getEndNodeIdProperty()+":$"+cmd.getEndNodeIdParameter()+"}) CREATE (s) -[:" + cmd.getRelationship() + " $" + cmd.getEdgePropertiesName() + "]-> (e)")
+                .params(cmd.getStartNodeIdParameter(), cmd.getStartId())
+                .params(cmd.getEndNodeIdParameter(), cmd.getEndId())
+                .params(cmd.getRelationshipName(), cmd.getRelationship())
+                .params(cmd.getEdgePropertiesName(), cmd.getEdgeProperties())
                 .build();
         executeQuery(cypherQuery);
     }
 
     public void executeCommand(AddNodeCommand cmd) throws Neo4jClientException {
     	NodeLabel nodeName = cmd.getNodeLabel();
-        CypherQuery removerQuery = CypherQuery.builder().query("MATCH(n {suid:$suid}) DELETE n")
-                .params("suid", cmd.getNodeId())
+    	String nodeIdMatchClause = cmd.getNodeIdPropertyName()+ ":$" + cmd.getNodeIdPropertyName();
+        String nodeIdSetClause = "n." + cmd.getNodeIdPropertyName()+ "=$" + cmd.getNodeIdPropertyName();
+        String nodeNameSetClause = "n.name ='" + cmd.getNodeName() + "'";
+        String nodeLabelClause = cmd.getNodeLabelList().stream().reduce( "", (str, label) -> str + ":" + label.getLabel(), (s1, s2) -> s1 + s2);
+
+        CypherQuery removerRelationsQuery = CypherQuery.builder().query("MATCH(n:" + nodeName.getLabel() + " {" + nodeIdMatchClause + "}) - [r] - (e) DELETE r")
+                .params(cmd.getNodeIdPropertyName(), cmd.getNodeId())
+                .build();
+        executeQuery(removerRelationsQuery);
+
+        CypherQuery removerQuery = CypherQuery.builder().query("MATCH(n:" + nodeName.getLabel() + " {" + nodeIdMatchClause + "}) DELETE n")
+                .params(cmd.getNodeIdPropertyName(), cmd.getNodeId())
                 .build();
         executeQuery(removerQuery);
-        CypherQuery insertQuery = CypherQuery.builder().query("CREATE(n:" + nodeName.getLabel() + " $props) SET n.suid=$suid")
-                .params("props",cmd.getNodeProperties())
-                .params("suid", cmd.getNodeId())
+        CypherQuery insertQuery = CypherQuery.builder().query(
+                "CREATE(n:" + nodeName.getLabel() + " $" +cmd.getNodePropertiesName()+ ") " +
+                        "SET " + nodeNameSetClause + ", " + nodeIdSetClause + (nodeLabelClause.isEmpty() ? "" : ", n" + nodeLabelClause))
+                .params(cmd.getNodePropertiesName(),cmd.getNodeProperties())
+                .params(cmd.getNodeIdPropertyName(), cmd.getNodeId())
                 .build();
         executeQuery(insertQuery);
     }

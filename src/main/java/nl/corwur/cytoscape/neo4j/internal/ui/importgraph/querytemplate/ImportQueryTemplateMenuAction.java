@@ -11,17 +11,17 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.stream.Collectors;
 
-public class QueryTemplateMenuAction extends AbstractCyAction {
+public class ImportQueryTemplateMenuAction extends AbstractCyAction {
 
     private static final String MENU_TITLE = "Import Stored Cypher Query";
     private static final String MENU_LOC = "Apps.Cypher Queries";
     private final transient Services services;
 
-    public static QueryTemplateMenuAction create(Services services) {
-        return new QueryTemplateMenuAction(services);
+    public static ImportQueryTemplateMenuAction create(Services services) {
+        return new ImportQueryTemplateMenuAction(services);
     }
 
-    private QueryTemplateMenuAction(Services services) {
+    private ImportQueryTemplateMenuAction(Services services) {
         super(MENU_TITLE);
         setPreferredMenu(MENU_LOC);
         this.services =services;

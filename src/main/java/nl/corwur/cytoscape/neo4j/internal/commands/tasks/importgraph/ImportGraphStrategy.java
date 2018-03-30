@@ -11,4 +11,5 @@ public interface ImportGraphStrategy {
     void createTables(CyNetwork network);
     void handleNode(CyNetwork network, GraphNode graphNode);
     void handleEdge(CyNetwork network, GraphEdge graphEdge);
+    void postProcess(CyNetwork network);
 }

@@ -70,6 +70,11 @@ public class GraphMappingImportStrategy implements ImportGraphStrategy {
         }
     }
 
+    @Override
+    public void postProcess(CyNetwork network) {
+
+    }
+
     private boolean edgeExists(CyNetwork network, long id) {
         String edgeRefereceIdColumn = graphMapping.getEdgeReferenceIdColumn();
         return ! network

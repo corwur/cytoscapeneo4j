@@ -38,7 +38,7 @@ public class ExportNetworkMenuAction extends AbstractCyAction {
         }
 
         NodeLabel nodeLabel = getNodeLabel();
-        ExportNetworkConfiguration exportNetworkConfiguration = ExportNetworkConfiguration.create(nodeLabel, "link");
+        ExportNetworkConfiguration exportNetworkConfiguration = ExportNetworkConfiguration.create(nodeLabel, "link", "refid", "_neo4j_labels", "_neo4j_properties");
         if (nodeLabel != null) {
             ExportNetworkToNeo4jTask task = services.getCommandFactory().createExportNetworkToNeo4jTask(exportNetworkConfiguration);
             services.getCommandExecutor().execute(task);

@@ -27,6 +27,7 @@ public class ImportGraphToCytoscapeGraphVisitor implements GraphVisitor {
         cancel();
         importGraphStrategy.createTables(network);
         list.forEach(item -> item.accept(this));
+        importGraphStrategy.postProcess(network);
     }
 
     @Override

@@ -7,8 +7,9 @@ import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClient;
 import nl.corwur.cytoscape.neo4j.internal.ui.CommandMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.connect.ConnectInstanceMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.exportnetwork.ExportNetworkMenuAction;
-import nl.corwur.cytoscape.neo4j.internal.ui.importgraph.CypherQueryMenuAction;
-import nl.corwur.cytoscape.neo4j.internal.ui.importgraph.querytemplate.QueryTemplateMenuAction;
+import nl.corwur.cytoscape.neo4j.internal.ui.importgraph.all.ImportAllNodesAndEdgesMenuAction;
+import nl.corwur.cytoscape.neo4j.internal.ui.importgraph.query.ImportCypherQueryMenuAction;
+import nl.corwur.cytoscape.neo4j.internal.ui.importgraph.querytemplate.ImportQueryTemplateMenuAction;
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.CySwingApplication;
 import org.cytoscape.event.CyEventHelper;
@@ -41,15 +42,15 @@ public class CyActivator extends AbstractCyActivator  {
         Services services = createServices(context);
 
         ConnectInstanceMenuAction connectAction = ConnectInstanceMenuAction.create(services);
-        CypherQueryMenuAction cypherQueryMenuAction = CypherQueryMenuAction.create(services);
-        QueryTemplateMenuAction queryTemplateMenuAction = QueryTemplateMenuAction.create(services);
-        CommandMenuAction importGraphMenuAction = CommandMenuAction.create("Import all nodes and edges from Neo4j",services, () -> services.getCommandFactory().createImportAllNodesAndEdgesFromNeo4jTask());
+        ImportCypherQueryMenuAction importQypherQueryMenuAction = ImportCypherQueryMenuAction.create(services);
+        ImportQueryTemplateMenuAction importImportQueryTemplateMenuAction = ImportQueryTemplateMenuAction.create(services);
+        ImportAllNodesAndEdgesMenuAction importAllNodesAndEdgesMenuAction = ImportAllNodesAndEdgesMenuAction.create(services);
         ExportNetworkMenuAction exportNetworkToNeo4jMenuAction = ExportNetworkMenuAction.create(services);
 
         registerAllServices(context, connectAction, new Properties());
-        registerAllServices(context, cypherQueryMenuAction, new Properties());
-        registerAllServices(context, importGraphMenuAction, new Properties());
-        registerAllServices(context, queryTemplateMenuAction, new Properties() );
+        registerAllServices(context, importQypherQueryMenuAction, new Properties());
+        registerAllServices(context, importAllNodesAndEdgesMenuAction, new Properties());
+        registerAllServices(context, importImportQueryTemplateMenuAction, new Properties() );
         registerAllServices(context, exportNetworkToNeo4jMenuAction, new Properties());
     }
 

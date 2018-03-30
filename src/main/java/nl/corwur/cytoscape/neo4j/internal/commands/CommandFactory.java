@@ -26,11 +26,11 @@ public class CommandFactory {
         this.services = services;
     }
 
-    public ImportAllNodesAndEdgesFromNeo4JTask createImportAllNodesAndEdgesFromNeo4jTask() {
+    public ImportAllNodesAndEdgesFromNeo4JTask createImportAllNodesAndEdgesFromNeo4jTask(String network, String visualStyle) {
         return new ImportAllNodesAndEdgesFromNeo4JTask(
                 services,
-                "Network",
-                services.getVisualMappingManager().getDefaultVisualStyle().getTitle());
+                network,
+                visualStyle);
     }
     public ExportNetworkToNeo4jTask createExportNetworkToNeo4jTask(ExportNetworkConfiguration exportNetworkConfiguration) {
         return new ExportNetworkToNeo4jTask(services, exportNetworkConfiguration);

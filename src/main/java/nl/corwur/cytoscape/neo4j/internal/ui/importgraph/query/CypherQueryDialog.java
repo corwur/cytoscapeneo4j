@@ -1,11 +1,9 @@
-package nl.corwur.cytoscape.neo4j.internal.ui.importgraph;
+package nl.corwur.cytoscape.neo4j.internal.ui.importgraph.query;
 
 import nl.corwur.cytoscape.neo4j.internal.ui.DialogMethods;
 
 import javax.swing.*;
 import java.awt.*;
-
-import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
 public class CypherQueryDialog extends JDialog { //NOSONAR, hierarchy > 5
 
