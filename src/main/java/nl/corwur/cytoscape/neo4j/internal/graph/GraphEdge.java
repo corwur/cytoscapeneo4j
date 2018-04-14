@@ -1,7 +1,10 @@
 package nl.corwur.cytoscape.neo4j.internal.graph;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * This class represents an edge in a graph.
@@ -9,7 +12,7 @@ import java.util.Optional;
 public class GraphEdge implements GraphObject {
     private long start;
     private long end;
-    private Map<String, Object> properties;
+    private Map<String, Object> properties = new ConcurrentHashMap<>();
     private String type;
     private long id;
 
@@ -35,11 +38,11 @@ public class GraphEdge implements GraphObject {
     }
 
     public void setProperties(Map<String, Object> properties) {
-        this.properties = properties;
+        this.properties.putAll(properties);
     }
 
     public Map<String, Object> getProperties() {
-        return properties;
+        return Collections.unmodifiableMap(properties);
     }
 
     public void setType(String type) {
@@ -69,4 +72,15 @@ public class GraphEdge implements GraphObject {
     }
 
 
+    GraphEdge merge(GraphEdge that) {
+        this.properties.putAll(that.properties.keySet()
+                    .stream()
+                    .filter(key -> !this.properties.containsKey(key))
+                    .collect(Collectors.toMap(key -> key, key -> that.properties.get(key)))
+            );
+        if(that.type != null) {
+            this.type = type;
+        }
+        return this;
+    }
 }

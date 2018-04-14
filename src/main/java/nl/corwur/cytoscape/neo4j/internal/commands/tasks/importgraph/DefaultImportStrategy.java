@@ -1,5 +1,6 @@
 package nl.corwur.cytoscape.neo4j.internal.commands.tasks.importgraph;
 
+import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphEdge;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphNode;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphObjectList;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class implements an import strategy that copies all labels and properties
+ * This class implements an import strategy that copies all labels and properties to cytoscape
  */
 public class DefaultImportStrategy implements ImportGraphStrategy {
 
@@ -48,13 +49,14 @@ public class DefaultImportStrategy implements ImportGraphStrategy {
         }
     }
 
-    public void handleNode(CyNetwork network, GraphNode graphNode) {
+
+    public void copyNode(CyNetwork network, GraphNode graphNode) {
         long nodeId = Long.valueOf(graphNode.getProperties().getOrDefault(COLUMN_REFERENCEID, graphNode.getId()).toString());
         idMap.put(graphNode.getId(), nodeId);
         nodeMap.putIfAbsent(nodeId, graphNode);
     }
 
-    public void handleEdge(CyNetwork network, GraphEdge graphEdge) {
+    public void copyEdge(CyNetwork network, GraphEdge graphEdge) {
         edges.add(graphEdge);
     }
 

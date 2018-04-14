@@ -77,12 +77,11 @@ class Neo4jGraphFactory {
     }
 
     private GraphNode create(org.neo4j.driver.v1.types.Node node) {
-        GraphNode graphNode = new GraphNode();
+        GraphNode graphNode = new GraphNode(node.id());
         graphNode.setProperties(node.asMap());
         for(String label :node.labels()) {
             graphNode.addLabel(label);
         }
-        graphNode.setId(node.id());
         return graphNode;
     }
 }

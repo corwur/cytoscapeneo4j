@@ -1,20 +1,22 @@
 package nl.corwur.cytoscape.neo4j.internal.graph;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * This class represents a node in a graph.
  */
 public class GraphNode implements GraphObject {
 
-    private Map<String, Object> properties;
+    private Map<String, Object> properties = new HashMap<>();
     private List<String> labels = new ArrayList<>();
     private long id;
+
+    public GraphNode(long id) {
+        this.id = id;
+    }
 
     @Override
     public void accept(GraphVisitor graphVisitor) {
@@ -22,7 +24,7 @@ public class GraphNode implements GraphObject {
     }
 
     public void setProperties(Map<String, Object> properties) {
-        this.properties = properties;
+        this.properties.putAll(properties);
     }
 
     public Map<String, Object> getProperties() {
@@ -71,5 +73,32 @@ public class GraphNode implements GraphObject {
 
     public void ifLabelPresent(String label, Consumer<String> consumer) {
         labels.stream().filter(val -> val.equalsIgnoreCase(label)).findFirst().ifPresent(consumer);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GraphNode graphNode = (GraphNode) o;
+        return id == graphNode.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    GraphNode merge(GraphNode that) {
+        this.labels.addAll(
+                that.labels.stream()
+                        .filter(label -> !this.labels.contains(label))
+                        .collect(Collectors.toList())
+        );
+        this.properties.putAll(that.properties.keySet()
+                .stream()
+                .filter(key -> !this.properties.containsKey(key))
+                .collect(Collectors.toMap(key -> key, key -> that.properties.get(key)))
+        );
+        return this;
     }
 }

@@ -43,7 +43,7 @@ public class GraphMappingImportStrategy implements ImportGraphStrategy {
     }
 
     @Override
-    public void handleNode(CyNetwork network, GraphNode graphNode) {
+    public void copyNode(CyNetwork network, GraphNode graphNode) {
         CyNode cyNode = getNodeByIdOrElseCreate(network, graphNode.getId());
         CyRow cyRow = network.getRow(cyNode);
         for(NodeColumnMapping<?> nodeColumnMapping : graphMapping.getNodeColumnMapping()) {
@@ -52,7 +52,7 @@ public class GraphMappingImportStrategy implements ImportGraphStrategy {
     }
 
     @Override
-    public void handleEdge(CyNetwork network, GraphEdge graphEdge) {
+    public void copyEdge(CyNetwork network, GraphEdge graphEdge) {
 
         if(edgeExists(network, graphEdge.getId())) {
             return;

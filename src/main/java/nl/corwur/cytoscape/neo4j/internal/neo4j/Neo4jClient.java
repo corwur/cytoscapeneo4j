@@ -1,5 +1,6 @@
 package nl.corwur.cytoscape.neo4j.internal.neo4j;
 
+import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
 import nl.corwur.cytoscape.neo4j.internal.graph.commands.AddEdgeCommand;
 import nl.corwur.cytoscape.neo4j.internal.graph.commands.AddNodeCommand;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphObject;
@@ -33,10 +34,18 @@ public class Neo4jClient {
             return false;
         }
     }
-    public List<GraphObject> executeQuery(CypherQuery cypherQuery) throws Neo4jClientException {
+
+    public void executeQuery(CypherQuery cypherQuery) throws Neo4jClientException {
+        try (Session session = driver.session()) {
+            session.run(cypherQuery.getQuery(), cypherQuery.getParams());
+        } catch (Exception e) {
+            throw new Neo4jClientException(e.getMessage(), e);
+        }
+    }
+    public Graph getGraph(CypherQuery cypherQuery) throws Neo4jClientException {
         try (Session session = driver.session()) {
             StatementResult statementResult = session.run(cypherQuery.getQuery(), cypherQuery.getParams());
-            return statementResult.list( neo4JGraphFactory::create);
+            return Graph.createFrom(statementResult.list(neo4JGraphFactory::create));
         } catch (Exception e) {
             throw new Neo4jClientException(e.getMessage(), e);
         }

@@ -2,8 +2,8 @@ package nl.corwur.cytoscape.neo4j.internal.commands.tasks;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
 import nl.corwur.cytoscape.neo4j.internal.commands.tasks.importgraph.ImportGraphStrategy;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.importgraph.ImportGraphToCytoscapeGraphVisitor;
-import nl.corwur.cytoscape.neo4j.internal.graph.GraphObject;
+import nl.corwur.cytoscape.neo4j.internal.commands.tasks.importgraph.ImportGraphToCytoscape;
+import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClientException;
 import org.cytoscape.event.CyEventHelper;
@@ -17,7 +17,6 @@ import org.cytoscape.work.AbstractTask;
 import org.cytoscape.work.TaskMonitor;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -46,7 +45,7 @@ public abstract class AbstractImportTask extends AbstractTask {
 
             taskMonitor.setStatusMessage("Execute query");
             explainQuery(cypherQuery);
-            CompletableFuture<List<GraphObject>> result = CompletableFuture.supplyAsync(() -> executeQuery(cypherQuery));
+            CompletableFuture<Graph> result = CompletableFuture.supplyAsync(() -> getGraph(cypherQuery));
 
             while(!result.isDone()) {
                 if(this.cancelled) {
@@ -58,7 +57,7 @@ public abstract class AbstractImportTask extends AbstractTask {
                 throw new IllegalStateException("Error executing cypher query");
             }
 
-            List<GraphObject> graphObjects = result.get();
+            Graph graph = result.get();
 
             taskMonitor.setTitle("Importing the Neo4j Graph " + networkName);
 
@@ -67,10 +66,10 @@ public abstract class AbstractImportTask extends AbstractTask {
             network.getRow(network).set(CyNetwork.NAME, networkName);
             services.getCyNetworkManager().addNetwork(network);
 
-            ImportGraphToCytoscapeGraphVisitor cypherParser = new ImportGraphToCytoscapeGraphVisitor(network, importGraphStrategy, () -> this.cancelled);
+            ImportGraphToCytoscape cypherParser = new ImportGraphToCytoscape(network, importGraphStrategy, () -> this.cancelled);
 
             taskMonitor.setStatusMessage("Importing graph");
-            cypherParser.importGraph(graphObjects);
+            cypherParser.importGraph(graph);
 
             CyEventHelper cyEventHelper = services.getCyEventHelper();
             cyEventHelper.flushPayloadEvents();
@@ -99,9 +98,9 @@ public abstract class AbstractImportTask extends AbstractTask {
         services.getNeo4jClient().explainQuery(cypherQuery);
     }
 
-    private List<GraphObject> executeQuery(CypherQuery query) {
+    private Graph getGraph(CypherQuery query) {
         try {
-            return services.getNeo4jClient().executeQuery(query);
+            return services.getNeo4jClient().getGraph(query);
         } catch (Neo4jClientException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }

@@ -34,9 +34,17 @@ public class ExportNetworkConfiguration {
     public String getRelationship(CyNetwork cyNetwork, CyEdge cyEdge) {
         CyRow cyRow = cyNetwork.getRow(cyEdge);
         if(cyRow.isSet(relationship) && cyRow.getRaw(relationship) instanceof String) {
-            return cyRow.get("shared name", String.class);
+            return escapeNeo4j(cyRow.get("shared name", String.class));
         } else {
-            return relationship;
+            return escapeNeo4j(relationship);
+        }
+    }
+
+    private String escapeNeo4j(String name) {
+        if(name != null && !name.isEmpty()) {
+            return name.replaceAll("[^a-zA-Z0-9_]+", "_");
+        } else {
+            return "empty";
         }
     }
 
