@@ -60,6 +60,12 @@ public class DefaultImportStrategy implements ImportGraphStrategy {
         edges.add(graphEdge);
     }
 
+    private String createJSONArray(List<Object> values) {
+		ArrayList<String> quoted = new ArrayList<String>();
+		values.forEach(v -> quoted.add("\"" + (String)v + "\""));
+		return "[" + String.join(",", quoted) + "]";
+
+    }
     private void saveNode(CyNetwork network, GraphNode graphNode) {
 
         long nodeId = Long.valueOf(graphNode.getProperties().getOrDefault(COLUMN_REFERENCEID, graphNode.getId()).toString());
@@ -71,8 +77,16 @@ public class DefaultImportStrategy implements ImportGraphStrategy {
         CyNode cyNode = getOrCreateNode(network, nodeId);
 
         for (Map.Entry<String, Object> entry : graphNode.getProperties().entrySet()) {
-            createColumn(cyTable, entry.getKey(), entry.getValue());
-            setEntry(cyTable, cyNode, entry.getKey(),entry.getValue());
+        	if (entry.getValue() instanceof List) {
+        		@SuppressWarnings("unchecked")
+				String value = createJSONArray((List<Object>)entry.getValue());
+        		createColumn(cyTable, entry.getKey(), value);
+	            setEntry(cyTable, cyNode, entry.getKey(),value);        		
+        	}
+        	else {
+	            createColumn(cyTable, entry.getKey(), entry.getValue());
+	            setEntry(cyTable, cyNode, entry.getKey(),entry.getValue());
+        	}
         }
         createColumn(cyTable, "_neo4j_labels", graphNode.getLabels());
         setEntry(cyTable, cyNode, "_neo4j_labels", graphNode.getLabels());
@@ -103,8 +117,16 @@ public class DefaultImportStrategy implements ImportGraphStrategy {
         network.getRow(cyEdge).set(CyEdge.INTERACTION, type);
 
         for (Map.Entry<String, Object> entry : graphEdge.getProperties().entrySet()) {
-            createColumn(cyTable, entry.getKey(), entry.getValue());
-            setEntry(cyTable, cyEdge, entry.getKey(), entry.getValue());
+        	if (entry.getValue() instanceof List) {
+        		@SuppressWarnings("unchecked")
+				String value = createJSONArray((List<Object>)entry.getValue());
+        		createColumn(cyTable, entry.getKey(), value);
+	            setEntry(cyTable, cyEdge, entry.getKey(),value);        		
+        	}
+        	else {
+	            createColumn(cyTable, entry.getKey(), entry.getValue());
+	            setEntry(cyTable, cyEdge, entry.getKey(), entry.getValue());
+        	}
         }
     }
 
