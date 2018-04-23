@@ -68,7 +68,8 @@ public class ExportNetworkConfiguration {
     public List<NodeLabel> getNodeLabels(CyNode cyNode, CyNetwork cyNetwork) {
         CyRow cyRow = cyNetwork.getRow(cyNode);
         if(cyRow.isSet(nodeLabelColumn) && cyRow.getRaw(nodeLabelColumn) instanceof List) {
-            Stream<NodeLabel> stream = cyRow.get(nodeLabelColumn, List.class).stream().map(obj -> NodeLabel.create(obj.toString()));
+            @SuppressWarnings("unchecked")
+			Stream<NodeLabel> stream = cyRow.get(nodeLabelColumn, List.class).stream().map(obj -> NodeLabel.create(obj.toString()));
             List<NodeLabel> list = stream.collect(Collectors.toList());
             return list;
         } else {
