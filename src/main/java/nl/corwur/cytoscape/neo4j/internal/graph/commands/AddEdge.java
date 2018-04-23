@@ -5,7 +5,7 @@ import java.util.Map;
 /**
  * This class implements the 'Add Edge' command that can be executed by a Neo4jClient.
  */
-public class AddEdgeCommand {
+public class AddEdgeCommand extends Command {
     private Map<String, Object> edgeProperties;
     private Long startId;
     private Long endId;
@@ -123,5 +123,10 @@ public class AddEdgeCommand {
 
     public void setEndNodeIdParameter(String endNodeIdParameter) {
         this.endNodeIdParameter = endNodeIdParameter;
+    }
+
+    @Override
+    public void execute() {
+
     }
 }

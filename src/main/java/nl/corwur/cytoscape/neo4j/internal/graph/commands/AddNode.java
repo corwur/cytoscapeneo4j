@@ -7,7 +7,7 @@ import java.util.Map;
  * This class implements the 'Add Node' command that can be executed by a Neo4jClient.
  */
 
-public class AddNodeCommand {
+public class AddNodeCommand extends Command {
     private Map<String, Object> nodeProperties;
     private Long nodeId;
     private Label label = null;
@@ -73,5 +73,10 @@ public class AddNodeCommand {
 
     public String getNodeName() {
         return nodeName;
+    }
+
+    @Override
+    public void execute() {
+
     }
 }
