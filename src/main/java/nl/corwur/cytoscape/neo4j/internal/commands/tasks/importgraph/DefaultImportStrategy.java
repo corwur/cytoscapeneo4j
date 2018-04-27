@@ -62,7 +62,14 @@ public class DefaultImportStrategy implements ImportGraphStrategy {
 
     private String createJSONArray(List<Object> values) {
 		ArrayList<String> quoted = new ArrayList<String>();
-		values.forEach(v -> quoted.add("\"" + (String)v + "\""));
+		values.forEach(v -> { 
+			if (!(v instanceof String))  {
+				quoted.add((String)v);  
+			}
+			else  {
+				quoted.add("\"" + (String)v + "\"");
+			}
+		} );
 		return "[" + String.join(",", quoted) + "]";
 
     }

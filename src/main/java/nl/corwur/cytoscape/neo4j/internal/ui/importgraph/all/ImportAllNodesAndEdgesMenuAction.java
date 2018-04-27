@@ -40,14 +40,19 @@ public class ImportAllNodesAndEdgesMenuAction extends AbstractCyAction {
 
         ImportAllNodesAndEdgesDialog importAllNodesAndEdgesDialog = new ImportAllNodesAndEdgesDialog(services.getCySwingApplication().getJFrame(), getAllVisualStyleTitle());
         importAllNodesAndEdgesDialog.showDialog();
-
-        AbstractImportTask importAllNodesAndEdgesFromNeo4jTask =
-                services.getCommandFactory().createImportAllNodesAndEdgesFromNeo4jTask(
-                        importAllNodesAndEdgesDialog.getNetwork(),
-                        importAllNodesAndEdgesDialog.getVisualStyleTitle()
-                );
-            services.getCommandExecutor().execute(importAllNodesAndEdgesFromNeo4jTask);
+        if (importAllNodesAndEdgesDialog.isExecuteQuery()) {
+	        AbstractImportTask importAllNodesAndEdgesFromNeo4jTask =
+	                services.getCommandFactory().createImportAllNodesAndEdgesFromNeo4jTask(
+	                        importAllNodesAndEdgesDialog.getNetwork(),
+	                        importAllNodesAndEdgesDialog.getVisualStyleTitle()
+	                );
+	            services.getCommandExecutor().execute(importAllNodesAndEdgesFromNeo4jTask);
+        }
+        else {
+        	return;
+        }
     }
+        
 
     private String[] getAllVisualStyleTitle() {
         return services.getVisualMappingManager()
