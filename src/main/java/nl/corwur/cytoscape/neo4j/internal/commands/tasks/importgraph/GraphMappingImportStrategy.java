@@ -10,7 +10,7 @@ import org.cytoscape.model.*;
 import java.util.Optional;
 
 /**
- * This class implements an import strategy that uses a grpah mapping (used by query templates)
+ * This class implements an import strategy that uses a graph mapping (used by query templates)
  * for copying nodes and edges into cytoscape.
  */
 public class GraphMappingImportStrategy implements ImportGraphStrategy {
@@ -104,4 +104,9 @@ public class GraphMappingImportStrategy implements ImportGraphStrategy {
         currNet.getRow(newNode).set(nodeReferenceIdColumn, id);
         return newNode;
     }
+
+	@Override
+	public String getRefIDName() {
+		return null;
+	}
 }

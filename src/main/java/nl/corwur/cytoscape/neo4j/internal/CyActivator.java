@@ -1,18 +1,15 @@
 package nl.corwur.cytoscape.neo4j.internal;
 
-import static org.cytoscape.work.ServiceProperties.PREFERRED_MENU;
-import static org.cytoscape.work.ServiceProperties.APPS_MENU;
+import static org.cytoscape.work.ServiceProperties.*;
 
 import nl.corwur.cytoscape.neo4j.internal.commands.CommandExecutor;
 import nl.corwur.cytoscape.neo4j.internal.commands.CommandFactory;
 import nl.corwur.cytoscape.neo4j.internal.configuration.AppConfiguration;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClient;
-import nl.corwur.cytoscape.neo4j.internal.ui.CommandMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.connect.ConnectInstanceMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.expandnode.ExpandNodeMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.exportnetwork.ExportNetworkMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.importgraph.all.ImportAllNodesAndEdgesMenuAction;
-import nl.corwur.cytoscape.neo4j.internal.ui.importgraph.expand.ExpandNodeTask;
 import nl.corwur.cytoscape.neo4j.internal.ui.importgraph.query.ImportCypherQueryMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.importgraph.querytemplate.ImportQueryTemplateMenuAction;
 import org.cytoscape.application.CyApplicationManager;
@@ -51,19 +48,25 @@ public class CyActivator extends AbstractCyActivator  {
         ImportQueryTemplateMenuAction importImportQueryTemplateMenuAction = ImportQueryTemplateMenuAction.create(services);
         ImportAllNodesAndEdgesMenuAction importAllNodesAndEdgesMenuAction = ImportAllNodesAndEdgesMenuAction.create(services);
         ExportNetworkMenuAction exportNetworkToNeo4jMenuAction = ExportNetworkMenuAction.create(services);
-        ExpandNodeMenuAction expandNodeMenuAction = ExpandNodeMenuAction.create(services);
         registerAllServices(context, connectAction, new Properties());
         registerAllServices(context, importQypherQueryMenuAction, new Properties());
         registerAllServices(context, importAllNodesAndEdgesMenuAction, new Properties());
         registerAllServices(context, importImportQueryTemplateMenuAction, new Properties() );
         registerAllServices(context, exportNetworkToNeo4jMenuAction, new Properties());
+
+        
+        // Context menus
         Properties expandNodeProperties = new Properties();
         expandNodeProperties.setProperty("preferredTaskManager", "menu");
-        expandNodeProperties.setProperty(PREFERRED_MENU, "Apps");
+        expandNodeProperties.setProperty(PREFERRED_MENU, "Apps.Cypher Queries");
         expandNodeProperties.setProperty(APPS_MENU, "Apps");
-        
-        
-        registerAllServices(context, expandNodeMenuAction, expandNodeProperties);
+        expandNodeProperties.setProperty(IN_CONTEXT_MENU, "true");
+        expandNodeProperties.setProperty(TITLE,"Expand node");
+        ExpandNodeMenuAction expandNodeMenuAction1 = ExpandNodeMenuAction.create(services, false);
+        registerAllServices(context, expandNodeMenuAction1, expandNodeProperties);
+        expandNodeProperties.setProperty(TITLE,"Expand node, redo layout");
+        ExpandNodeMenuAction expandNodeMenuAction2 = ExpandNodeMenuAction.create(services, true);
+        registerAllServices(context, expandNodeMenuAction2, expandNodeProperties);
     }
 
     private Services createServices(BundleContext context) {

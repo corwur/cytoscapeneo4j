@@ -1,9 +1,7 @@
 package nl.corwur.cytoscape.neo4j.internal.commands.tasks.importgraph;
 
-import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphEdge;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphNode;
-import nl.corwur.cytoscape.neo4j.internal.graph.GraphObjectList;
 import org.cytoscape.model.*;
 
 import java.util.ArrayList;
@@ -49,7 +47,9 @@ public class DefaultImportStrategy implements ImportGraphStrategy {
         }
     }
 
-
+    public String getRefIDName() {
+    	return COLUMN_REFERENCEID;
+    }
     public void copyNode(CyNetwork network, GraphNode graphNode) {
         long nodeId = Long.valueOf(graphNode.getProperties().getOrDefault(COLUMN_REFERENCEID, graphNode.getId()).toString());
         idMap.put(graphNode.getId(), nodeId);

@@ -3,44 +3,45 @@
  */
 package nl.corwur.cytoscape.neo4j.internal.ui.expandnode;
 
-import java.awt.event.ActionEvent;
-
-import org.cytoscape.application.swing.AbstractCyAction;
+import org.cytoscape.model.CyNode;
+import org.cytoscape.task.AbstractNodeViewTaskFactory;
+import org.cytoscape.view.model.CyNetworkView;
+import org.cytoscape.view.model.View;
+import org.cytoscape.work.TaskIterator;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
+import nl.corwur.cytoscape.neo4j.internal.ui.importgraph.expand.ExpandNodeTask;
 
 
 /**
  * @author sven
  *
  */
-public class ExpandNodeMenuAction extends AbstractCyAction {
+public class ExpandNodeMenuAction extends AbstractNodeViewTaskFactory {
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final String MENU_TITLE = "Expand node";
-    private static final String MENU_LOC = "Apps.Cypher Queries";
     private final transient Services services;
+	private Boolean redoLayout;
     
-    public static ExpandNodeMenuAction create(Services services) {
-        return new ExpandNodeMenuAction(services);
+    public static ExpandNodeMenuAction create(Services services, Boolean redoLayout ) {
+        return new ExpandNodeMenuAction(services, redoLayout);
     }
 
-    private ExpandNodeMenuAction(Services services) {
-        super(MENU_TITLE, services.getCyApplicationManager(), "selectedNetworkObjs", services.getCyNetworkViewManager());
+    private ExpandNodeMenuAction(Services services, Boolean redoLayout) {
         this.services = services;
+        this.redoLayout = redoLayout;
+    }
        
-        setPreferredMenu(MENU_LOC);
-        setEnabled(true);
-        setMenuGravity(0.5f);
-
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent arg0) {
-
-    
-    }
+	@Override
+	public TaskIterator createTaskIterator(View<CyNode> nodeView, CyNetworkView networkView) {
+		if (this.isReady(nodeView, networkView)) {
+			return new TaskIterator(new ExpandNodeTask(nodeView, networkView, this.services, this.redoLayout));
+		}
+		else {
+			return null;
+		}
+	}
 
 }
