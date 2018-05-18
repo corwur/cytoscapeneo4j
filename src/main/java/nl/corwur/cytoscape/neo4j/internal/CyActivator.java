@@ -58,15 +58,15 @@ public class CyActivator extends AbstractCyActivator  {
         // Context menus
         Properties expandNodeProperties = new Properties();
         expandNodeProperties.setProperty("preferredTaskManager", "menu");
-        expandNodeProperties.setProperty(PREFERRED_MENU, "Apps.Cypher Queries");
+        expandNodeProperties.setProperty(PREFERRED_MENU, "Neo4j");
         expandNodeProperties.setProperty(APPS_MENU, "Apps");
         expandNodeProperties.setProperty(IN_CONTEXT_MENU, "true");
         expandNodeProperties.setProperty(TITLE,"Expand node");
-        ExpandNodeMenuAction expandNodeMenuAction1 = ExpandNodeMenuAction.create(services, false);
-        registerAllServices(context, expandNodeMenuAction1, expandNodeProperties);
+        ExpandNodeMenuAction expandNodeMenuActionKeepLayout = ExpandNodeMenuAction.create(services, false);
+        registerAllServices(context, expandNodeMenuActionKeepLayout, expandNodeProperties);
         expandNodeProperties.setProperty(TITLE,"Expand node, redo layout");
-        ExpandNodeMenuAction expandNodeMenuAction2 = ExpandNodeMenuAction.create(services, true);
-        registerAllServices(context, expandNodeMenuAction2, expandNodeProperties);
+        ExpandNodeMenuAction expandNodeMenuActionRedoLayout = ExpandNodeMenuAction.create(services, true);
+        registerAllServices(context, expandNodeMenuActionRedoLayout, expandNodeProperties);
     }
 
     private Services createServices(BundleContext context) {

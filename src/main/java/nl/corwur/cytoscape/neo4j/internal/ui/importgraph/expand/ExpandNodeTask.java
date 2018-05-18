@@ -52,6 +52,7 @@ public class ExpandNodeTask extends AbstractNodeViewTask implements Task {
             Thread.sleep(400);
         }
         if(result.isCompletedExceptionally()) {
+        	taskMonitor.setStatusMessage("Could not expand node. Are you still connected to the database?");
             throw new IllegalStateException("Error executing cypher query");
         }
 
