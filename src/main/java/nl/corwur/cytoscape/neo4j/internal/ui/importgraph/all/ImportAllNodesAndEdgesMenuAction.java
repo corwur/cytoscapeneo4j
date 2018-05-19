@@ -27,7 +27,7 @@ public class ImportAllNodesAndEdgesMenuAction extends AbstractCyAction {
         super(MENU_TITLE);
         this.services = services;
         setPreferredMenu(MENU_LOC);
-        setEnabled(false);
+        setEnabled(true);
         setMenuGravity(0.5f);
     }
 

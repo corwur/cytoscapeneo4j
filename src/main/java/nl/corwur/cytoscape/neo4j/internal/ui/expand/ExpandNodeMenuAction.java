@@ -11,6 +11,9 @@ import org.cytoscape.work.TaskIterator;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
 import nl.corwur.cytoscape.neo4j.internal.commands.tasks.expand.ExpandNodeTask;
+import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
+import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
+import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClientException;
 
 
 /**
@@ -37,11 +40,12 @@ public class ExpandNodeMenuAction extends AbstractNodeViewTaskFactory {
 	@Override
 	public TaskIterator createTaskIterator(View<CyNode> nodeView, CyNetworkView networkView) {
 		if (this.isReady(nodeView, networkView)) {
-			return new TaskIterator(new ExpandNodeTask(nodeView, networkView, this.services, this.redoLayout));
+			return new TaskIterator(new ExpandNodeTask(nodeView, networkView, this.services, this.redoLayout, null));
 		}
 		else {
 			return null;
 		}
 	}
+	
 
 }

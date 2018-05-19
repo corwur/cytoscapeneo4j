@@ -51,6 +51,16 @@ public class Neo4jClient {
         }
     }
 
+    public StatementResult getResults(CypherQuery cypherQuery) throws Neo4jClientException {
+        try (Session session = driver.session()) {
+            StatementResult statementResult = session.run(cypherQuery.getQuery(), cypherQuery.getParams());
+            return statementResult;
+        } catch (Exception e) {
+            throw new Neo4jClientException(e.getMessage(), e);
+        }
+    }
+
+    
     public void explainQuery(CypherQuery cypherQuery) throws Neo4jClientException {
         try (Session session = driver.session()) {
             session.run(cypherQuery.getExplainQuery(), cypherQuery.getParams());

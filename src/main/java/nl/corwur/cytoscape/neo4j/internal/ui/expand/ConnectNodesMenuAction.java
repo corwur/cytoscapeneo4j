@@ -41,7 +41,7 @@ public class ConnectNodesMenuAction implements NetworkTaskFactory {
 
 	@Override
 	public boolean isReady(CyNetwork arg0) {
-		return arg0.getNodeCount() > 0;
+		return arg0 != null && arg0.getNodeCount() > 0;
 	}
 
 	public static ConnectNodesMenuAction create(Services services, Boolean onlySelected) {
