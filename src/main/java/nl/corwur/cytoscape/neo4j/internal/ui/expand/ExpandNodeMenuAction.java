@@ -1,7 +1,7 @@
 /**
  * 
  */
-package nl.corwur.cytoscape.neo4j.internal.ui.expandnode;
+package nl.corwur.cytoscape.neo4j.internal.ui.expand;
 
 import org.cytoscape.model.CyNode;
 import org.cytoscape.task.AbstractNodeViewTaskFactory;
@@ -10,7 +10,7 @@ import org.cytoscape.view.model.View;
 import org.cytoscape.work.TaskIterator;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
-import nl.corwur.cytoscape.neo4j.internal.ui.importgraph.expand.ExpandNodeTask;
+import nl.corwur.cytoscape.neo4j.internal.commands.tasks.expand.ExpandNodeTask;
 
 
 /**

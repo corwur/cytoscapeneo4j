@@ -1,4 +1,4 @@
-package nl.corwur.cytoscape.neo4j.internal.ui.importgraph.expand;
+package nl.corwur.cytoscape.neo4j.internal.commands.tasks.expand;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -38,6 +38,7 @@ public class ExpandNodeTask extends AbstractNodeViewTask implements Task {
 	public void run(TaskMonitor taskMonitor) throws Exception {
 		taskMonitor.setTitle("Expanding node");
 		CyNode cyNode = (CyNode)this.nodeView.getModel();
+		
 		Long refid = this.netView.getModel().getRow(cyNode).get(this.importGraphStrategy.getRefIDName(), Long.class);
 		taskMonitor.setStatusMessage("Getting node and relationships for node " + refid);
 		String query = "match p=(n)-[r]-() where ID(n) = " + refid +" return p"; 
