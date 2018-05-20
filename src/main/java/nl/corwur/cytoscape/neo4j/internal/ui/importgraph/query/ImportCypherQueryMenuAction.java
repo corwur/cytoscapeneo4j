@@ -3,7 +3,7 @@ package nl.corwur.cytoscape.neo4j.internal.ui.importgraph.query;
 import nl.corwur.cytoscape.neo4j.internal.Services;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClientException;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.AbstractImportTask;
+import nl.corwur.cytoscape.neo4j.internal.tasks.AbstractImportTask;
 import nl.corwur.cytoscape.neo4j.internal.ui.DialogMethods;
 import org.cytoscape.application.swing.AbstractCyAction;
 import org.cytoscape.view.vizmap.VisualStyle;
@@ -54,12 +54,12 @@ public class ImportCypherQueryMenuAction extends AbstractCyAction {
             try {
                 services.getNeo4jClient().explainQuery(cypherQuery);
                 AbstractImportTask executeCypherQueryTask =
-                        services.getCommandFactory().createImportQueryTask(
+                        services.getTaskFactory().createImportQueryTask(
                                 cypherQueryDialog.getNetwork(),
                                 cypherQuery,
                                 cypherQueryDialog.getVisualStyleTitle()
                         );
-                services.getCommandExecutor().execute(executeCypherQueryTask);
+                services.getTaskExecutor().execute(executeCypherQueryTask);
                 finished = true;
             } catch (Neo4jClientException e1) {
                 JOptionPane.showMessageDialog(services.getCySwingApplication().getJFrame(), e1.getMessage());

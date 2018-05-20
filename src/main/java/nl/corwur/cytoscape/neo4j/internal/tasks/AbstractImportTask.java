@@ -1,14 +1,17 @@
-package nl.corwur.cytoscape.neo4j.internal.commands.tasks;
+package nl.corwur.cytoscape.neo4j.internal.tasks;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.importgraph.ImportGraphStrategy;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.importgraph.ImportGraphToCytoscape;
+import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQueryWriter;
+import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.ImportGraphStrategy;
+import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.ImportGraphToCytoscape;
 import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClientException;
 import org.cytoscape.event.CyEventHelper;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
+import org.cytoscape.model.CyRow;
+import org.cytoscape.model.CyTable;
 import org.cytoscape.view.layout.CyLayoutAlgorithm;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.View;
@@ -16,6 +19,8 @@ import org.cytoscape.view.vizmap.VisualStyle;
 import org.cytoscape.work.AbstractTask;
 import org.cytoscape.work.TaskMonitor;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -64,6 +69,8 @@ public abstract class AbstractImportTask extends AbstractTask {
             // setup network
             CyNetwork network = services.getCyNetworkFactory().createNetwork();
             network.getRow(network).set(CyNetwork.NAME, networkName);
+            setCypherQuery(network);
+
             services.getCyNetworkManager().addNetwork(network);
 
             ImportGraphToCytoscape cypherParser = new ImportGraphToCytoscape(network, importGraphStrategy, () -> this.cancelled);
@@ -92,6 +99,17 @@ public abstract class AbstractImportTask extends AbstractTask {
         } catch (Exception e) {
             taskMonitor.showMessage(TaskMonitor.Level.ERROR, e.getMessage());
         }
+    }
+
+    private void setCypherQuery(CyNetwork network) throws IOException {
+        StringWriter writer = new StringWriter();
+        CypherQueryWriter cypherQueryWriter = new CypherQueryWriter(writer);
+        cypherQueryWriter.write(cypherQuery);
+        CyTable cyTable = network.getDefaultNetworkTable();
+        if(cyTable.getColumn("cypher_query") == null) {
+            network.getDefaultNetworkTable().createColumn("cypher_query", String.class, true);
+        }
+        network.getRow(network).set("cypher_query", writer.toString());
     }
 
     private void explainQuery(CypherQuery cypherQuery) throws Neo4jClientException {

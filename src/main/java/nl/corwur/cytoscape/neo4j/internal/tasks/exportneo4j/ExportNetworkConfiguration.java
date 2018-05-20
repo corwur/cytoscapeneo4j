@@ -1,7 +1,7 @@
-package nl.corwur.cytoscape.neo4j.internal.commands.tasks.exportneo4j;
+package nl.corwur.cytoscape.neo4j.internal.tasks.exportneo4j;
 
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.Label;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.NodeLabel;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.Label;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.NodeLabel;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;

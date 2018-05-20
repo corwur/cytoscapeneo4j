@@ -1,12 +1,12 @@
-package nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate;
+package nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate;
 
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.importgraph.DefaultImportStrategy;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.importgraph.GraphMappingImportStrategy;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.importgraph.ImportGraphStrategy;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.mapping.CopyAllMappingStrategy;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.mapping.GraphMapping;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.mapping.MappingStrategy;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.mapping.MappingStrategyVisitor;
+import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.DefaultImportStrategy;
+import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.GraphMappingImportStrategy;
+import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.ImportGraphStrategy;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.CopyAllMappingStrategy;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.GraphMapping;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.MappingStrategy;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.MappingStrategyVisitor;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
 
 import java.util.HashMap;

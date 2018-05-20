@@ -1,4 +1,4 @@
-package nl.corwur.cytoscape.neo4j.internal.commands;
+package nl.corwur.cytoscape.neo4j.internal.tasks;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
 import org.cytoscape.work.Task;
@@ -8,15 +8,15 @@ import org.cytoscape.work.swing.DialogTaskManager;
 /**
  * This class executes a command in the cytoscape dialog task manager
  */
-public class CommandExecutor {
+public class TaskExecutor {
 
     private final DialogTaskManager dialogTaskManager;
 
-    public static CommandExecutor create(Services services) {
-        return new CommandExecutor(services.getDialogTaskManager());
+    public static TaskExecutor create(Services services) {
+        return new TaskExecutor(services.getDialogTaskManager());
     }
 
-    private CommandExecutor(DialogTaskManager dialogTaskManager) {
+    private TaskExecutor(DialogTaskManager dialogTaskManager) {
         this.dialogTaskManager = dialogTaskManager;
     }
 

@@ -1,9 +1,9 @@
-package nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.provider;
+package nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.provider;
 
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.CypherQueryTemplate;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.template.Reader;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.template.ReaderException;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.template.Writer;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.CypherQueryTemplate;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.template.Reader;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.template.ReaderException;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.template.Writer;
 import org.apache.log4j.Logger;
 
 import javax.xml.bind.JAXBException;

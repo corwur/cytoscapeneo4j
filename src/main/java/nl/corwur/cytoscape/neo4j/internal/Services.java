@@ -1,7 +1,7 @@
 package nl.corwur.cytoscape.neo4j.internal;
 
-import nl.corwur.cytoscape.neo4j.internal.commands.CommandExecutor;
-import nl.corwur.cytoscape.neo4j.internal.commands.CommandFactory;
+import nl.corwur.cytoscape.neo4j.internal.tasks.TaskExecutor;
+import nl.corwur.cytoscape.neo4j.internal.tasks.TaskFactory;
 import nl.corwur.cytoscape.neo4j.internal.configuration.AppConfiguration;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClient;
 import org.cytoscape.application.CyApplicationManager;
@@ -31,8 +31,8 @@ public class Services {
     private CyLayoutAlgorithmManager cyLayoutAlgorithmManager;
     private VisualMappingManager visualMappingManager;
     private Neo4jClient neo4jClient;
-    private CommandFactory commandFactory;
-    private CommandExecutor commandExecutor;
+    private TaskFactory taskFactory;
+    private TaskExecutor taskExecutor;
     private CyEventHelper cyEventHelper;
     private VisualStyleFactory visualStyleFactory;
     private AppConfiguration appConfiguration;
@@ -117,20 +117,20 @@ public class Services {
         return neo4jClient;
     }
 
-    void setCommandFactory(CommandFactory commandFactory) {
-        this.commandFactory = commandFactory;
+    void setTaskFactory(TaskFactory taskFactory) {
+        this.taskFactory = taskFactory;
     }
 
-    public CommandFactory getCommandFactory() {
-        return commandFactory;
+    public TaskFactory getTaskFactory() {
+        return taskFactory;
     }
 
-    void setCommandExecutor(CommandExecutor commandExecutor) {
-        this.commandExecutor = commandExecutor;
+    void setTaskExecutor(TaskExecutor taskExecutor) {
+        this.taskExecutor = taskExecutor;
     }
 
-    public CommandExecutor getCommandExecutor() {
-        return commandExecutor;
+    public TaskExecutor getTaskExecutor() {
+        return taskExecutor;
     }
 
     public void setCyEventHelper(CyEventHelper cyEventHelper) {

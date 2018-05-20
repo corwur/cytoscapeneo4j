@@ -1,4 +1,4 @@
-package nl.corwur.cytoscape.neo4j.internal.commands.tasks.exportnetwork;
+package nl.corwur.cytoscape.neo4j.internal.tasks.exportnetwork;
 
 import static org.junit.Assert.*;
 

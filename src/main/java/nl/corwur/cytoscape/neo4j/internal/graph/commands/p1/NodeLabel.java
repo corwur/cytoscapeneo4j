@@ -1,4 +1,4 @@
-package nl.corwur.cytoscape.neo4j.internal.graph.commands;
+package nl.corwur.cytoscape.neo4j.internal.graph.commands.p1;
 
 
 public class NodeLabel extends Label {
@@ -7,7 +7,7 @@ public class NodeLabel extends Label {
 		super(label);
 	}
 
-	public static Label create(String label) {
+	public static NodeLabel create(String label) {
         if(label.matches("[\\w\\d\\s]+")) {
             return new NodeLabel(label);
         }

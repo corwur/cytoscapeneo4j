@@ -1,8 +1,8 @@
-package nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.mapping;
+package nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping;
 
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.importgraph.GraphMappingImportStrategy;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.importgraph.ImportGraphStrategy;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.mapping.values.ValueExpression;
+import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.GraphMappingImportStrategy;
+import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.ImportGraphStrategy;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.values.ValueExpression;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphEdge;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphNode;
 

@@ -1,13 +1,13 @@
-package nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.template;
+package nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.template;
 
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.mapping.CopyAllMappingStrategy;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.CypherQueryTemplate;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.mapping.GraphMapping;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.mapping.values.*;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.template.xml.ColumnMapping;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.template.xml.CopyAll;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.template.xml.MappingVisitor;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.template.xml.QueryTemplate;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.CopyAllMappingStrategy;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.CypherQueryTemplate;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.GraphMapping;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.values.*;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.template.xml.ColumnMapping;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.template.xml.CopyAll;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.template.xml.MappingVisitor;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.template.xml.QueryTemplate;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;

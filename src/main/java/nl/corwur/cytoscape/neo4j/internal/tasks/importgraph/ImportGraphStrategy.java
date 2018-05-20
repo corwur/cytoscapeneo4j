@@ -1,4 +1,4 @@
-package nl.corwur.cytoscape.neo4j.internal.commands.tasks.importgraph;
+package nl.corwur.cytoscape.neo4j.internal.tasks.importgraph;
 
 import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphEdge;

@@ -1,4 +1,5 @@
 package nl.corwur.cytoscape.neo4j.internal.graph.commands;
 
-public class Command {
+public abstract class Command {
+    public abstract void execute() throws CommandException;
 }

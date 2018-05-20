@@ -1,6 +1,6 @@
-package nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.mapping;
+package nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping;
 
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.mapping.values.ValueExpression;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.values.ValueExpression;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphNode;
 
 /**

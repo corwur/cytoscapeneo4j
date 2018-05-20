@@ -1,6 +1,8 @@
 package nl.corwur.cytoscape.neo4j.internal.graph;
 
-import javax.swing.text.html.Option;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.*;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.GraphImplementation;
+
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -12,6 +14,10 @@ public class Graph implements GraphObject {
 
     private final Map<Long, GraphNode> nodeTable = new HashMap<>();
     private final Map<Long, GraphEdge> edgeTable = new HashMap<>();
+
+    public static Graph empty() {
+        return new Graph();
+    }
 
     public static Graph createFrom(List<GraphObject> list) {
         GraphBuilder graphBuilder = new GraphBuilder();
@@ -78,6 +84,22 @@ public class Graph implements GraphObject {
         return (id, oldValue) -> Optional.ofNullable(oldValue)
                 .map(value -> merge.apply(value))
                 .orElse(defaultValue);
+    }
+
+    public boolean containsNodeId(long nodeId) {
+        return nodeTable.containsKey(nodeId);
+    }
+
+    public boolean edgeExists(long start, long end) {
+        return edges().stream().anyMatch(edge -> edge.getStart() == start && edge.getEnd() == end);
+    }
+
+    public Optional<GraphEdge> getEdge(long start, long end) {
+        return edges().stream().filter(edge -> edge.getStart() == start && edge.getEnd() == end).findFirst();
+    }
+
+    public boolean containsEdgeId(long edgeId) {
+        return edgeTable.containsKey(edgeId);
     }
 
     private static final class GraphBuilder implements GraphVisitor {

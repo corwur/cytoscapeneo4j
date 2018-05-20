@@ -1,15 +1,12 @@
 package nl.corwur.cytoscape.neo4j.internal;
 
-import nl.corwur.cytoscape.neo4j.internal.commands.CommandFactory;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.ImportQueryTemplateTask;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.exportneo4j.ExportNetworkConfiguration;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.CypherQueryTemplate;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.mapping.MappingStrategy;
+import nl.corwur.cytoscape.neo4j.internal.tasks.TaskFactory;
+import nl.corwur.cytoscape.neo4j.internal.tasks.ImportQueryTemplateTask;
+import nl.corwur.cytoscape.neo4j.internal.tasks.exportneo4j.ExportNetworkConfiguration;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.CypherQueryTemplate;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.ExportNetworkToNeo4jTask;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.AbstractImportTask;
-import org.cytoscape.view.vizmap.VisualMappingManager;
-import org.cytoscape.view.vizmap.VisualStyle;
+import nl.corwur.cytoscape.neo4j.internal.tasks.ExportNetworkToNeo4jTask;
+import nl.corwur.cytoscape.neo4j.internal.tasks.AbstractImportTask;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -19,48 +16,47 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CommandFactoryTest {
+public class TaskFactoryTest {
 
     @Mock
     private Services services;
 
     @Test
     public void create() throws Exception {
-        CommandFactory commandFactory = CommandFactory.create(services);
-        assertNotNull("create command factory should not return null", commandFactory);
+        TaskFactory taskFactory = TaskFactory.create(services);
+        assertNotNull("create command factory should not return null", taskFactory);
     }
 
     @Test
     public void createImportGraphTask() throws Exception {
-        CommandFactory commandFactory = CommandFactory.create(services);
-        AbstractImportTask task = commandFactory.createImportAllNodesAndEdgesFromNeo4jTask("Network", "default");
+        TaskFactory taskFactory = TaskFactory.create(services);
+        AbstractImportTask task = taskFactory.createImportAllNodesAndEdgesFromNeo4jTask("Network", "default");
         assertNotNull("create import graph should not return null",task);
     }
 
     @Test
     public void createExportNetworkToNeo4jTask() throws Exception {
-        CommandFactory commandFactory = CommandFactory.create(services);
+        TaskFactory taskFactory = TaskFactory.create(services);
         ExportNetworkConfiguration exportNetworkConfiguration = mock(ExportNetworkConfiguration.class);
-        ExportNetworkToNeo4jTask task = commandFactory.createExportNetworkToNeo4jTask(exportNetworkConfiguration);
+        ExportNetworkToNeo4jTask task = taskFactory.createExportNetworkToNeo4jTask(exportNetworkConfiguration);
         assertNotNull("create export network to Neo4j should not return null",task);
     }
 
     @Test
     public void createRetrieveDataFromQueryTemplateTask() throws Exception {
-        CommandFactory commandFactory = CommandFactory.create(services);
+        TaskFactory taskFactory = TaskFactory.create(services);
         CypherQueryTemplate query = mock(CypherQueryTemplate.class);
-        ImportQueryTemplateTask task = commandFactory.createImportQueryTemplateTask("Networkname", query, "visualStyle");
+        ImportQueryTemplateTask task = taskFactory.createImportQueryTemplateTask("Networkname", query, "visualStyle");
         assertNotNull("create retrieve data from query-template should not return null",task);
     }
 
     @Test
     public void createExecuteCypherQueryTask() throws Exception {
-        CommandFactory commandFactory = CommandFactory.create(services);
+        TaskFactory taskFactory = TaskFactory.create(services);
         CypherQuery query = mock(CypherQuery.class);
-        AbstractImportTask task = commandFactory.createImportQueryTask("Networkname", query, "visualStyle");
+        AbstractImportTask task = taskFactory.createImportQueryTask("Networkname", query, "visualStyle");
         assertNotNull("create execute cypher-query should not return null",task);
     }
 }

@@ -1,14 +1,14 @@
-package nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.template;
+package nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.template;
 
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.mapping.CopyAllMappingStrategy;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.CypherQueryTemplate;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.mapping.MappingStrategy;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.mapping.MappingStrategyVisitor;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.mapping.EdgeColumnMapping;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.mapping.GraphMapping;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.mapping.NodeColumnMapping;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.mapping.values.*;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.template.xml.*;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.CopyAllMappingStrategy;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.CypherQueryTemplate;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.MappingStrategy;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.MappingStrategyVisitor;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.EdgeColumnMapping;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.GraphMapping;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.NodeColumnMapping;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.values.*;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.template.xml.*;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

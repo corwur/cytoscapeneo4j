@@ -1,4 +1,4 @@
-package nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.mapping.values;
+package nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.values;
 
 /**
  * This interface specifies a value expression visitor.

@@ -1,9 +1,9 @@
-package nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.template.xml;
+package nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.template.xml;
 
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.mapping.CopyAllMappingStrategy;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.CypherQueryTemplate;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.mapping.GraphMapping;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.template.Reader;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.CopyAllMappingStrategy;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.CypherQueryTemplate;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.GraphMapping;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.template.Reader;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

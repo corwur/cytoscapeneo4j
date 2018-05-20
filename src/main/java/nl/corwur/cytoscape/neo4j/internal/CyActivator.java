@@ -1,10 +1,9 @@
 package nl.corwur.cytoscape.neo4j.internal;
 
-import nl.corwur.cytoscape.neo4j.internal.commands.CommandExecutor;
-import nl.corwur.cytoscape.neo4j.internal.commands.CommandFactory;
+import nl.corwur.cytoscape.neo4j.internal.tasks.TaskExecutor;
+import nl.corwur.cytoscape.neo4j.internal.tasks.TaskFactory;
 import nl.corwur.cytoscape.neo4j.internal.configuration.AppConfiguration;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClient;
-import nl.corwur.cytoscape.neo4j.internal.ui.CommandMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.connect.ConnectInstanceMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.exportnetwork.ExportNetworkMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.importgraph.all.ImportAllNodesAndEdgesMenuAction;
@@ -68,8 +67,8 @@ public class CyActivator extends AbstractCyActivator  {
         services.setCyEventHelper(getService(context, CyEventHelper.class));
         services.setVisualStyleFactory(getService(context, VisualStyleFactory.class));
         services.setNeo4jClient(new Neo4jClient());
-        services.setCommandFactory(CommandFactory.create(services));
-        services.setCommandExecutor(CommandExecutor.create(services));
+        services.setTaskFactory(TaskFactory.create(services));
+        services.setTaskExecutor(TaskExecutor.create(services));
         return services;
     }
 

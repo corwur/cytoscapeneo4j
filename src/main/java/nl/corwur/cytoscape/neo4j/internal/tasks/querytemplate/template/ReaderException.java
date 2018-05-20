@@ -1,4 +1,4 @@
-package nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.template;
+package nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.template;
 
 public class ReaderException extends Exception {
     public ReaderException(String msg) {

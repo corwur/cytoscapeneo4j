@@ -1,6 +1,6 @@
 package nl.corwur.cytoscape.neo4j.internal;
 
-import nl.corwur.cytoscape.neo4j.internal.commands.CommandExecutor;
+import nl.corwur.cytoscape.neo4j.internal.tasks.TaskExecutor;
 import org.cytoscape.work.Task;
 import org.cytoscape.work.swing.DialogTaskManager;
 import org.junit.Test;
@@ -15,15 +15,15 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CommandExecutorTest {
+public class TaskExecutorTest {
 
     @Mock
     private Services services;
 
     @Test
     public void create() throws Exception {
-        CommandExecutor commandExecutor = CommandExecutor.create(services);
-        assertNotNull("create command runner should not return null", commandExecutor);
+        TaskExecutor taskExecutor = TaskExecutor.create(services);
+        assertNotNull("create command runner should not return null", taskExecutor);
     }
 
     @Test
@@ -31,9 +31,9 @@ public class CommandExecutorTest {
         Task task = mock(Task.class);
         DialogTaskManager dialogTaskManager = mock(DialogTaskManager.class);
         when(services.getDialogTaskManager()).thenReturn(dialogTaskManager);
-        CommandExecutor commandExecutor = CommandExecutor.create(services);
-        commandExecutor.execute(task);
-        assertNotNull("create command runner should not return null", commandExecutor);
+        TaskExecutor taskExecutor = TaskExecutor.create(services);
+        taskExecutor.execute(task);
+        assertNotNull("create command runner should not return null", taskExecutor);
         verify(dialogTaskManager).execute(any());
     }
 

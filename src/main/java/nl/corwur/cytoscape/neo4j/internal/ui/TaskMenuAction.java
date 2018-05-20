@@ -1,6 +1,6 @@
 package nl.corwur.cytoscape.neo4j.internal.ui;
 
-import nl.corwur.cytoscape.neo4j.internal.commands.CommandExecutor;
+import nl.corwur.cytoscape.neo4j.internal.tasks.TaskExecutor;
 import nl.corwur.cytoscape.neo4j.internal.Services;
 import nl.corwur.cytoscape.neo4j.internal.ui.connect.ConnectToNeo4j;
 import org.cytoscape.application.swing.AbstractCyAction;
@@ -9,21 +9,21 @@ import org.cytoscape.work.AbstractTask;
 import java.awt.event.ActionEvent;
 import java.util.function.Supplier;
 
-public class CommandMenuAction extends AbstractCyAction {
+public class TaskMenuAction extends AbstractCyAction {
 
     private static final String MENU_LOC = "Apps.Cypher Queries";
     private final transient ConnectToNeo4j connectToNeo4j;
-    private final transient CommandExecutor commandExecutor;
+    private final transient TaskExecutor taskExecutor;
     private final transient Supplier<AbstractTask> taskSupplier;
 
-    public static CommandMenuAction create(String menuTitle, Services services, Supplier<AbstractTask> taskSupplier) {
-        return new CommandMenuAction(menuTitle, services, taskSupplier);
+    public static TaskMenuAction create(String menuTitle, Services services, Supplier<AbstractTask> taskSupplier) {
+        return new TaskMenuAction(menuTitle, services, taskSupplier);
     }
 
-    private CommandMenuAction(String menuTitle, Services services, Supplier<AbstractTask> taskSupplier) {
+    private TaskMenuAction(String menuTitle, Services services, Supplier<AbstractTask> taskSupplier) {
         super(menuTitle);
         this.taskSupplier = taskSupplier;
-        this.commandExecutor = services.getCommandExecutor();
+        this.taskExecutor = services.getTaskExecutor();
         this.connectToNeo4j = ConnectToNeo4j.create(services);
         setPreferredMenu(MENU_LOC);
         setEnabled(false);
@@ -34,7 +34,7 @@ public class CommandMenuAction extends AbstractCyAction {
     public void actionPerformed(ActionEvent e) {
         if(connectToNeo4j.openConnectDialogIfNotConnected()) {
             AbstractTask abstractTask = taskSupplier.get();
-            commandExecutor.execute(abstractTask);
+            taskExecutor.execute(abstractTask);
         }
     }
 }

@@ -113,7 +113,7 @@ public class EditQueryTemplateWithMappingStrategyDialog extends JDialog {  //NOS
             TableColumn mappingTypeColumn = jTable.getColumnModel().getColumn(2);
             JComboBox comboBoxMappingType = new JComboBox();
             comboBoxMappingType.addItem("Id");
-            comboBoxMappingType.addItem("Property");
+            comboBoxMappingType.addItem("NamedParameterProperty");
             comboBoxMappingType.addItem("Expression");
             comboBoxMappingType.addItem("Label");
             mappingTypeColumn.setCellEditor(new DefaultCellEditor(comboBoxMappingType));

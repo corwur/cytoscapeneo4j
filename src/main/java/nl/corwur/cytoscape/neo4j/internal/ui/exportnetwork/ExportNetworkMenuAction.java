@@ -1,10 +1,10 @@
 package nl.corwur.cytoscape.neo4j.internal.ui.exportnetwork;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.exportneo4j.ExportNetworkConfiguration;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.Label;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.NodeLabel;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.ExportNetworkToNeo4jTask;
+import nl.corwur.cytoscape.neo4j.internal.tasks.exportneo4j.ExportNetworkConfiguration;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.Label;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.NodeLabel;
+import nl.corwur.cytoscape.neo4j.internal.tasks.ExportNetworkToNeo4jTask;
 import nl.corwur.cytoscape.neo4j.internal.ui.DialogMethods;
 import org.cytoscape.application.swing.AbstractCyAction;
 import org.cytoscape.model.CyNetwork;
@@ -51,8 +51,8 @@ public class ExportNetworkMenuAction extends AbstractCyAction {
                 "_neo4j_properties"
         );
         if (label != null) {
-            ExportNetworkToNeo4jTask task = services.getCommandFactory().createExportNetworkToNeo4jTask(exportNetworkConfiguration);
-            services.getCommandExecutor().execute(task);
+            ExportNetworkToNeo4jTask task = services.getTaskFactory().createExportNetworkToNeo4jTask(exportNetworkConfiguration);
+            services.getTaskExecutor().execute(task);
         }
     }
 

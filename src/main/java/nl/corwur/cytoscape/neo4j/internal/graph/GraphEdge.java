@@ -16,6 +16,14 @@ public class GraphEdge implements GraphObject {
     private String type;
     private long id;
 
+    public GraphEdge() {}
+
+    public GraphEdge(long id, long start, long end) {
+        this.id = id;
+        this.start = start;
+        this.end = end;
+    }
+
     @Override
     public void accept(GraphVisitor graphVisitor) {
         graphVisitor.visit(this);

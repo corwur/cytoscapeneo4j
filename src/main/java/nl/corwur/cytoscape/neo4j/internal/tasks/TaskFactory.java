@@ -1,11 +1,10 @@
-package nl.corwur.cytoscape.neo4j.internal.commands;
+package nl.corwur.cytoscape.neo4j.internal.tasks;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.*;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.exportneo4j.ExportNetworkConfiguration;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.CypherQueryTemplate;
+import nl.corwur.cytoscape.neo4j.internal.tasks.exportneo4j.ExportNetworkConfiguration;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.CypherQueryTemplate;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.importgraph.DefaultImportStrategy;
+import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.DefaultImportStrategy;
 
 /**
  * This class creates executable commands:
@@ -14,15 +13,15 @@ import nl.corwur.cytoscape.neo4j.internal.commands.tasks.importgraph.DefaultImpo
  * - Import query template
  * - Import a query
  */
-public class CommandFactory {
+public class TaskFactory {
 
     private final Services services;
 
-    public static CommandFactory create(Services services) {
-        return new CommandFactory(services);
+    public static TaskFactory create(Services services) {
+        return new TaskFactory(services);
     }
 
-    private CommandFactory(Services services) {
+    private TaskFactory(Services services) {
         this.services = services;
     }
 

@@ -1,5 +1,6 @@
 package nl.corwur.cytoscape.neo4j.internal.neo4j;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 

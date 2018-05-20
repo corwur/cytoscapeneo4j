@@ -1,7 +1,7 @@
-package nl.corwur.cytoscape.neo4j.internal.commands.tasks;
+package nl.corwur.cytoscape.neo4j.internal.tasks;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.importgraph.DefaultImportStrategy;
+import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.DefaultImportStrategy;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
 
 import java.text.MessageFormat;

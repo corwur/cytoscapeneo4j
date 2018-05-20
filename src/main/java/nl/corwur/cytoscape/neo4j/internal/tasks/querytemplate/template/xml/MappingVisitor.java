@@ -1,4 +1,4 @@
-package nl.corwur.cytoscape.neo4j.internal.commands.tasks.querytemplate.template.xml;
+package nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.template.xml;
 
 public interface MappingVisitor {
     void visit(ColumnMapping columnMapping);

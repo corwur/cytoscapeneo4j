@@ -1,18 +1,13 @@
 package nl.corwur.cytoscape.neo4j.internal.neo4j;
 
 import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.AddEdgeCommand;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.AddNodeCommand;
-import nl.corwur.cytoscape.neo4j.internal.graph.GraphObject;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.Label;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.NodeLabel;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.*;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.Label;
 import org.neo4j.driver.v1.*;
 import org.neo4j.driver.v1.exceptions.AuthenticationException;
 import org.neo4j.driver.v1.exceptions.ServiceUnavailableException;
 
-import java.util.List;
-
-public class Neo4jClient {
+public class Neo4jClient  {
     private static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(Neo4jClient.class);
 
     private Driver driver;
@@ -63,39 +58,7 @@ public class Neo4jClient {
         return driver != null && driver.session().isOpen();
     }
 
-    public void executeCommand(AddEdgeCommand cmd) throws Neo4jClientException {
-        CypherQuery cypherQuery = CypherQuery.builder()
-                .query("MATCH (s:" + cmd.getNodeLabel().getLabel() + " {"+cmd.getStartNodeIdProperty()+":$"+cmd.getStartNodeIdParameter()+"}), (e:" + cmd.getNodeLabel().getLabel() + " {"+cmd.getEndNodeIdProperty()+":$"+cmd.getEndNodeIdParameter()+"}) CREATE (s) -[:" + cmd.getRelationship() + " $" + cmd.getEdgePropertiesName() + "]-> (e)")
-                .params(cmd.getStartNodeIdParameter(), cmd.getStartId())
-                .params(cmd.getEndNodeIdParameter(), cmd.getEndId())
-                .params(cmd.getRelationshipName(), cmd.getRelationship())
-                .params(cmd.getEdgePropertiesName(), cmd.getEdgeProperties())
-                .build();
-        executeQuery(cypherQuery);
-    }
-
-    public void executeCommand(AddNodeCommand cmd) throws Neo4jClientException {
-    	Label nodeName = cmd.getNodeLabel();
-    	String nodeIdMatchClause = cmd.getNodeIdPropertyName()+ ":$" + cmd.getNodeIdPropertyName();
-        String nodeIdSetClause = "n." + cmd.getNodeIdPropertyName()+ "=$" + cmd.getNodeIdPropertyName();
-        String nodeNameSetClause = "n.name ='" + cmd.getNodeName() + "'";
-        String nodeLabelClause = cmd.getNodeLabelList().stream().reduce( "", (str, label) -> str + ":" + label.getLabel(), (s1, s2) -> s1 + s2);
-
-        CypherQuery removerRelationsQuery = CypherQuery.builder().query("MATCH(n:" + nodeName.getLabel() + " {" + nodeIdMatchClause + "}) - [r] - (e) DELETE r")
-                .params(cmd.getNodeIdPropertyName(), cmd.getNodeId())
-                .build();
-        executeQuery(removerRelationsQuery);
-
-        CypherQuery removerQuery = CypherQuery.builder().query("MATCH(n:" + nodeName.getLabel() + " {" + nodeIdMatchClause + "}) DELETE n")
-                .params(cmd.getNodeIdPropertyName(), cmd.getNodeId())
-                .build();
-        executeQuery(removerQuery);
-        CypherQuery insertQuery = CypherQuery.builder().query(
-                "CREATE(n:" + nodeName.getLabel() + " $" +cmd.getNodePropertiesName()+ ") " +
-                        "SET " + nodeNameSetClause + ", " + nodeIdSetClause + (nodeLabelClause.isEmpty() ? "" : ", n" + nodeLabelClause))
-                .params(cmd.getNodePropertiesName(),cmd.getNodeProperties())
-                .params(cmd.getNodeIdPropertyName(), cmd.getNodeId())
-                .build();
-        executeQuery(insertQuery);
+    public void close() {
+        driver.close();
     }
 }
