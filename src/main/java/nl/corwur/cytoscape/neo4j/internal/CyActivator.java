@@ -60,7 +60,6 @@ public class CyActivator extends AbstractCyActivator  {
 
         Properties expandProperties = new Properties();
         expandProperties.setProperty(PREFERRED_MENU, "Apps.Cypher Queries");
-        expandProperties.setProperty(INSERT_SEPARATOR_BEFORE, "true");
         expandProperties.setProperty(TITLE,"Connect all nodes");
         ConnectNodesMenuAction connectNodesMenuAction = ConnectNodesMenuAction.create(services, false);
         registerAllServices(context, connectNodesMenuAction, expandProperties);

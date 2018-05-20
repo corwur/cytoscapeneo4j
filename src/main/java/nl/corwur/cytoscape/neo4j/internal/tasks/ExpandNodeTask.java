@@ -48,7 +48,7 @@ public class ExpandNodeTask extends AbstractNodeViewTask implements Task, Action
 			query = "match p=(n)-[r]-() where ID(n) = " + refid +" return p"; 
 		}
 		else {
-			query = "match p=(n)-["+this.edge+"]-() where ID(n) = " + refid +" return p";
+			query = "match p=(n)-[:"+this.edge+"]-() where ID(n) = " + refid +" return p";
 		}
 		CypherQuery cypherQuery = CypherQuery.builder().query(query).build();
 		
