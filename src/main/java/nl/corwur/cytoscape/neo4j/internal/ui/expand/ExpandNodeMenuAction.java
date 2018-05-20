@@ -10,10 +10,7 @@ import org.cytoscape.view.model.View;
 import org.cytoscape.work.TaskIterator;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.expand.ExpandNodeTask;
-import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
-import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
-import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClientException;
+import nl.corwur.cytoscape.neo4j.internal.tasks.ExpandNodeTask;
 
 
 /**

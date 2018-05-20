@@ -9,7 +9,7 @@ import org.cytoscape.task.NetworkTaskFactory;
 import org.cytoscape.work.TaskIterator;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.expand.ConnectNodesTask;
+import nl.corwur.cytoscape.neo4j.internal.tasks.ConnectNodesTask;
 
 /**
  * @author sven

@@ -1,4 +1,4 @@
-package nl.corwur.cytoscape.neo4j.internal.commands.tasks.expand;
+package nl.corwur.cytoscape.neo4j.internal.tasks;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,9 +16,9 @@ import org.cytoscape.work.Task;
 import org.cytoscape.work.TaskMonitor;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.importgraph.DefaultImportStrategy;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.importgraph.ImportGraphStrategy;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.importgraph.ImportGraphToCytoscape;
+import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.DefaultImportStrategy;
+import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.ImportGraphStrategy;
+import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.ImportGraphToCytoscape;
 import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClientException;

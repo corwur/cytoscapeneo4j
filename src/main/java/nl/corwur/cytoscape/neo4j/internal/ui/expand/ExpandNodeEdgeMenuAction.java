@@ -14,9 +14,9 @@ import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.StatementResult;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.expand.ExpandNodeTask;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.importgraph.DefaultImportStrategy;
-import nl.corwur.cytoscape.neo4j.internal.commands.tasks.importgraph.ImportGraphStrategy;
+import nl.corwur.cytoscape.neo4j.internal.tasks.ExpandNodeTask;
+import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.DefaultImportStrategy;
+import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.ImportGraphStrategy;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClientException;
 
