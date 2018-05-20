@@ -17,4 +17,6 @@ public interface ImportGraphStrategy {
     void copyNode(CyNetwork network, GraphNode graphNode);
     void copyEdge(CyNetwork network, GraphEdge graphEdge);
     void postProcess(CyNetwork network);
+	String getRefIDName();
+	
 }

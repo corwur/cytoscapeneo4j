@@ -1,10 +1,15 @@
 package nl.corwur.cytoscape.neo4j.internal;
 
+import static org.cytoscape.work.ServiceProperties.*;
 import nl.corwur.cytoscape.neo4j.internal.tasks.TaskExecutor;
 import nl.corwur.cytoscape.neo4j.internal.tasks.TaskFactory;
 import nl.corwur.cytoscape.neo4j.internal.configuration.AppConfiguration;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClient;
 import nl.corwur.cytoscape.neo4j.internal.ui.connect.ConnectInstanceMenuAction;
+import nl.corwur.cytoscape.neo4j.internal.ui.expand.ConnectNodesMenuAction;
+import nl.corwur.cytoscape.neo4j.internal.ui.expand.ExpandNodeEdgeMenuAction;
+import nl.corwur.cytoscape.neo4j.internal.ui.expand.ExpandNodeMenuAction;
+import nl.corwur.cytoscape.neo4j.internal.ui.expand.ExpandNodesMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.exportnetwork.ExportNetworkMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.importgraph.all.ImportAllNodesAndEdgesMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.importgraph.query.ImportCypherQueryMenuAction;
@@ -22,6 +27,8 @@ import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.view.vizmap.VisualStyleFactory;
 import org.cytoscape.work.swing.DialogTaskManager;
 import org.osgi.framework.BundleContext;
+
+import javafx.beans.property.SetProperty;
 
 import java.util.Properties;
 
@@ -46,10 +53,60 @@ public class CyActivator extends AbstractCyActivator  {
         ImportAllNodesAndEdgesMenuAction importAllNodesAndEdgesMenuAction = ImportAllNodesAndEdgesMenuAction.create(services);
         ExportNetworkMenuAction exportNetworkToNeo4jMenuAction = ExportNetworkMenuAction.create(services);
         registerAllServices(context, connectAction, new Properties());
+        registerAllServices(context, exportNetworkToNeo4jMenuAction, new Properties());
+
         registerAllServices(context, importQypherQueryMenuAction, new Properties());
         registerAllServices(context, importAllNodesAndEdgesMenuAction, new Properties());
         registerAllServices(context, importImportQueryTemplateMenuAction, new Properties() );
-        registerAllServices(context, exportNetworkToNeo4jMenuAction, new Properties());
+
+
+        Properties expandProperties = new Properties();
+        expandProperties.setProperty(PREFERRED_MENU, "Apps.Cypher Queries");
+        expandProperties.setProperty(INSERT_SEPARATOR_BEFORE, "true");
+        expandProperties.setProperty(TITLE,"Connect all nodes");
+        ConnectNodesMenuAction connectNodesMenuAction = ConnectNodesMenuAction.create(services, false);
+        registerAllServices(context, connectNodesMenuAction, expandProperties);
+
+        expandProperties = new Properties();
+        expandProperties.setProperty(PREFERRED_MENU, "Apps.Cypher Queries");
+        expandProperties.setProperty(TITLE,"Connect all selected nodes");
+        connectNodesMenuAction = ConnectNodesMenuAction.create(services, true);
+        registerAllServices(context, connectNodesMenuAction, expandProperties);
+
+        expandProperties = new Properties();
+        expandProperties.setProperty(PREFERRED_MENU, "Apps.Cypher Queries");
+        expandProperties.setProperty(TITLE,"Expand all nodes");
+        ExpandNodesMenuAction expandNodesMenuAction = ExpandNodesMenuAction.create(services, false);
+        registerAllServices(context, expandNodesMenuAction, expandProperties);
+
+        expandProperties = new Properties();
+        expandProperties.setProperty(PREFERRED_MENU, "Apps.Cypher Queries");
+        expandProperties.setProperty(TITLE,"Expand all selected nodes");
+        expandNodesMenuAction = ExpandNodesMenuAction.create(services, true);
+        registerAllServices(context, expandNodesMenuAction, expandProperties);
+
+        /*
+         *  Context menus
+         */
+        expandProperties = new Properties();
+        //expandProperties.setProperty("preferredTaskManager", "menu");
+        expandProperties.setProperty(PREFERRED_MENU, "Neo4j");
+        expandProperties.setProperty(APPS_MENU, "Apps");
+        expandProperties.setProperty(IN_CONTEXT_MENU, "true");
+
+        expandProperties.setProperty(TITLE,"Expand node");
+        ExpandNodeMenuAction expandNodeMenuAction = ExpandNodeMenuAction.create(services, false);
+        registerAllServices(context, expandNodeMenuAction, expandProperties);
+
+        expandProperties.setProperty(TITLE,"Expand node, redo default layout");
+        expandNodeMenuAction = ExpandNodeMenuAction.create(services, true);
+        registerAllServices(context, expandNodeMenuAction, expandProperties);
+
+        expandProperties = new Properties();
+        expandProperties.setProperty(PREFERRED_MENU, "Neo4j");
+        expandProperties.setProperty(IN_CONTEXT_MENU, "true");
+        ExpandNodeEdgeMenuAction expandNodeEdgeMenuAction = new ExpandNodeEdgeMenuAction(services);
+        registerAllServices(context, expandNodeEdgeMenuAction, expandProperties);
     }
 
     private Services createServices(BundleContext context) {
