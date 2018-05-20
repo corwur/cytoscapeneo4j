@@ -28,8 +28,6 @@ import org.cytoscape.view.vizmap.VisualStyleFactory;
 import org.cytoscape.work.swing.DialogTaskManager;
 import org.osgi.framework.BundleContext;
 
-import javafx.beans.property.SetProperty;
-
 import java.util.Properties;
 
 /**

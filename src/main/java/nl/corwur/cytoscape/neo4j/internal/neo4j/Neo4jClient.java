@@ -69,6 +69,8 @@ public class Neo4jClient  {
     }
 
     public void close() {
-        driver.close();
+        if(isConnected()) {
+            driver.close();
+        }
     }
 }

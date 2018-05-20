@@ -19,6 +19,7 @@ import java.util.UUID;
 import static nl.corwur.cytoscape.test.model.fixtures.CyNetworkFixtures.Fixture.NETWORK_WITH_3_NODES_1_EDGE;
 import static nl.corwur.cytoscape.test.model.fixtures.CyNetworkFixtures.emptyNetwork;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -34,6 +35,9 @@ public class CyNeo4jGraphIT {
 
     @Before
     public void setUp() {
+        assertNotNull("neo4j url not set", neo4jUrl);
+        assertNotNull("neo4j user not set", user);
+        assertNotNull("neo4j password not set", passwd);
         assertTrue("could not connect to neo4j", neo4jClient.connect(new ConnectionParameter(neo4jUrl, user, passwd.toCharArray())));
     }
     @After
