@@ -1,63 +1,63 @@
-#Templates
+# Templates
 The plugin supports parameterized cypher query templates and a configurable mapping. 
 The template is specified in an xml file, the user can select the template in the user interface:
 Apps -> Cypher Queries -> Import Stored Cypher Query.
-#XML
+# XML
 The xml contains a query, parameters and a mapping specification. 
 There are two mapping options, a default strategy 'copy all', it just copies all nodes and edges from Neo4j to cytoscape.
 Or the user can specify an explicit mapping.
 
-##cytemplate (1)
+## cytemplate (1)
 The root element for the temlae
-###query (1)
+### query (1)
 Cyher query (typically in a CDATA element)
-####parameters (0..1)
+#### parameters (0..1)
 List of parameters
-#####parameter (0..n)
+##### parameter (0..n)
 A parameter has a name and a type, it is as a parameter in the cypher query.
 Attributes:
 - - name, the parameter name, string
 - - type, a valid java type like (java.lang.String or java.lang.Integer, ...)
-###mapping (0..1)
+### mapping (0..1)
 The mapping specifies how nodes and edge are imported in cytoscape. 
 It contains two elements: node and edge.
-####node (0..1)
+#### node (0..1)
 Attributes:
 - referenceIdColumn, the name of the column where the node id is copied into to.
-#####column (0..n)
+##### column (0..n)
 Attributes:
 - type, a java type like java.lang.String 
 - name, the name of the column the value is copied into
-######expression (0..1)
+###### expression (0..1)
 The value of column is calculate by evaluating a javascript expression. 
 The variable 'node' of type 'nl.corwur.cytoscape.neo4j.internal.graph.GraphNode' is passed into the expression.
-######id (0..1)
+###### id (0..1)
 The id of the Neo4j node is copied into the column
-######property (0..1)
+###### property (0..1)
 The property of the node is copied into the column.
 Attributes:
 - key, the name of the Neo4j property.
-######label (0..1)
+###### label (0..1)
 The label of the node is copied into the column.
 Attributes:
 - match, a regular expression that matches a label.
-####edge (0..1)
+#### edge (0..1)
 An edge is mapped to columns.
-#####column (0..n)
+##### column (0..n)
 Attributes:
 - type (java type like java.lang.String)
 - name (string)
-######id
+###### id
 Copy the id of the Neo4j edge into the column
-######edgeType
+###### edgeType
 Copy the id of the Neo4j edge into the column
 
-###copyall
+### copyall
 Use a copy all mapping strategy, all nodes and relations form the query are copied.
 Attributes:
 - referenceIdColumn (string), the name of the column where the id is stored.
 
-##Example
+## Example
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <cytemplate name="test-query">
@@ -98,7 +98,7 @@ Attributes:
     </mapping>
 </cytemplate>
 ```
-##XSD
+## XSD
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">

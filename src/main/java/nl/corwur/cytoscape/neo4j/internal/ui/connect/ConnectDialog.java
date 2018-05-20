@@ -114,6 +114,7 @@ class ConnectDialog extends JDialog { //NOSONAR , hierarchy level > 5
 
         this.add(topPanel);
         this.add(buttonPanel, BorderLayout.SOUTH);
+        this.getRootPane().setDefaultButton(okButton);
 
     }
 
