@@ -14,6 +14,8 @@ import nl.corwur.cytoscape.neo4j.internal.ui.exportnetwork.ExportNetworkMenuActi
 import nl.corwur.cytoscape.neo4j.internal.ui.importgraph.all.ImportAllNodesAndEdgesMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.importgraph.query.ImportCypherQueryMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.importgraph.querytemplate.ImportQueryTemplateMenuAction;
+import nl.corwur.cytoscape.neo4j.internal.ui.shortestpath.ShortestPathMenuAction;
+
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.CySwingApplication;
 import org.cytoscape.event.CyEventHelper;
@@ -81,6 +83,12 @@ public class CyActivator extends AbstractCyActivator  {
         expandProperties.setProperty(TITLE,"Expand all selected nodes");
         expandNodesMenuAction = ExpandNodesMenuAction.create(services, true);
         registerAllServices(context, expandNodesMenuAction, expandProperties);
+
+        Properties shortestPathProperties = new Properties();
+        shortestPathProperties.setProperty(PREFERRED_MENU, "Apps.Cypher Queries");
+        shortestPathProperties.setProperty(TITLE,"Get shortest paths between selected nodes");
+        ShortestPathMenuAction shortestPathMenuAction = ShortestPathMenuAction.create(services);
+        registerAllServices(context, shortestPathMenuAction, shortestPathProperties);
 
         /*
          *  Context menus
