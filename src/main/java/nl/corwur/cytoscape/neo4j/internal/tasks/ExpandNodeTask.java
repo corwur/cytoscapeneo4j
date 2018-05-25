@@ -30,26 +30,27 @@ public class ExpandNodeTask extends AbstractNodeViewTask implements Task, Action
     private String edge;
 
 
-    public ExpandNodeTask(View<CyNode> nodeView, CyNetworkView networkView, Services services, Boolean redoLayout, String edge) {
-        super(nodeView, networkView);
-        this.services = services;
-        this.importGraphStrategy = new DefaultImportStrategy();
-        this.redoLayout = redoLayout;
-        this.edge = edge;
-    }
-
-    private void expand() throws InterruptedException, ExecutionException {
-        CyNode cyNode = (CyNode) this.nodeView.getModel();
-
-        Long refid = this.netView.getModel().getRow(cyNode).get(this.importGraphStrategy.getRefIDName(), Long.class);
-        String query;
-        if (this.edge == null) {
-            query = "match p=(n)-[r]-() where ID(n) = " + refid + " return p";
-        } else {
-            query = "match p=(n)-[" + this.edge + "]-() where ID(n) = " + refid + " return p";
-        }
-        CypherQuery cypherQuery = CypherQuery.builder().query(query).build();
-
+	public ExpandNodeTask(View<CyNode> nodeView, CyNetworkView networkView, Services services, Boolean redoLayout, String edge) {
+		super(nodeView, networkView);
+		this.services = services;
+		this.importGraphStrategy = new DefaultImportStrategy();
+		this.redoLayout = redoLayout;
+		this.edge = edge;
+	}
+	
+	private void expand() throws InterruptedException, ExecutionException {
+		CyNode cyNode = (CyNode)this.nodeView.getModel();
+		
+		Long refid = this.netView.getModel().getRow(cyNode).get(this.importGraphStrategy.getRefIDName(), Long.class);
+		String query;
+		if (this.edge == null) {
+			query = "match p=(n)-[r]-() where ID(n) = " + refid +" return p"; 
+		}
+		else {
+			query = "match p=(n)-[:"+this.edge+"]-() where ID(n) = " + refid +" return p";
+		}
+		CypherQuery cypherQuery = CypherQuery.builder().query(query).build();
+		
         CompletableFuture<Graph> result = CompletableFuture.supplyAsync(() -> getGraph(cypherQuery));
 
         while (!result.isDone()) {

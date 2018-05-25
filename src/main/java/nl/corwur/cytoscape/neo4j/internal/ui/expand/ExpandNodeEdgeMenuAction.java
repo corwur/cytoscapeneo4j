@@ -32,10 +32,11 @@ public class ExpandNodeEdgeMenuAction implements CyNodeViewContextMenuFactory {
 
     }
 
-    public void addMenuItems(Record record) {
-        JMenuItem menuItem = new JMenuItem(record.get("r", ""));
-        menuItem.addActionListener(new ExpandNodeTask(nodeView, networkView, this.services, true, record.get("r", "")));
-        menu.add(menuItem);
+	public void addMenuItems(Record record) {
+		String edge = record.get("r","");
+		JMenuItem menuItem = new JMenuItem(edge);
+		menuItem.addActionListener(new ExpandNodeTask(nodeView, networkView, this.services, true, edge));
+		menu.add(menuItem);
 
     }
 
