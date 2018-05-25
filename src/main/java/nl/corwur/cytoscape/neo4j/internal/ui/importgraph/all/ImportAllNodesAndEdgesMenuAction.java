@@ -31,7 +31,7 @@ public class ImportAllNodesAndEdgesMenuAction extends AbstractCyAction {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if(!DialogMethods.connect(services)) {
+        if (!DialogMethods.connect(services)) {
             return;
         }
 
@@ -45,9 +45,8 @@ public class ImportAllNodesAndEdgesMenuAction extends AbstractCyAction {
                             importAllNodesAndEdgesDialog.getVisualStyleTitle()
                     );
             services.getTaskExecutor().execute(importAllNodesAndEdgesFromNeo4jTask);
-        }
-        else {
-        	return;
+        } else {
+            return;
         }
     }
 

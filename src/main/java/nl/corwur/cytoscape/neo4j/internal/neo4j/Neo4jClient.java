@@ -1,13 +1,16 @@
 package nl.corwur.cytoscape.neo4j.internal.neo4j;
 
 import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.*;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.Label;
-import org.neo4j.driver.v1.*;
+import org.neo4j.driver.v1.AuthTokens;
+import org.neo4j.driver.v1.Config;
+import org.neo4j.driver.v1.Driver;
+import org.neo4j.driver.v1.GraphDatabase;
+import org.neo4j.driver.v1.Session;
+import org.neo4j.driver.v1.StatementResult;
 import org.neo4j.driver.v1.exceptions.AuthenticationException;
 import org.neo4j.driver.v1.exceptions.ServiceUnavailableException;
 
-public class Neo4jClient  {
+public class Neo4jClient {
     private static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(Neo4jClient.class);
 
     private Driver driver;
@@ -16,12 +19,12 @@ public class Neo4jClient  {
     public boolean connect(ConnectionParameter connectionParameter) {
         try {
             driver = GraphDatabase.driver(
-                connectionParameter.getBoltUrl(),
-                AuthTokens.basic(
-                    connectionParameter.getUsername(),
-                    connectionParameter.getPasswordAsString()
-                ),
-                Config.build().withoutEncryption().toConfig()
+                    connectionParameter.getBoltUrl(),
+                    AuthTokens.basic(
+                            connectionParameter.getUsername(),
+                            connectionParameter.getPasswordAsString()
+                    ),
+                    Config.build().withoutEncryption().toConfig()
             );
             return true;
         } catch (AuthenticationException | ServiceUnavailableException e) {
@@ -37,6 +40,7 @@ public class Neo4jClient  {
             throw new Neo4jClientException(e.getMessage(), e);
         }
     }
+
     public Graph getGraph(CypherQuery cypherQuery) throws Neo4jClientException {
         try (Session session = driver.session()) {
             StatementResult statementResult = session.run(cypherQuery.getQuery(), cypherQuery.getParams());
@@ -55,7 +59,7 @@ public class Neo4jClient  {
         }
     }
 
-    
+
     public void explainQuery(CypherQuery cypherQuery) throws Neo4jClientException {
         try (Session session = driver.session()) {
             session.run(cypherQuery.getExplainQuery(), cypherQuery.getParams());
@@ -69,7 +73,7 @@ public class Neo4jClient  {
     }
 
     public void close() {
-        if(isConnected()) {
+        if (isConnected()) {
             driver.close();
         }
     }

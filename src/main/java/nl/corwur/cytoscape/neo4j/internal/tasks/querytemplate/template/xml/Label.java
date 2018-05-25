@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Label {
 
-    @XmlAttribute(name="match")
+    @XmlAttribute(name = "match")
     private String match;
 
     public String getMatch() {

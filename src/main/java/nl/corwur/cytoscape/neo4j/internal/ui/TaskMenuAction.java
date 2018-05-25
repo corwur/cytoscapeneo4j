@@ -1,7 +1,7 @@
 package nl.corwur.cytoscape.neo4j.internal.ui;
 
-import nl.corwur.cytoscape.neo4j.internal.tasks.TaskExecutor;
 import nl.corwur.cytoscape.neo4j.internal.Services;
+import nl.corwur.cytoscape.neo4j.internal.tasks.TaskExecutor;
 import nl.corwur.cytoscape.neo4j.internal.ui.connect.ConnectToNeo4j;
 import org.cytoscape.application.swing.AbstractCyAction;
 import org.cytoscape.work.AbstractTask;
@@ -29,10 +29,10 @@ public class TaskMenuAction extends AbstractCyAction {
         setEnabled(false);
         setMenuGravity(0.1f);
     }
-    
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(connectToNeo4j.openConnectDialogIfNotConnected()) {
+        if (connectToNeo4j.openConnectDialogIfNotConnected()) {
             AbstractTask abstractTask = taskSupplier.get();
             taskExecutor.execute(abstractTask);
         }

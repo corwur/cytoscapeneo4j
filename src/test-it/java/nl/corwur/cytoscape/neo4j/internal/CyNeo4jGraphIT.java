@@ -3,25 +3,32 @@ package nl.corwur.cytoscape.neo4j.internal;
 import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
 import nl.corwur.cytoscape.neo4j.internal.graph.commands.Command;
 import nl.corwur.cytoscape.neo4j.internal.graph.commands.CommandException;
-import nl.corwur.cytoscape.neo4j.internal.neo4j.*;
+import nl.corwur.cytoscape.neo4j.internal.graph.implementation.GraphImplementationException;
+import nl.corwur.cytoscape.neo4j.internal.neo4j.ConnectionParameter;
+import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
+import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClient;
+import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClientException;
+import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jGraphImplementation;
 import nl.corwur.cytoscape.neo4j.internal.tasks.ImportAllNodesAndEdgesFromNeo4JTask;
 import nl.corwur.cytoscape.neo4j.internal.tasks.exportneo4j.ExportDifference;
 import nl.corwur.cytoscape.neo4j.internal.tasks.exportneo4j.ExportNew;
 import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.DefaultImportStrategy;
 import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.ImportGraphToCytoscape;
+import nl.corwur.cytoscape.test.model.fixtures.Neo4jFixtures;
 import org.cytoscape.model.CyNetwork;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.text.MessageFormat;
 import java.util.Base64;
 import java.util.UUID;
 
-import static nl.corwur.cytoscape.test.model.fixtures.CyNetworkFixtures.Fixture.NETWORK_WITH_3_NODES_1_EDGE;
+import static nl.corwur.cytoscape.test.model.fixtures.CyNetworkFixtures.CyFixture.NETWORK_WITH_3_NODES_1_EDGE;
 import static nl.corwur.cytoscape.test.model.fixtures.CyNetworkFixtures.emptyNetwork;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
 
 //@Ignore
 //@RunWith(MockitoJUnitRunner.class)
@@ -60,7 +67,7 @@ public class CyNeo4jGraphIT {
     }
 
     @Test
-    public void testExportDiffrence() throws CommandException, Neo4jClientException {
+    public void testExportDifference() throws CommandException, Neo4jClientException {
         String networkLabel = randomLabel();
         Neo4jGraphImplementation graphImplementation = Neo4jGraphImplementation.create(neo4jClient, networkLabel);
 
@@ -74,19 +81,46 @@ public class CyNeo4jGraphIT {
         importGraphToCytoscape.importGraph(graph);
 
         //export difference
-        ExportDifference exportDifference1 = ExportDifference.create(graph, cyNetwork, graphImplementation);
-        Command command1 = exportDifference1.compute();
-        command1.execute();
+        ExportDifference exportDifference = ExportDifference.create(graph, cyNetwork, graphImplementation);
+        Command command = exportDifference.compute();
+        command.execute();
 
         //import graph
-        Graph importGraph1 = neo4jClient.getGraph(importAllNodesAndEdges(networkLabel));
+        Graph importGraph = neo4jClient.getGraph(importAllNodesAndEdges(networkLabel));
 
-        assertEquals(3, importGraph1.nodes().size());
-        assertEquals(1, importGraph1.edges().size());
-
-
-
+        assertEquals(3, importGraph.nodes().size());
+        assertEquals(1, importGraph.edges().size());
     }
+
+    @Test
+    public void testExportDifferenceWithEdges() throws CommandException, Neo4jClientException, GraphImplementationException {
+        String networkLabel = randomLabel();
+
+
+        Neo4jGraphImplementation graphImplementation = Neo4jGraphImplementation.create(neo4jClient, networkLabel);
+        Neo4jFixtures.Neo4jFixture.GRAPH_5_STAR.create(neo4jClient, networkLabel);
+
+        //import graph
+        Graph graph = neo4jClient.getGraph(importAllNodesAndEdges(networkLabel));
+        CyNetwork cyNetwork = emptyNetwork();
+        ImportGraphToCytoscape importGraphToCytoscape = new ImportGraphToCytoscape(cyNetwork, new DefaultImportStrategy(), () -> false);
+        importGraphToCytoscape.importGraph(graph);
+
+        //export difference
+        ExportDifference exportDifference = ExportDifference.create(graph, cyNetwork, graphImplementation);
+        Command command = exportDifference.compute();
+        command.execute();
+
+        //import graph
+        Graph importGraph = neo4jClient.getGraph(importAllNodesAndEdges(networkLabel));
+
+        assertEquals(5, importGraph.nodes().size());
+        assertEquals(20, importGraph.edges().size());
+    }
+
+
+
+
 
     private String randomLabel() {
         return Base64.getEncoder().encodeToString(UUID.randomUUID().toString().getBytes());

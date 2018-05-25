@@ -17,10 +17,10 @@ import java.util.Properties;
 public class AppConfiguration {
 
     private static final Logger LOG = Logger.getLogger(AppConfiguration.class);
-    public static final String TEMPLATEDIR = "templatedir";
-    public static final String NEO4J_HOST = "neo4j.host";
-    public static final String NEO4J_USERNAME = "neo4j.username";
-    private Properties properties =new Properties();
+    private static final String TEMPLATEDIR = "templatedir";
+    private static final String NEO4J_HOST = "neo4j.host";
+    private static final String NEO4J_USERNAME = "neo4j.username";
+    private Properties properties = new Properties();
 
     public String getTemplateDirectory() {
         return properties.getProperty(TEMPLATEDIR);
@@ -41,7 +41,7 @@ public class AppConfiguration {
 
     public void load() {
         Path configurationPath = getConfigurationFile();
-        if(configurationPath.toFile().exists()) {
+        if (configurationPath.toFile().exists()) {
             try {
                 properties.load(Files.newInputStream(configurationPath, StandardOpenOption.READ));
             } catch (IOException e) {
@@ -59,9 +59,9 @@ public class AppConfiguration {
     }
 
     public void save() {
-        Path configfile = getConfigurationFile();
+        Path configurationFile = getConfigurationFile();
         try {
-            properties.store(Files.newOutputStream(configfile, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING), "saved app config: " + LocalDateTime.now());
+            properties.store(Files.newOutputStream(configurationFile, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING), "saved app config: " + LocalDateTime.now());
         } catch (IOException e) {
             LOG.warn("Error writing config file");
         }
@@ -69,7 +69,7 @@ public class AppConfiguration {
 
     private Path getConfigurationFile() {
         String tmpDir = System.getProperty("java.io.tmpdir");
-        return Paths.get(tmpDir,"corwur-cyneo4j.properties");
+        return Paths.get(tmpDir, "corwur-cyneo4j.properties");
     }
 
     public void setConnectionParameters(String hostname, String username) {

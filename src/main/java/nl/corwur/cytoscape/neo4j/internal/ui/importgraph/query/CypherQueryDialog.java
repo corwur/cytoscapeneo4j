@@ -33,14 +33,14 @@ public class CypherQueryDialog extends JDialog { //NOSONAR, hierarchy > 5
 
         setTitle("Execute Cypher Query");
 
-        JEditorPane  queryText = new JEditorPane ();
+        JEditorPane queryText = new JEditorPane();
         queryText.setText(cypherQuery);
         JScrollPane queryTextScrollPane = new JScrollPane(queryText);
         queryTextScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
         JComboBox visualStyleComboBox = new JComboBox(visualStyles);
         JLabel visualStyleLabel = new JLabel("Visual Style");
-        JTextField networkNameField = new JTextField(network,30);
+        JTextField networkNameField = new JTextField(network, 30);
         JLabel networkNameLabel = new JLabel("network");
 
 
@@ -50,7 +50,7 @@ public class CypherQueryDialog extends JDialog { //NOSONAR, hierarchy > 5
             CypherQueryDialog.this.dispose();
         });
         JButton executButton = new JButton("Execute Query");
-        executButton.addActionListener(e ->{
+        executButton.addActionListener(e -> {
             executeQuery = true;
             cypherQuery = queryText.getText();
             network = networkNameField.getText();
@@ -59,7 +59,7 @@ public class CypherQueryDialog extends JDialog { //NOSONAR, hierarchy > 5
         });
 
         JButton explainButton = new JButton("Explain");
-        executButton.addActionListener(e ->{
+        executButton.addActionListener(e -> {
             explainQuery = true;
             cypherQuery = queryText.getText();
             network = networkNameField.getText();
@@ -67,10 +67,10 @@ public class CypherQueryDialog extends JDialog { //NOSONAR, hierarchy > 5
             CypherQueryDialog.this.dispose();
         });
 
-        JPanel topPanel =new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JPanel queryPanel =new JPanel();
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel queryPanel = new JPanel();
         queryPanel.setLayout(new BorderLayout());
-        JPanel buttonPanel =new JPanel();
+        JPanel buttonPanel = new JPanel();
         topPanel.add(networkNameLabel);
         topPanel.add(networkNameField);
         topPanel.add(visualStyleLabel);
@@ -82,9 +82,9 @@ public class CypherQueryDialog extends JDialog { //NOSONAR, hierarchy > 5
 
         add(topPanel, BorderLayout.NORTH);
         add(queryPanel);
-        add(buttonPanel,  BorderLayout.SOUTH);
+        add(buttonPanel, BorderLayout.SOUTH);
 
-        setMinimumSize(new Dimension(400,300));
+        setMinimumSize(new Dimension(400, 300));
         DialogMethods.center(this);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setModal(true);
@@ -114,7 +114,7 @@ public class CypherQueryDialog extends JDialog { //NOSONAR, hierarchy > 5
     }
 
     public static void main(String[] args) {
-        CypherQueryDialog dialog = new CypherQueryDialog(null, new String[]{ "v1" , "v2"});
+        CypherQueryDialog dialog = new CypherQueryDialog(null, new String[]{"v1", "v2"});
         dialog.showDialog();
     }
 }

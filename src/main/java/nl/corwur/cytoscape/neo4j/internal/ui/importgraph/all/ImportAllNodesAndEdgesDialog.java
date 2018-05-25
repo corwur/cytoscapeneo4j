@@ -32,10 +32,10 @@ public class ImportAllNodesAndEdgesDialog extends JDialog { //NOSONAR, hierarchy
 
         JComboBox visualStyleComboBox = new JComboBox(visualStyles);
         JLabel visualStyleLabel = new JLabel("Visual Style");
-        JTextField networkNameField = new JTextField(network,30);
+        JTextField networkNameField = new JTextField(network, 30);
         JLabel networkNameLabel = new JLabel("Network, (all neo4j nodes with this label)");
         JLabel warning = new JLabel("This could result in a very large graph!");
-        		
+
 
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(e -> {
@@ -43,15 +43,15 @@ public class ImportAllNodesAndEdgesDialog extends JDialog { //NOSONAR, hierarchy
             ImportAllNodesAndEdgesDialog.this.dispose();
         });
         JButton executButton = new JButton("Import");
-        executButton.addActionListener(e ->{
+        executButton.addActionListener(e -> {
             executeQuery = true;
             network = networkNameField.getText();
             visualStyleTitle = (String) visualStyleComboBox.getSelectedItem();
             ImportAllNodesAndEdgesDialog.this.dispose();
         });
 
-        JPanel topPanel =new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JPanel buttonPanel =new JPanel();
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel buttonPanel = new JPanel();
         topPanel.add(networkNameLabel);
         topPanel.add(networkNameField);
         topPanel.add(visualStyleLabel);
@@ -61,7 +61,7 @@ public class ImportAllNodesAndEdgesDialog extends JDialog { //NOSONAR, hierarchy
         buttonPanel.add(executButton);
         buttonPanel.add(warning);
         add(topPanel, BorderLayout.CENTER);
-        add(buttonPanel,  BorderLayout.SOUTH);
+        add(buttonPanel, BorderLayout.SOUTH);
         DialogMethods.center(this);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setModal(true);
@@ -83,7 +83,7 @@ public class ImportAllNodesAndEdgesDialog extends JDialog { //NOSONAR, hierarchy
     }
 
     public static void main(String[] args) {
-        ImportAllNodesAndEdgesDialog dialog = new ImportAllNodesAndEdgesDialog(null, new String[]{ "v1" , "v2"});
+        ImportAllNodesAndEdgesDialog dialog = new ImportAllNodesAndEdgesDialog(null, new String[]{"v1", "v2"});
         dialog.showDialog();
     }
 }

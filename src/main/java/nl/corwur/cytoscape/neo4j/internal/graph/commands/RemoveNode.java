@@ -1,10 +1,12 @@
 package nl.corwur.cytoscape.neo4j.internal.graph.commands;
 
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.GraphImplementation;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.GraphImplementationException;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.PropertyKey;
+import nl.corwur.cytoscape.neo4j.internal.graph.implementation.GraphImplementationException;
+import nl.corwur.cytoscape.neo4j.internal.graph.implementation.PropertyKey;
 
-public class RemoveNode  extends GraphCommand  {
+/**
+ * Remove a node from a graph.
+ */
+public class RemoveNode extends GraphCommand {
 
     private final PropertyKey<Long> nodeId;
 

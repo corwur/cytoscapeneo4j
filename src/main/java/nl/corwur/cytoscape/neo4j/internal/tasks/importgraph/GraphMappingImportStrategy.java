@@ -1,11 +1,15 @@
 package nl.corwur.cytoscape.neo4j.internal.tasks.importgraph;
 
+import nl.corwur.cytoscape.neo4j.internal.graph.GraphEdge;
+import nl.corwur.cytoscape.neo4j.internal.graph.GraphNode;
 import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.EdgeColumnMapping;
 import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.GraphMapping;
 import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.NodeColumnMapping;
-import nl.corwur.cytoscape.neo4j.internal.graph.GraphEdge;
-import nl.corwur.cytoscape.neo4j.internal.graph.GraphNode;
-import org.cytoscape.model.*;
+import org.cytoscape.model.CyEdge;
+import org.cytoscape.model.CyNetwork;
+import org.cytoscape.model.CyNode;
+import org.cytoscape.model.CyRow;
+import org.cytoscape.model.CyTable;
 
 import java.util.Optional;
 
@@ -26,12 +30,12 @@ public class GraphMappingImportStrategy implements ImportGraphStrategy {
         CyTable nodeTable = network.getDefaultNodeTable();
         CyTable edgeTable = network.getDefaultEdgeTable();
 
-        for(NodeColumnMapping<?> nodeColumnMapping : graphMapping.getNodeColumnMapping()) {
+        for (NodeColumnMapping<?> nodeColumnMapping : graphMapping.getNodeColumnMapping()) {
             if (!columnExists(nodeTable, nodeColumnMapping.getColumnName())) {
                 nodeTable.createColumn(nodeColumnMapping.getColumnName(), nodeColumnMapping.getColumnType(), true);
             }
         }
-        for(EdgeColumnMapping<?> edgeColumnMapping : graphMapping.getEdgeColumnMapping()) {
+        for (EdgeColumnMapping<?> edgeColumnMapping : graphMapping.getEdgeColumnMapping()) {
             if (!columnExists(edgeTable, edgeColumnMapping.getColumnName())) {
                 edgeTable.createColumn(edgeColumnMapping.getColumnName(), edgeColumnMapping.getColumnType(), true);
             }
@@ -46,7 +50,7 @@ public class GraphMappingImportStrategy implements ImportGraphStrategy {
     public void copyNode(CyNetwork network, GraphNode graphNode) {
         CyNode cyNode = getNodeByIdOrElseCreate(network, graphNode.getId());
         CyRow cyRow = network.getRow(cyNode);
-        for(NodeColumnMapping<?> nodeColumnMapping : graphMapping.getNodeColumnMapping()) {
+        for (NodeColumnMapping<?> nodeColumnMapping : graphMapping.getNodeColumnMapping()) {
             cyRow.set(nodeColumnMapping.getColumnName(), nodeColumnMapping.getValueExpression().eval(graphNode));
         }
     }
@@ -54,7 +58,7 @@ public class GraphMappingImportStrategy implements ImportGraphStrategy {
     @Override
     public void copyEdge(CyNetwork network, GraphEdge graphEdge) {
 
-        if(edgeExists(network, graphEdge.getId())) {
+        if (edgeExists(network, graphEdge.getId())) {
             return;
         }
         Long start = graphEdge.getStart();
@@ -65,7 +69,7 @@ public class GraphMappingImportStrategy implements ImportGraphStrategy {
         CyEdge cyEdge = network.addEdge(startNode, endNode, true);
         CyRow cyRow = network.getRow(cyEdge);
 
-        for(EdgeColumnMapping<?> edgeColumnMapping : graphMapping.getEdgeColumnMapping()) {
+        for (EdgeColumnMapping<?> edgeColumnMapping : graphMapping.getEdgeColumnMapping()) {
             cyRow.set(edgeColumnMapping.getColumnName(), edgeColumnMapping.getValueExpression().eval(graphEdge));
         }
     }
@@ -77,9 +81,9 @@ public class GraphMappingImportStrategy implements ImportGraphStrategy {
 
     private boolean edgeExists(CyNetwork network, long id) {
         String edgeRefereceIdColumn = graphMapping.getEdgeReferenceIdColumn();
-        return ! network
+        return !network
                 .getDefaultEdgeTable()
-                .getMatchingRows(edgeRefereceIdColumn , id)
+                .getMatchingRows(edgeRefereceIdColumn, id)
                 .isEmpty();
     }
 
@@ -88,7 +92,7 @@ public class GraphMappingImportStrategy implements ImportGraphStrategy {
     }
 
     private Optional<CyNode> getNodeById(CyNetwork network, Long id) {
-        String primaryKeyColumnName =network.getDefaultNodeTable().getPrimaryKey().getName();
+        String primaryKeyColumnName = network.getDefaultNodeTable().getPrimaryKey().getName();
         String nodeReferenceIdColumn = graphMapping.getNodeReferenceIdColumn();
         return network
                 .getDefaultNodeTable()
@@ -105,8 +109,8 @@ public class GraphMappingImportStrategy implements ImportGraphStrategy {
         return newNode;
     }
 
-	@Override
-	public String getRefIDName() {
-		return null;
-	}
+    @Override
+    public String getRefIDName() {
+        return null;
+    }
 }

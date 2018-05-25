@@ -16,7 +16,8 @@ public class GraphEdge implements GraphObject {
     private String type;
     private long id;
 
-    public GraphEdge() {}
+    public GraphEdge() {
+    }
 
     public GraphEdge(long id, long start, long end) {
         this.id = id;
@@ -82,11 +83,11 @@ public class GraphEdge implements GraphObject {
 
     GraphEdge merge(GraphEdge that) {
         this.properties.putAll(that.properties.keySet()
-                    .stream()
-                    .filter(key -> !this.properties.containsKey(key))
-                    .collect(Collectors.toMap(key -> key, key -> that.properties.get(key)))
-            );
-        if(that.type != null) {
+                .stream()
+                .filter(key -> !this.properties.containsKey(key))
+                .collect(Collectors.toMap(key -> key, key -> that.properties.get(key)))
+        );
+        if (that.type != null) {
             this.type = type;
         }
         return this;

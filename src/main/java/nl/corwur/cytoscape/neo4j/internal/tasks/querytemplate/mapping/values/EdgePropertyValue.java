@@ -4,6 +4,7 @@ import nl.corwur.cytoscape.neo4j.internal.graph.GraphEdge;
 
 /**
  * This class implements the value expresion for the property of an edge.
+ *
  * @param <T>
  */
 public class EdgePropertyValue<T> implements ValueExpression<GraphEdge, T> {

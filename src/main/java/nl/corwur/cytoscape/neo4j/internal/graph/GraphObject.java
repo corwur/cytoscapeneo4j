@@ -6,5 +6,5 @@ package nl.corwur.cytoscape.neo4j.internal.graph;
  * A graph object can be processed by a visitor.
  */
 public interface GraphObject {
-   void accept(GraphVisitor graphVisitor);
+    void accept(GraphVisitor graphVisitor);
 }

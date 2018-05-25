@@ -1,12 +1,10 @@
 package nl.corwur.cytoscape.neo4j.internal.tasks.importgraph;
 
+import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
 import nl.corwur.cytoscape.neo4j.internal.tasks.CancelTaskException;
-import nl.corwur.cytoscape.neo4j.internal.graph.*;
 import org.cytoscape.model.CyNetwork;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
 /**
@@ -27,6 +25,7 @@ public class ImportGraphToCytoscape {
 
     /**
      * Import a graph asynchronous, check if the import is cancelled.
+     *
      * @param graph
      */
     public void importGraph(Graph graph) {
@@ -35,7 +34,7 @@ public class ImportGraphToCytoscape {
             importGraphStrategy.copyGraph(network, graph);
             importGraphStrategy.postProcess(network);
         });
-        while(!future.isDone()) {
+        while (!future.isDone()) {
             cancel();
             try {
                 Thread.sleep(500);
@@ -46,7 +45,7 @@ public class ImportGraphToCytoscape {
     }
 
     private void cancel() {
-        if(isCancelled.get()) {
+        if (isCancelled.get()) {
             throw new CancelTaskException("Import canceled");
         }
     }

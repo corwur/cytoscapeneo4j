@@ -1,7 +1,7 @@
 package nl.corwur.cytoscape.neo4j.internal.ui.importgraph.querytemplate;
 
-import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.CopyAllMappingStrategy;
 import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.CypherQueryTemplate;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.CopyAllMappingStrategy;
 import nl.corwur.cytoscape.neo4j.internal.ui.DialogMethods;
 
 import javax.swing.*;
@@ -12,7 +12,9 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.awt.BorderLayout.*;
+import static java.awt.BorderLayout.CENTER;
+import static java.awt.BorderLayout.PAGE_END;
+import static java.awt.BorderLayout.PAGE_START;
 
 public class EditQueryTemplateDialog extends JDialog { //NOSONAR, hierarchy > 5
 
@@ -30,7 +32,7 @@ public class EditQueryTemplateDialog extends JDialog { //NOSONAR, hierarchy > 5
     private ParametersPanel parametersPanel;
     private boolean ok = false;
 
-    EditQueryTemplateDialog(){
+    EditQueryTemplateDialog() {
         this.cypherQuery = null;
         name = "New query";
         parameterTypes = new HashMap<>();
@@ -79,10 +81,10 @@ public class EditQueryTemplateDialog extends JDialog { //NOSONAR, hierarchy > 5
         builder.setName(attributesPanel.nameField.getText());
         builder.addMappingStrategy(new CopyAllMappingStrategy(attributesPanel.referenceColumnField.getText(), networkName));
 
-        for(int i = 1; i < parametersPanel.getRowCount(); i++) {
+        for (int i = 1; i < parametersPanel.getRowCount(); i++) {
             String parameter = parametersPanel.getParameter(i);
             Class<?> parameterType = parametersPanel.getParameterType(i);
-            if(parameter != null && !parameter.isEmpty() && parameterType != null ) {
+            if (parameter != null && !parameter.isEmpty() && parameterType != null) {
                 builder.addParameter(parameter, parameterType);
             }
         }
@@ -114,9 +116,9 @@ public class EditQueryTemplateDialog extends JDialog { //NOSONAR, hierarchy > 5
 
         AttributesPanel(String name, String referenceColumn) {
             nameLabel = new JLabel("Name");
-            nameField = new JTextField(name,20);
+            nameField = new JTextField(name, 20);
             referenceColumnLabel = new JLabel("Reference column");
-            referenceColumnField = new JTextField(referenceColumn,20);
+            referenceColumnField = new JTextField(referenceColumn, 20);
 
             setLayout(new FlowLayout());
             add(nameLabel);
@@ -129,8 +131,9 @@ public class EditQueryTemplateDialog extends JDialog { //NOSONAR, hierarchy > 5
 
     private final class EditQueryPanel extends JPanel {
         JTextArea textArea;
+
         EditQueryPanel(String cypherQuery) {
-            textArea = new JTextArea(20,40);
+            textArea = new JTextArea(20, 40);
             textArea.setText(cypherQuery);
             JScrollPane textAreaScrollPane = new JScrollPane(textArea);
             JLabel label = new JLabel("Cypher Query");
@@ -143,11 +146,11 @@ public class EditQueryTemplateDialog extends JDialog { //NOSONAR, hierarchy > 5
 
     private final class ParametersPanel extends JPanel {
 
-        private ParameterTableModel parameterTableModel =  new ParameterTableModel ();
+        private ParameterTableModel parameterTableModel = new ParameterTableModel();
 
         public ParametersPanel(Map<String, Class<?>> parameterTypes) {
 
-            for(Map.Entry<String, Class<?>> entry : parameterTypes.entrySet()) {
+            for (Map.Entry<String, Class<?>> entry : parameterTypes.entrySet()) {
                 parameterTableModel.addRow(entry.getKey(), entry.getValue());
             }
 
@@ -173,7 +176,7 @@ public class EditQueryTemplateDialog extends JDialog { //NOSONAR, hierarchy > 5
             JButton removeButton = new JButton("Remove");
             removeButton.addActionListener(e -> {
                 int[] selected = jTable.getSelectedRows();
-                for(int index : selected) {
+                for (int index : selected) {
                     if (index != 0) {
                         parameterTableModel.removeRow(index);
                     }
@@ -192,7 +195,7 @@ public class EditQueryTemplateDialog extends JDialog { //NOSONAR, hierarchy > 5
         private final class ParameterTableModel extends DefaultTableModel {
 
             public ParameterTableModel() {
-                super(new String[] {"Parameter","Type"}, 1);
+                super(new String[]{"Parameter", "Type"}, 1);
             }
 
             @Override
@@ -202,14 +205,14 @@ public class EditQueryTemplateDialog extends JDialog { //NOSONAR, hierarchy > 5
 
 
             public void addRow(String key, Class<?> value) {
-                super.addRow(new Object[] {key, getTypeAsString(value)});
+                super.addRow(new Object[]{key, getTypeAsString(value)});
             }
 
             private String getTypeAsString(Class<?> clz) {
-                if(clz.equals(String.class)) return STRING;
-                if(clz.equals(Integer.class)) return INTEGER;
-                if(clz.equals(Long.class)) return LONG;
-                if(clz.equals(Double.class)) return DOUBLE;
+                if (clz.equals(String.class)) return STRING;
+                if (clz.equals(Integer.class)) return INTEGER;
+                if (clz.equals(Long.class)) return LONG;
+                if (clz.equals(Double.class)) return DOUBLE;
                 return null;
             }
         }
@@ -218,22 +221,27 @@ public class EditQueryTemplateDialog extends JDialog { //NOSONAR, hierarchy > 5
             return parameterTableModel.getRowCount();
         }
 
-         private String getParameter(int row) {
-            return (String) parameterTableModel.getValueAt(row,0);
+        private String getParameter(int row) {
+            return (String) parameterTableModel.getValueAt(row, 0);
         }
 
         private Class<?> getParameterType(int row) {
-            return getType((String) parameterTableModel.getValueAt(row,1));
+            return getType((String) parameterTableModel.getValueAt(row, 1));
         }
 
         private Class<?> getType(String type) {
-            if(type == null) return null;
-            switch(type) {
-                case STRING: return String.class;
-                case INTEGER: return Integer.class;
-                case LONG: return Long.class;
-                case DOUBLE: return Double.class;
-                default: return null;
+            if (type == null) return null;
+            switch (type) {
+                case STRING:
+                    return String.class;
+                case INTEGER:
+                    return Integer.class;
+                case LONG:
+                    return Long.class;
+                case DOUBLE:
+                    return Double.class;
+                default:
+                    return null;
             }
         }
     }

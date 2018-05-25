@@ -4,6 +4,7 @@ import nl.corwur.cytoscape.neo4j.internal.graph.GraphEdge;
 
 /**
  * This class implements the value expression for evaluated javascriptcode.
+ *
  * @param <V>
  */
 public class EdgeScriptExpression<V> extends ValueScriptExpression<GraphEdge, V> {

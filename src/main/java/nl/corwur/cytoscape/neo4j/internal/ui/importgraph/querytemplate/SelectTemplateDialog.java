@@ -1,7 +1,7 @@
 package nl.corwur.cytoscape.neo4j.internal.ui.importgraph.querytemplate;
 
-import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.CopyAllMappingStrategy;
 import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.CypherQueryTemplate;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.CopyAllMappingStrategy;
 import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.provider.CypherQueryTemplateDirectoryProvider;
 import nl.corwur.cytoscape.neo4j.internal.ui.DialogMethods;
 
@@ -55,7 +55,7 @@ public class SelectTemplateDialog extends JDialog {  //NOSONAR, hierarchy > 5
         setTitle("Select Query");
 
         TemplateQueryListEntry[] templateQueryListEntries = getQueryTemplatesFromDir();
-        if(templateQueryListEntries == null) {
+        if (templateQueryListEntries == null) {
             this.dispose();
             return;
         }
@@ -245,24 +245,24 @@ public class SelectTemplateDialog extends JDialog {  //NOSONAR, hierarchy > 5
                 TemplateQueryListEntry templateQueryListEntry = (TemplateQueryListEntry) queryList.getSelectedValue();
                 CypherQueryTemplate cypherQueryTemplate = provider.getCypherQueryTemplate(Long.valueOf(templateQueryListEntry.id)).orElse(null);
                 if (cypherQueryTemplate != null && (cypherQueryTemplate.getMapping() instanceof CopyAllMappingStrategy)) {
-                        CopyAllMappingStrategy copyAllMappingStrategy = (CopyAllMappingStrategy) cypherQueryTemplate.getMapping();
-                        EditQueryTemplateDialog editQueryTemplateDialog = new EditQueryTemplateDialog(
-                                cypherQueryTemplate.getName(),
-                                cypherQueryTemplate.getCypherQuery(),
-                                cypherQueryTemplate.getParameterTypes(),
-                                copyAllMappingStrategy.getReferenceColumn(),
-                                copyAllMappingStrategy.getNetworkName()
-                        );
-                        editQueryTemplateDialog.showDialog();
-                        if (editQueryTemplateDialog.isOk()) {
-                            updateCypherQueryTemplate(templateQueryListEntry, editQueryTemplateDialog);
-                        }
-
-                    } else {
-                        JOptionPane.showMessageDialog(this, "The mapping strategy is not supported by the editor, use a text editor to edit this query");
+                    CopyAllMappingStrategy copyAllMappingStrategy = (CopyAllMappingStrategy) cypherQueryTemplate.getMapping();
+                    EditQueryTemplateDialog editQueryTemplateDialog = new EditQueryTemplateDialog(
+                            cypherQueryTemplate.getName(),
+                            cypherQueryTemplate.getCypherQuery(),
+                            cypherQueryTemplate.getParameterTypes(),
+                            copyAllMappingStrategy.getReferenceColumn(),
+                            copyAllMappingStrategy.getNetworkName()
+                    );
+                    editQueryTemplateDialog.showDialog();
+                    if (editQueryTemplateDialog.isOk()) {
+                        updateCypherQueryTemplate(templateQueryListEntry, editQueryTemplateDialog);
                     }
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "The mapping strategy is not supported by the editor, use a text editor to edit this query");
                 }
             }
+        }
 
         private void updateCypherQueryTemplate(TemplateQueryListEntry templateQueryListEntry, EditQueryTemplateDialog editQueryTemplateDialog) {
             try {

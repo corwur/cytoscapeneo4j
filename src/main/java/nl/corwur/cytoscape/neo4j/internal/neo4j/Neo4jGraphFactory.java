@@ -1,6 +1,13 @@
 package nl.corwur.cytoscape.neo4j.internal.neo4j;
 
-import nl.corwur.cytoscape.neo4j.internal.graph.*;
+import nl.corwur.cytoscape.neo4j.internal.graph.GraphEdge;
+import nl.corwur.cytoscape.neo4j.internal.graph.GraphLong;
+import nl.corwur.cytoscape.neo4j.internal.graph.GraphNode;
+import nl.corwur.cytoscape.neo4j.internal.graph.GraphObject;
+import nl.corwur.cytoscape.neo4j.internal.graph.GraphObjectList;
+import nl.corwur.cytoscape.neo4j.internal.graph.GraphPath;
+import nl.corwur.cytoscape.neo4j.internal.graph.GraphResult;
+import nl.corwur.cytoscape.neo4j.internal.graph.GraphUnspecifiedType;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.Value;
 import org.neo4j.driver.v1.types.Entity;
@@ -10,27 +17,33 @@ import org.neo4j.driver.v1.types.Relationship;
 import org.neo4j.driver.v1.util.Pair;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 class Neo4jGraphFactory {
 
     GraphObject create(Record record) {
         GraphResult neo4jResult = new GraphResult();
-        for(Pair<String, Value> pair : record.fields()) {
-                neo4jResult.add(pair.key(), create(pair.value()));
+        for (Pair<String, Value> pair : record.fields()) {
+            neo4jResult.add(pair.key(), create(pair.value()));
         }
         return neo4jResult;
     }
 
     private GraphObject create(Value value) {
         switch (value.type().name()) {
-            case "NODE" : return create(value.asNode());
-            case "RELATIONSHIP" : return create(value.asRelationship());
-            case "PATH" : return create(value.asPath());
-            case "BOOLEAN" : return create(value.asRelationship());
-            case "INTEGER" : return create(value.asLong());
-            case "LIST OF ANY?" : return create(value.asList());
-            default: return new GraphUnspecifiedType();
+            case "NODE":
+                return create(value.asNode());
+            case "RELATIONSHIP":
+                return create(value.asRelationship());
+            case "PATH":
+                return create(value.asPath());
+            case "BOOLEAN":
+                return create(value.asRelationship());
+            case "INTEGER":
+                return create(value.asLong());
+            case "LIST OF ANY?":
+                return create(value.asList());
+            default:
+                return new GraphUnspecifiedType();
         }
     }
 
@@ -38,14 +51,14 @@ class Neo4jGraphFactory {
         return objects.stream()
                 .filter(o -> o instanceof Entity)
                 .map(o -> this.create((Entity) o))
-                .collect(GraphObjectList::new, (list, o) -> list.add(o), (list1,list2) -> list1.addAll(list2));
+                .collect(GraphObjectList::new, (list, o) -> list.add(o), (list1, list2) -> list1.addAll(list2));
     }
 
     private GraphObject create(Entity entity) {
-        if(entity instanceof Relationship) {
-            return create((Relationship)entity);
+        if (entity instanceof Relationship) {
+            return create((Relationship) entity);
         } else if (entity instanceof Node) {
-            return create((Node)entity);
+            return create((Node) entity);
         }
         throw new IllegalStateException();
     }
@@ -53,10 +66,10 @@ class Neo4jGraphFactory {
     private GraphObject create(Path path) {
 
         GraphPath graphPath = new GraphPath();
-        for(Node node : path.nodes()) {
+        for (Node node : path.nodes()) {
             graphPath.add(create(node));
         }
-        for(Relationship relationship : path.relationships()) {
+        for (Relationship relationship : path.relationships()) {
             graphPath.add(create(relationship));
         }
         return graphPath;
@@ -79,7 +92,7 @@ class Neo4jGraphFactory {
     private GraphNode create(org.neo4j.driver.v1.types.Node node) {
         GraphNode graphNode = new GraphNode(node.id());
         graphNode.setProperties(node.asMap());
-        for(String label :node.labels()) {
+        for (String label : node.labels()) {
             graphNode.addLabel(label);
         }
         return graphNode;

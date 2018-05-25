@@ -1,9 +1,12 @@
 package nl.corwur.cytoscape.neo4j.internal.graph.commands;
 
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.GraphImplementationException;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.PropertyKey;
+import nl.corwur.cytoscape.neo4j.internal.graph.implementation.GraphImplementationException;
+import nl.corwur.cytoscape.neo4j.internal.graph.implementation.PropertyKey;
 
-public class RemoveEdge extends GraphCommand  {
+/**
+ * Remove an edge from a graph
+ */
+public class RemoveEdge extends GraphCommand {
 
     private final PropertyKey<Long> edgeId;
 

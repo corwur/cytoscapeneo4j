@@ -8,7 +8,8 @@ import java.awt.*;
 
 public class DialogMethods {
 
-    private DialogMethods() {}
+    private DialogMethods() {
+    }
 
     public static void centerAndShow(JDialog jDialog) {
         center(jDialog);
@@ -28,7 +29,7 @@ public class DialogMethods {
 
     public static boolean connect(Services services) {
         ConnectToNeo4j connectToNeo4j = ConnectToNeo4j.create(services);
-        if(!connectToNeo4j.openConnectDialogIfNotConnected()) {
+        if (!connectToNeo4j.openConnectDialogIfNotConnected()) {
             JOptionPane.showMessageDialog(services.getCySwingApplication().getJFrame(), "Not connected");
             return false;
         }

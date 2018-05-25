@@ -2,7 +2,12 @@ package nl.corwur.cytoscape.neo4j.internal.tasks.importgraph;
 
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphEdge;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphNode;
-import org.cytoscape.model.*;
+import org.cytoscape.model.CyColumn;
+import org.cytoscape.model.CyEdge;
+import org.cytoscape.model.CyIdentifiable;
+import org.cytoscape.model.CyNetwork;
+import org.cytoscape.model.CyNode;
+import org.cytoscape.model.CyTable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,8 +53,9 @@ public class DefaultImportStrategy implements ImportGraphStrategy {
     }
 
     public String getRefIDName() {
-    	return COLUMN_REFERENCEID;
+        return COLUMN_REFERENCEID;
     }
+
     public void copyNode(CyNetwork network, GraphNode graphNode) {
         long nodeId = Long.valueOf(graphNode.getProperties().getOrDefault(COLUMN_REFERENCEID, graphNode.getId()).toString());
         idMap.put(graphNode.getId(), nodeId);
@@ -61,22 +67,22 @@ public class DefaultImportStrategy implements ImportGraphStrategy {
     }
 
     private String createJSONArray(List<Object> values) {
-		ArrayList<String> quoted = new ArrayList<String>();
-		values.forEach(v -> { 
-			if (!(v instanceof String))  {
-				quoted.add((String)v);  
-			}
-			else  {
-				quoted.add("\"" + (String)v + "\"");
-			}
-		} );
-		return "[" + String.join(",", quoted) + "]";
+        ArrayList<String> quoted = new ArrayList<String>();
+        values.forEach(v -> {
+            if (!(v instanceof String)) {
+                quoted.add((String) v);
+            } else {
+                quoted.add("\"" + (String) v + "\"");
+            }
+        });
+        return "[" + String.join(",", quoted) + "]";
 
     }
+
     private void saveNode(CyNetwork network, GraphNode graphNode) {
 
         long nodeId = Long.valueOf(graphNode.getProperties().getOrDefault(COLUMN_REFERENCEID, graphNode.getId()).toString());
-        if(nodeExists(network, nodeId)) {
+        if (nodeExists(network, nodeId)) {
             return;
         }
 
@@ -84,18 +90,17 @@ public class DefaultImportStrategy implements ImportGraphStrategy {
         CyNode cyNode = getOrCreateNode(network, nodeId);
 
         for (Map.Entry<String, Object> entry : graphNode.getProperties().entrySet()) {
-        	if (entry.getValue() instanceof List) {
-        		@SuppressWarnings("unchecked")
-				String value = createJSONArray((List<Object>)entry.getValue());
-        		createColumn(cyTable, entry.getKey(), value);
-	            setEntry(cyTable, cyNode, entry.getKey(),value);        		
-        	}
-        	else {
-	            createColumn(cyTable, entry.getKey(), entry.getValue());
-	            setEntry(cyTable, cyNode, entry.getKey(),entry.getValue());
-        	}
+            if (entry.getValue() instanceof List) {
+                @SuppressWarnings("unchecked")
+                String value = createJSONArray((List<Object>) entry.getValue());
+                createColumn(cyTable, entry.getKey(), String.class);
+                setEntry(cyTable, cyNode, entry.getKey(), value);
+            } else {
+                createColumn(cyTable, entry.getKey(), entry.getValue().getClass());
+                setEntry(cyTable, cyNode, entry.getKey(), entry.getValue());
+            }
         }
-        createColumn(cyTable, "_neo4j_labels", graphNode.getLabels());
+        createListColumn(cyTable, "_neo4j_labels", String.class);
         setEntry(cyTable, cyNode, "_neo4j_labels", graphNode.getLabels());
     }
 
@@ -105,12 +110,12 @@ public class DefaultImportStrategy implements ImportGraphStrategy {
 
     private void saveEdge(CyNetwork network, GraphEdge graphEdge) {
         long edgeId = Long.valueOf(graphEdge.getProperties().getOrDefault(COLUMN_REFERENCEID, graphEdge.getId()).toString());
-        if(edgeExists(network, edgeId)) {
+        if (edgeExists(network, edgeId)) {
             return;
         }
         CyTable cyTable = network.getDefaultEdgeTable();
 
-        Long start = idMap.getOrDefault(graphEdge.getStart(),graphEdge.getStart());
+        Long start = idMap.getOrDefault(graphEdge.getStart(), graphEdge.getStart());
         Long end = idMap.getOrDefault(graphEdge.getEnd(), graphEdge.getEnd());
         String type = graphEdge.getType();
 
@@ -124,16 +129,15 @@ public class DefaultImportStrategy implements ImportGraphStrategy {
         network.getRow(cyEdge).set(CyEdge.INTERACTION, type);
 
         for (Map.Entry<String, Object> entry : graphEdge.getProperties().entrySet()) {
-        	if (entry.getValue() instanceof List) {
-        		@SuppressWarnings("unchecked")
-				String value = createJSONArray((List<Object>)entry.getValue());
-        		createColumn(cyTable, entry.getKey(), value);
-	            setEntry(cyTable, cyEdge, entry.getKey(),value);        		
-        	}
-        	else {
-	            createColumn(cyTable, entry.getKey(), entry.getValue());
-	            setEntry(cyTable, cyEdge, entry.getKey(), entry.getValue());
-        	}
+            if (entry.getValue() instanceof List) {
+                @SuppressWarnings("unchecked")
+                String value = createJSONArray((List<Object>) entry.getValue());
+                createColumn(cyTable, entry.getKey(), value.getClass());
+                setEntry(cyTable, cyEdge, entry.getKey(), value);
+            } else {
+                createColumn(cyTable, entry.getKey(), entry.getValue().getClass());
+                setEntry(cyTable, cyEdge, entry.getKey(), entry.getValue());
+            }
         }
     }
 
@@ -142,7 +146,7 @@ public class DefaultImportStrategy implements ImportGraphStrategy {
     }
 
     private CyNode getOrCreateNode(CyNetwork network, long id) {
-        CyColumn primaryKey =  network.getDefaultNodeTable().getPrimaryKey();
+        CyColumn primaryKey = network.getDefaultNodeTable().getPrimaryKey();
         return network.getDefaultNodeTable()
                 .getMatchingRows(COLUMN_REFERENCEID, id)
                 .stream()
@@ -151,23 +155,29 @@ public class DefaultImportStrategy implements ImportGraphStrategy {
                 .orElseGet(() -> this.createNode(network, id));
     }
 
-    private CyNode createNode(CyNetwork network, long id ) {
+    private CyNode createNode(CyNetwork network, long id) {
         CyNode cyNode = network.addNode();
         setEntry(network.getDefaultNodeTable(), cyNode, COLUMN_REFERENCEID, id);
         return cyNode;
     }
 
-    private void createColumn(CyTable cyTable, String key, Object value) {
+    private void createColumn(CyTable cyTable, String key, Class<?> type) {
         if (cyTable.getColumn(key) == null) {
-            if (value instanceof List) {
-                cyTable.createListColumn(key, String.class, true);
-            } else {
-                cyTable.createColumn(key, value.getClass(), true);
-            }
+            cyTable.createColumn(key, type, true);
         }
     }
 
+    private void createListColumn(CyTable cyTable, String key, Class<?> type) {
+        if (cyTable.getColumn(key) == null) {
+            cyTable.createListColumn(key, type, true);
+        }
+    }
+
+
     private void setEntry(CyTable cyTable, CyIdentifiable cyId, String key, Object value) {
-        cyTable.getRow(cyId.getSUID()).set(key, value);
+        CyColumn cyColumn = cyTable.getColumn(key);
+        if(cyColumn != null && cyColumn.getType().isInstance(value)) {
+            cyTable.getRow(cyId.getSUID()).set(key, value);
+        }
     }
 }

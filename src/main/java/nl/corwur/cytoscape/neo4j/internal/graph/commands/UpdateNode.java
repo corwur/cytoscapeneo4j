@@ -1,11 +1,16 @@
 package nl.corwur.cytoscape.neo4j.internal.graph.commands;
 
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.*;
+import nl.corwur.cytoscape.neo4j.internal.graph.implementation.GraphImplementationException;
+import nl.corwur.cytoscape.neo4j.internal.graph.implementation.NodeLabel;
+import nl.corwur.cytoscape.neo4j.internal.graph.implementation.PropertyKey;
 
 import java.util.List;
 import java.util.Map;
 
-public class UpdateNode extends GraphCommand  {
+/**
+ * Update a node
+ */
+public class UpdateNode extends GraphCommand {
 
     private PropertyKey<Long> nodeId;
     private List<NodeLabel> labels;

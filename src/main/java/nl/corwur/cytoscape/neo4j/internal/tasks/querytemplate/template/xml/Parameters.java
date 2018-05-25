@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Parameters {
 
-    @XmlElement(name="parameter")
+    @XmlElement(name = "parameter")
     private List<Parameter> parameterList = new ArrayList<>();
 
     public List<Parameter> getParameterList() {

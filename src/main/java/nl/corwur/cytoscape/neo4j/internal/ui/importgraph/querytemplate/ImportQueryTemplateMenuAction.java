@@ -1,8 +1,8 @@
 package nl.corwur.cytoscape.neo4j.internal.ui.importgraph.querytemplate;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
-import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.CypherQueryTemplate;
 import nl.corwur.cytoscape.neo4j.internal.tasks.AbstractImportTask;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.CypherQueryTemplate;
 import nl.corwur.cytoscape.neo4j.internal.ui.DialogMethods;
 import org.cytoscape.application.swing.AbstractCyAction;
 import org.cytoscape.view.vizmap.VisualStyle;
@@ -24,13 +24,13 @@ public class ImportQueryTemplateMenuAction extends AbstractCyAction {
     private ImportQueryTemplateMenuAction(Services services) {
         super(MENU_TITLE);
         setPreferredMenu(MENU_LOC);
-        this.services =services;
+        this.services = services;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if(!DialogMethods.connect(services)) {
+        if (!DialogMethods.connect(services)) {
             return;
         }
 
@@ -44,9 +44,9 @@ public class ImportQueryTemplateMenuAction extends AbstractCyAction {
                 });
         dialog.showDialog();
 
-        if(dialog.isOk()) {
+        if (dialog.isOk()) {
             CypherQueryTemplate query = dialog.getCypherQueryTemplate();
-            if(query != null) {
+            if (query != null) {
                 String networkName = dialog.getNetworkName();
                 String visualStyle = dialog.getVisualStyle();
                 ParameterDialog parameterDialog = new ParameterDialog(services.getCySwingApplication().getJFrame(), query.getParameterTypes());

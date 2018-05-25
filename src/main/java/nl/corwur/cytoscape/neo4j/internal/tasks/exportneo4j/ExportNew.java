@@ -1,12 +1,20 @@
 package nl.corwur.cytoscape.neo4j.internal.tasks.exportneo4j;
 
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.*;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.GraphImplementation;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.NodeLabel;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.PropertyKey;
-import org.cytoscape.model.*;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.Command;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.CommandBuilder;
+import nl.corwur.cytoscape.neo4j.internal.graph.implementation.GraphImplementation;
+import nl.corwur.cytoscape.neo4j.internal.graph.implementation.NodeLabel;
+import nl.corwur.cytoscape.neo4j.internal.graph.implementation.PropertyKey;
+import org.cytoscape.model.CyEdge;
+import org.cytoscape.model.CyIdentifiable;
+import org.cytoscape.model.CyNetwork;
+import org.cytoscape.model.CyNode;
+import org.cytoscape.model.CyRow;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ExportNew {
@@ -26,13 +34,17 @@ public class ExportNew {
     }
 
     public Command compute() {
-        for(CyNode cyNode : cyNetwork.getNodeList()) {
+        for (CyNode cyNode : cyNetwork.getNodeList()) {
             commandBuilder.addNode(getNodeLabels(cyNode), getProperties(cyNode));
         }
-        for(CyEdge cyEdge : cyNetwork.getEdgeList()) {
-            commandBuilder.addEdge(suid(cyEdge.getSource()), suid(cyEdge.getTarget()), getProperties(cyEdge));
+        for (CyEdge cyEdge : cyNetwork.getEdgeList()) {
+            commandBuilder.addEdge(suid(cyEdge.getSource()), suid(cyEdge.getTarget()), getProperties(cyEdge), relationship(cyEdge));
         }
         return commandBuilder.build();
+    }
+
+    private String relationship(CyEdge cyEdge) {
+        return cyNetwork.getRow(cyEdge).get("name", String.class, "relationship");
     }
 
 
@@ -40,7 +52,7 @@ public class ExportNew {
         return new PropertyKey<>(SUID, cyIdentifiable.getSUID());
     }
 
-    private Map<String,Object> getProperties(CyIdentifiable cyIdentifiable) {
+    private Map<String, Object> getProperties(CyIdentifiable cyIdentifiable) {
         CyRow cyRow = cyNetwork.getRow(cyIdentifiable);
         Map<String, Object> properties = new HashMap<>(cyRow.getAllValues());
         properties.put(SUID, cyIdentifiable.getSUID());
@@ -49,7 +61,7 @@ public class ExportNew {
 
     private List<NodeLabel> getNodeLabels(CyIdentifiable cyIdentifiable) {
         CyRow cyRow = cyNetwork.getRow(cyIdentifiable);
-        if(cyRow.isSet(NEO4JLABELS)) {
+        if (cyRow.isSet(NEO4JLABELS)) {
             return cyRow.getList(NEO4JLABELS, String.class).stream()
                     .map(NodeLabel::create)
                     .collect(Collectors.toList());

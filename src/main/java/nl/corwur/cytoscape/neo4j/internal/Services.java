@@ -1,9 +1,9 @@
 package nl.corwur.cytoscape.neo4j.internal;
 
-import nl.corwur.cytoscape.neo4j.internal.tasks.TaskExecutor;
-import nl.corwur.cytoscape.neo4j.internal.tasks.TaskFactory;
 import nl.corwur.cytoscape.neo4j.internal.configuration.AppConfiguration;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClient;
+import nl.corwur.cytoscape.neo4j.internal.tasks.TaskExecutor;
+import nl.corwur.cytoscape.neo4j.internal.tasks.TaskFactory;
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.CySwingApplication;
 import org.cytoscape.event.CyEventHelper;

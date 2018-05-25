@@ -1,9 +1,11 @@
 package nl.corwur.cytoscape.neo4j.internal.graph;
 
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.*;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.GraphImplementation;
-
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -43,6 +45,7 @@ public class Graph implements GraphObject {
 
     /**
      * Add a new node, if the node already exists merge the node.
+     *
      * @param node
      */
     public void add(GraphNode node) {
@@ -51,6 +54,7 @@ public class Graph implements GraphObject {
 
     /**
      * Add a new edge, if the edge already exists merge the edge. If the start or end node does not exists create a new node.
+     *
      * @param edge
      */
 
@@ -61,7 +65,6 @@ public class Graph implements GraphObject {
     }
 
     /**
-     *
      * @return the number of nodes + the number of edges in the graph
      */
     public int size() {
@@ -76,11 +79,12 @@ public class Graph implements GraphObject {
     private BiFunction<Long, GraphNode, GraphNode> merge(GraphNode node) {
         return merge(oldValue -> oldValue.merge(node), node);
     }
+
     private BiFunction<Long, GraphEdge, GraphEdge> merge(GraphEdge edge) {
         return merge(oldValue -> oldValue.merge(edge), edge);
     }
 
-    private <T> BiFunction<Long, T, T> merge(Function<T,T> merge, T defaultValue) {
+    private <T> BiFunction<Long, T, T> merge(Function<T, T> merge, T defaultValue) {
         return (id, oldValue) -> Optional.ofNullable(oldValue)
                 .map(value -> merge.apply(value))
                 .orElse(defaultValue);

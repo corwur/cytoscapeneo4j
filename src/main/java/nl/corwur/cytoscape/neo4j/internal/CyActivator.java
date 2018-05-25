@@ -1,10 +1,9 @@
 package nl.corwur.cytoscape.neo4j.internal;
 
-import static org.cytoscape.work.ServiceProperties.*;
-import nl.corwur.cytoscape.neo4j.internal.tasks.TaskExecutor;
-import nl.corwur.cytoscape.neo4j.internal.tasks.TaskFactory;
 import nl.corwur.cytoscape.neo4j.internal.configuration.AppConfiguration;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClient;
+import nl.corwur.cytoscape.neo4j.internal.tasks.TaskExecutor;
+import nl.corwur.cytoscape.neo4j.internal.tasks.TaskFactory;
 import nl.corwur.cytoscape.neo4j.internal.ui.connect.ConnectInstanceMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.expand.ConnectNodesMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.expand.ExpandNodeEdgeMenuAction;
@@ -30,13 +29,19 @@ import org.osgi.framework.BundleContext;
 
 import java.util.Properties;
 
+import static org.cytoscape.work.ServiceProperties.APPS_MENU;
+import static org.cytoscape.work.ServiceProperties.INSERT_SEPARATOR_BEFORE;
+import static org.cytoscape.work.ServiceProperties.IN_CONTEXT_MENU;
+import static org.cytoscape.work.ServiceProperties.PREFERRED_MENU;
+import static org.cytoscape.work.ServiceProperties.TITLE;
+
 /**
  * This class is the entrypoint of the application,
  * it loads the configuration,
  * creates an object that holds references to cytoscape classes,
  * adds menu items.
  */
-public class CyActivator extends AbstractCyActivator  {
+public class CyActivator extends AbstractCyActivator {
 
     private AppConfiguration appConfiguration = new AppConfiguration();
 
@@ -55,31 +60,31 @@ public class CyActivator extends AbstractCyActivator  {
 
         registerAllServices(context, importQypherQueryMenuAction, new Properties());
         registerAllServices(context, importAllNodesAndEdgesMenuAction, new Properties());
-        registerAllServices(context, importImportQueryTemplateMenuAction, new Properties() );
+        registerAllServices(context, importImportQueryTemplateMenuAction, new Properties());
 
 
         Properties expandProperties = new Properties();
         expandProperties.setProperty(PREFERRED_MENU, "Apps.Cypher Queries");
         expandProperties.setProperty(INSERT_SEPARATOR_BEFORE, "true");
-        expandProperties.setProperty(TITLE,"Connect all nodes");
+        expandProperties.setProperty(TITLE, "Connect all nodes");
         ConnectNodesMenuAction connectNodesMenuAction = ConnectNodesMenuAction.create(services, false);
         registerAllServices(context, connectNodesMenuAction, expandProperties);
 
         expandProperties = new Properties();
         expandProperties.setProperty(PREFERRED_MENU, "Apps.Cypher Queries");
-        expandProperties.setProperty(TITLE,"Connect all selected nodes");
+        expandProperties.setProperty(TITLE, "Connect all selected nodes");
         connectNodesMenuAction = ConnectNodesMenuAction.create(services, true);
         registerAllServices(context, connectNodesMenuAction, expandProperties);
 
         expandProperties = new Properties();
         expandProperties.setProperty(PREFERRED_MENU, "Apps.Cypher Queries");
-        expandProperties.setProperty(TITLE,"Expand all nodes");
+        expandProperties.setProperty(TITLE, "Expand all nodes");
         ExpandNodesMenuAction expandNodesMenuAction = ExpandNodesMenuAction.create(services, false);
         registerAllServices(context, expandNodesMenuAction, expandProperties);
 
         expandProperties = new Properties();
         expandProperties.setProperty(PREFERRED_MENU, "Apps.Cypher Queries");
-        expandProperties.setProperty(TITLE,"Expand all selected nodes");
+        expandProperties.setProperty(TITLE, "Expand all selected nodes");
         expandNodesMenuAction = ExpandNodesMenuAction.create(services, true);
         registerAllServices(context, expandNodesMenuAction, expandProperties);
 
@@ -92,11 +97,11 @@ public class CyActivator extends AbstractCyActivator  {
         expandProperties.setProperty(APPS_MENU, "Apps");
         expandProperties.setProperty(IN_CONTEXT_MENU, "true");
 
-        expandProperties.setProperty(TITLE,"Expand node");
+        expandProperties.setProperty(TITLE, "Expand node");
         ExpandNodeMenuAction expandNodeMenuAction = ExpandNodeMenuAction.create(services, false);
         registerAllServices(context, expandNodeMenuAction, expandProperties);
 
-        expandProperties.setProperty(TITLE,"Expand node, redo default layout");
+        expandProperties.setProperty(TITLE, "Expand node, redo default layout");
         expandNodeMenuAction = ExpandNodeMenuAction.create(services, true);
         registerAllServices(context, expandNodeMenuAction, expandProperties);
 

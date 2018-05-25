@@ -1,8 +1,5 @@
 package nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping;
 
-import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.DefaultImportStrategy;
-import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.ImportGraphStrategy;
-
 /**
  * This class implements the copy all mapping strategy.
  */

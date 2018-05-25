@@ -37,7 +37,7 @@ public class CypherQueryTemplateDirectoryProvider {
     }
 
     public Optional<CypherQueryTemplate> getCypherQueryTemplate(Long id) {
-        if(cypherQueryTemplateMap.containsKey(id)) {
+        if (cypherQueryTemplateMap.containsKey(id)) {
             return Optional.of(cypherQueryTemplateMap.get(id).queryTemplate);
         } else {
             return Optional.empty();
@@ -47,12 +47,12 @@ public class CypherQueryTemplateDirectoryProvider {
     public void readDirectory(Path templateDirectory) {
         this.cypherQueryTemplateMap.clear();
         Reader reader = new Reader();
-        try(DirectoryStream<Path> directoryStream = Files.newDirectoryStream(templateDirectory, "*.xml")) {
+        try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(templateDirectory, "*.xml")) {
             long id = 0;
-            for(Path filePath : directoryStream) {
+            for (Path filePath : directoryStream) {
                 CypherQueryTemplate queryTemplate = parseTemplateQueryXml(reader, filePath);
-                if(queryTemplate != null) {
-                    this.cypherQueryTemplateMap.put(id++, new TemplateMapEntry(queryTemplate, filePath) );
+                if (queryTemplate != null) {
+                    this.cypherQueryTemplateMap.put(id++, new TemplateMapEntry(queryTemplate, filePath));
                 }
             }
         } catch (IOException e) {
@@ -84,7 +84,7 @@ public class CypherQueryTemplateDirectoryProvider {
 
     public void putCypherQueryTemplate(Long id, CypherQueryTemplate cypherQuery) throws IOException, JAXBException {
 
-        if(cypherQueryTemplateMap.containsKey(id)) {
+        if (cypherQueryTemplateMap.containsKey(id)) {
             Path path = cypherQueryTemplateMap.get(id).filePath;
             Writer writer = new Writer();
             OutputStream outputStream = Files.newOutputStream(path);
@@ -96,7 +96,7 @@ public class CypherQueryTemplateDirectoryProvider {
         }
     }
 
-    private class TemplateMapEntry  {
+    private class TemplateMapEntry {
         final CypherQueryTemplate queryTemplate;
         final Path filePath;
 

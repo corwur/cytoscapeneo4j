@@ -1,6 +1,5 @@
 package nl.corwur.cytoscape.neo4j.internal.neo4j;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,11 +47,10 @@ public class CypherQuery {
             return this;
         }
 
-        public Builder params(Map<String,Object> map) {
+        public Builder params(Map<String, Object> map) {
             this.params.putAll(map);
             return this;
         }
-
 
 
         public CypherQuery build() {

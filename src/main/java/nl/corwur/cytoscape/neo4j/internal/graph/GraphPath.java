@@ -18,6 +18,7 @@ public class GraphPath implements GraphObject {
     public void add(GraphNode graphNode) {
         nodes.add(graphNode);
     }
+
     public void add(GraphEdge graphEdge) {
         edges.add(graphEdge);
     }

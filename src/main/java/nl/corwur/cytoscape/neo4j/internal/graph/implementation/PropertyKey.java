@@ -1,6 +1,7 @@
-package nl.corwur.cytoscape.neo4j.internal.graph.commands.p1;
+package nl.corwur.cytoscape.neo4j.internal.graph.implementation;
 
 public class PropertyKey<T> {
+
     private final String name;
     private final T value;
 

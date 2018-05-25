@@ -1,16 +1,17 @@
 package nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping;
 
-import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.values.ValueExpression;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphEdge;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.values.ValueExpression;
 
 /**
  * This class implements a mapping from a value expression to a Cytoscape column.
+ *
  * @param <T>
  */
 public class EdgeColumnMapping<T> {
     private final String columnName;
     private final Class<T> columnType;
-    private final ValueExpression<GraphEdge,T> valueExpression;
+    private final ValueExpression<GraphEdge, T> valueExpression;
 
     public EdgeColumnMapping(String columnName, Class<T> columnType, ValueExpression<GraphEdge, T> valueExpression) {
         this.columnName = columnName;

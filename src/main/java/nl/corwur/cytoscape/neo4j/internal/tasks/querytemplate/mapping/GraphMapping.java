@@ -1,10 +1,8 @@
 package nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping;
 
-import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.GraphMappingImportStrategy;
-import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.ImportGraphStrategy;
-import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.values.ValueExpression;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphEdge;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphNode;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.values.ValueExpression;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +76,7 @@ public class GraphMapping implements MappingStrategy {
             this.nodeReferenceIdColumn = nodeReferenceIdColumn;
             return this;
         }
+
         public Builder setEdgeReferenceIdColumn(String edgeReferenceIdColumn) {
             this.edgeReferenceIdColumn = edgeReferenceIdColumn;
             return this;

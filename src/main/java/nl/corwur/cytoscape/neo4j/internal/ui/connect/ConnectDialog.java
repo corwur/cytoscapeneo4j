@@ -31,7 +31,7 @@ class ConnectDialog extends JDialog { //NOSONAR , hierarchy level > 5
         setModal(true);
         setResizable(true);
         pack();
-        setSize(380,200);
+        setSize(380, 200);
         setVisible(true);
     }
 
@@ -119,7 +119,7 @@ class ConnectDialog extends JDialog { //NOSONAR , hierarchy level > 5
     }
 
     private void ok() {
-        if(connectionCheck.test(getParameters())) {
+        if (connectionCheck.test(getParameters())) {
             ok = true;
             dispose();
         } else {

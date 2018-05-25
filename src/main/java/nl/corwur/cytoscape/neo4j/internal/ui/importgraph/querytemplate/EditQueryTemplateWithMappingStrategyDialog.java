@@ -52,7 +52,7 @@ public class EditQueryTemplateWithMappingStrategyDialog extends JDialog {  //NOS
 
     private final class EditQueryPanel extends JPanel {
         EditQueryPanel() {
-            JTextArea textArea = new JTextArea(20,40);
+            JTextArea textArea = new JTextArea(20, 40);
             JLabel label = new JLabel("Cypher Query");
             setLayout(new BorderLayout());
             add(label, PAGE_START);
@@ -63,7 +63,7 @@ public class EditQueryTemplateWithMappingStrategyDialog extends JDialog {  //NOS
     private final class ParametersPanel extends JPanel {
         ParametersPanel() {
             JTable jTable = new JTable();
-            jTable.setModel(new ParameterTableModel ());
+            jTable.setModel(new ParameterTableModel());
             jTable.getModel().setValueAt("Parametername", 0, 0);
             jTable.getModel().setValueAt("Type", 0, 1);
 
@@ -80,10 +80,11 @@ public class EditQueryTemplateWithMappingStrategyDialog extends JDialog {  //NOS
             add(label, PAGE_START);
             add(jTable, CENTER);
         }
+
         private final class ParameterTableModel extends DefaultTableModel {
 
             public ParameterTableModel() {
-                super(new String[] {"Parameter","Type"}, 5);
+                super(new String[]{"Parameter", "Type"}, 5);
             }
 
             @Override
@@ -97,11 +98,11 @@ public class EditQueryTemplateWithMappingStrategyDialog extends JDialog {  //NOS
     private final class NodeMappingPanel extends JPanel {
         NodeMappingPanel() {
             JTable jTable = new JTable();
-            jTable.setModel(new DefaultTableModel(5,4));
-            jTable.setValueAt("Columnname",0,0);
-            jTable.setValueAt("Columntype",0,1);
-            jTable.setValueAt("Mappingtype",0,2);
-            jTable.setValueAt("Mapping",0,3);
+            jTable.setModel(new DefaultTableModel(5, 4));
+            jTable.setValueAt("Columnname", 0, 0);
+            jTable.setValueAt("Columntype", 0, 1);
+            jTable.setValueAt("Mappingtype", 0, 2);
+            jTable.setValueAt("Mapping", 0, 3);
 
             TableColumn columnTypeColumn = jTable.getColumnModel().getColumn(1);
             JComboBox comboBoxColumnType = new JComboBox();
@@ -129,10 +130,10 @@ public class EditQueryTemplateWithMappingStrategyDialog extends JDialog {  //NOS
         EdgeMappingPanel() {
             JTable jTable = new JTable();
             jTable.setModel(new DefaultTableModel(10, 4));
-            jTable.setValueAt("Columnname",0,0);
-            jTable.setValueAt("Columntype",0,1);
-            jTable.setValueAt("Mappingtype",0,2);
-            jTable.setValueAt("Mapping",0,3);
+            jTable.setValueAt("Columnname", 0, 0);
+            jTable.setValueAt("Columntype", 0, 1);
+            jTable.setValueAt("Mappingtype", 0, 2);
+            jTable.setValueAt("Mapping", 0, 3);
 
             TableColumn columnTypeColumn = jTable.getColumnModel().getColumn(1);
             JComboBox comboBoxColumnType = new JComboBox();

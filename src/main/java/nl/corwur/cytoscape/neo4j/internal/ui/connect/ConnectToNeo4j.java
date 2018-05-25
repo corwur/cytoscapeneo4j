@@ -28,14 +28,14 @@ public class ConnectToNeo4j {
 
 
     public boolean openConnectDialogIfNotConnected() {
-        if(neo4jClient.isConnected()) {
+        if (neo4jClient.isConnected()) {
             return true;
         }
         return connect();
     }
 
     public boolean connect() {
-            ConnectDialog connectDialog = new ConnectDialog(cySwingApplication.getJFrame(), neo4jClient::connect,
+        ConnectDialog connectDialog = new ConnectDialog(cySwingApplication.getJFrame(), neo4jClient::connect,
                 appConfiguration.getNeo4jHost(),
                 appConfiguration.getNeo4jUsername()
         );

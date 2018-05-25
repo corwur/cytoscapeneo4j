@@ -4,6 +4,7 @@ import nl.corwur.cytoscape.neo4j.internal.graph.GraphNode;
 
 /**
  * This class implements the value expression for a node property.
+ *
  * @param <T>
  */
 public class NodePropertyValue<T> implements ValueExpression<GraphNode, T> {

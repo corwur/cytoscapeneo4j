@@ -1,4 +1,5 @@
 package nl.corwur.cytoscape.neo4j.internal.ui.importgraph.querytemplate;
+
 import nl.corwur.cytoscape.neo4j.internal.ui.DialogMethods;
 
 import javax.swing.*;
@@ -29,20 +30,19 @@ public class ParameterDialog extends JDialog {  //NOSONAR, hierarchy > 5
 
         JTable parameterTable = new JTable();
         parameterTable.setBorder(new MatteBorder(1, 1, 0, 0, Color.BLACK));
-        parameterTable.setIntercellSpacing(new Dimension(4,4));
+        parameterTable.setIntercellSpacing(new Dimension(4, 4));
         parameterTable.setRowHeight(24);
         parameterTable.setShowHorizontalLines(true);
-        DefaultTableModel model = new DefaultTableModel(getParametersAsRows(), new String[] {"Parameter", "Value"}) {
+        DefaultTableModel model = new DefaultTableModel(getParametersAsRows(), new String[]{"Parameter", "Value"}) {
             @Override
-            public boolean isCellEditable(int row, int column)
-            {
-                return column>0;
+            public boolean isCellEditable(int row, int column) {
+                return column > 0;
             }
         };
         parameterTable.setModel(model);
         parameterTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
         parameterTable.getModel().addTableModelListener(e -> {
-            String key = (String) parameterTable.getValueAt(e.getFirstRow(),0);
+            String key = (String) parameterTable.getValueAt(e.getFirstRow(), 0);
             Object value = ((TableModel) e.getSource()).getValueAt(e.getFirstRow(), e.getColumn());
             parameters.put(key, value);
         });
@@ -82,7 +82,7 @@ public class ParameterDialog extends JDialog {  //NOSONAR, hierarchy > 5
 
         Object[][] rows = new Object[parameterTypes.size()][2];
         int i = 0;
-        for(Map.Entry<String,Class<?>> entry : parameterTypes.entrySet()) {
+        for (Map.Entry<String, Class<?>> entry : parameterTypes.entrySet()) {
             rows[i][0] = entry.getKey();
             rows[i][1] = "";
             i++;

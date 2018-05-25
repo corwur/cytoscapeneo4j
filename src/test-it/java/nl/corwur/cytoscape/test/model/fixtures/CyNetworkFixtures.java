@@ -10,7 +10,11 @@ import org.cytoscape.event.DummyCyEventHelper;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.SavePolicy;
-import org.cytoscape.model.internal.*;
+import org.cytoscape.model.internal.CyNetworkManagerImpl;
+import org.cytoscape.model.internal.CyNetworkTableManagerImpl;
+import org.cytoscape.model.internal.CyRootNetworkImpl;
+import org.cytoscape.model.internal.CyTableFactoryImpl;
+import org.cytoscape.model.internal.CyTableManagerImpl;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.service.util.CyServiceRegistrar;
 import org.cytoscape.session.CyNetworkNaming;
@@ -22,12 +26,12 @@ public class CyNetworkFixtures {
 
     public static final String MY_NAME = "my_name";
 
-    public enum Fixture {
+    public enum CyFixture {
         NETWORK_WITH_3_NODES_1_EDGE(createNetworkWith3NodesAnd1Edge());
 
         private final CyNetwork network;
 
-        Fixture(CyNetwork network) {
+        CyFixture(CyNetwork network) {
             this.network = network;
         }
 

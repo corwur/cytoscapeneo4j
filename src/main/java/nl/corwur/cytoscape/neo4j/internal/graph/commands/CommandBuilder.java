@@ -1,8 +1,8 @@
 package nl.corwur.cytoscape.neo4j.internal.graph.commands;
 
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.GraphImplementation;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.NodeLabel;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.PropertyKey;
+import nl.corwur.cytoscape.neo4j.internal.graph.implementation.GraphImplementation;
+import nl.corwur.cytoscape.neo4j.internal.graph.implementation.NodeLabel;
+import nl.corwur.cytoscape.neo4j.internal.graph.implementation.PropertyKey;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -19,15 +19,15 @@ public class CommandBuilder {
         return this;
     }
 
-    public CommandBuilder addEdge(PropertyKey<Long> startId, PropertyKey<Long> endId, Map<String, Object> properties) {
-        AddEdge addEdge = AddEdge.create(startId, endId, properties);
+    public CommandBuilder addEdge(PropertyKey<Long> startId, PropertyKey<Long> endId, Map<String, Object> properties, String relationship) {
+        AddEdge addEdge = AddEdge.create(startId, endId, properties, relationship);
         addEdge.setGraphImplementation(graphImplementation);
         commandList.add(addEdge);
         return this;
     }
 
 
-    public CommandBuilder  updateNode(PropertyKey<Long> nodeId, List<NodeLabel> labels, Map<String, Object> properties) {
+    public CommandBuilder updateNode(PropertyKey<Long> nodeId, List<NodeLabel> labels, Map<String, Object> properties) {
         UpdateNode updateNode = UpdateNode.create(nodeId, labels, properties);
         updateNode.setGraphImplementation(graphImplementation);
         commandList.add(updateNode);

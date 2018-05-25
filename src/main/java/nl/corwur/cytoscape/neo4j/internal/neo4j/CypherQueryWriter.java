@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Map;
-
 
 
 public class CypherQueryWriter {

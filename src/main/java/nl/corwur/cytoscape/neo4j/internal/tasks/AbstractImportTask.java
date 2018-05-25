@@ -1,16 +1,15 @@
 package nl.corwur.cytoscape.neo4j.internal.tasks;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
-import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQueryWriter;
-import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.ImportGraphStrategy;
-import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.ImportGraphToCytoscape;
 import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
+import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQueryWriter;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClientException;
+import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.ImportGraphStrategy;
+import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.ImportGraphToCytoscape;
 import org.cytoscape.event.CyEventHelper;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
-import org.cytoscape.model.CyRow;
 import org.cytoscape.model.CyTable;
 import org.cytoscape.view.layout.CyLayoutAlgorithm;
 import org.cytoscape.view.model.CyNetworkView;
@@ -52,13 +51,13 @@ public abstract class AbstractImportTask extends AbstractTask {
             explainQuery(cypherQuery);
             CompletableFuture<Graph> result = CompletableFuture.supplyAsync(() -> getGraph(cypherQuery));
 
-            while(!result.isDone()) {
-                if(this.cancelled) {
+            while (!result.isDone()) {
+                if (this.cancelled) {
                     result.cancel(true);
                 }
                 Thread.sleep(400);
             }
-            if(result.isCompletedExceptionally()) {
+            if (result.isCompletedExceptionally()) {
                 throw new IllegalStateException("Error executing cypher query");
             }
 
@@ -106,7 +105,7 @@ public abstract class AbstractImportTask extends AbstractTask {
         CypherQueryWriter cypherQueryWriter = new CypherQueryWriter(writer);
         cypherQueryWriter.write(cypherQuery);
         CyTable cyTable = network.getDefaultNetworkTable();
-        if(cyTable.getColumn("cypher_query") == null) {
+        if (cyTable.getColumn("cypher_query") == null) {
             network.getDefaultNetworkTable().createColumn("cypher_query", String.class, true);
         }
         network.getRow(network).set("cypher_query", writer.toString());

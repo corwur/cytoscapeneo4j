@@ -7,10 +7,10 @@ import javax.xml.bind.annotation.XmlAttribute;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CopyAll implements Mapping {
 
-    @XmlAttribute(name="referenceIdColumn")
+    @XmlAttribute(name = "referenceIdColumn")
     private String referenceIdColumn;
 
-    @XmlAttribute(name="network")
+    @XmlAttribute(name = "network")
     private String network;
 
     public String getReferenceIdColumn() {

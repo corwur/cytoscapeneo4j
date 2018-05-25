@@ -34,7 +34,7 @@ public class ImportCypherQueryMenuAction extends AbstractCyAction {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if(!DialogMethods.connect(services)) {
+        if (!DialogMethods.connect(services)) {
             return;
         }
         boolean finished = false;
@@ -64,7 +64,7 @@ public class ImportCypherQueryMenuAction extends AbstractCyAction {
             } catch (Neo4jClientException e1) {
                 JOptionPane.showMessageDialog(services.getCySwingApplication().getJFrame(), e1.getMessage());
             }
-            if(!finished) {
+            if (!finished) {
                 cypherQueryDialog = new CypherQueryDialog(
                         services.getCySwingApplication().getJFrame(),
                         getAllVisualStyleTitle(),
@@ -72,7 +72,7 @@ public class ImportCypherQueryMenuAction extends AbstractCyAction {
                         cypherQueryDialog.getNetwork()
                 );
             }
-        }while (!finished);
+        } while (!finished);
     }
 
     private String[] getAllVisualStyleTitle() {

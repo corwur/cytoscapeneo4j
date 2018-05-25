@@ -1,10 +1,13 @@
 package nl.corwur.cytoscape.neo4j.internal.graph.commands;
 
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.GraphImplementationException;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.PropertyKey;
+import nl.corwur.cytoscape.neo4j.internal.graph.implementation.GraphImplementationException;
+import nl.corwur.cytoscape.neo4j.internal.graph.implementation.PropertyKey;
 
 import java.util.Map;
 
+/**
+ * Update an edge
+ */
 public class UpdateEdge extends GraphCommand {
 
     private PropertyKey<Long> startId;

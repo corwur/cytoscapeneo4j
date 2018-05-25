@@ -1,10 +1,10 @@
 package nl.corwur.cytoscape.neo4j.internal.tasks;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
-import nl.corwur.cytoscape.neo4j.internal.tasks.exportneo4j.ExportNetworkConfiguration;
-import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.CypherQueryTemplate;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
+import nl.corwur.cytoscape.neo4j.internal.tasks.exportneo4j.ExportNetworkConfiguration;
 import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.DefaultImportStrategy;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.CypherQueryTemplate;
 
 /**
  * This class creates executable commands:
@@ -31,6 +31,7 @@ public class TaskFactory {
                 network,
                 visualStyle);
     }
+
     public ExportNetworkToNeo4jTask createExportNetworkToNeo4jTask(ExportNetworkConfiguration exportNetworkConfiguration) {
         return new ExportNetworkToNeo4jTask(services, exportNetworkConfiguration);
     }

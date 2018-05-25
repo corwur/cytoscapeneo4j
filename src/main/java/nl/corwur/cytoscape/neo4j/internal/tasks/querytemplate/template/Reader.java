@@ -1,9 +1,15 @@
 package nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.template;
 
-import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.CopyAllMappingStrategy;
 import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.CypherQueryTemplate;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.CopyAllMappingStrategy;
 import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.GraphMapping;
-import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.values.*;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.values.EdgeId;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.values.EdgePropertyValue;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.values.EdgeScriptExpression;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.values.LabelValue;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.values.NodeId;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.values.NodePropertyValue;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.values.NodeScriptExpression;
 import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.template.xml.ColumnMapping;
 import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.template.xml.CopyAll;
 import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.template.xml.MappingVisitor;

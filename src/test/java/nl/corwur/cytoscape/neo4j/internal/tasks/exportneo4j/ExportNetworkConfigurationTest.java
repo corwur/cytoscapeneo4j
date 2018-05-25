@@ -1,6 +1,6 @@
 package nl.corwur.cytoscape.neo4j.internal.tasks.exportneo4j;
 
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.NodeLabel;
+import nl.corwur.cytoscape.neo4j.internal.graph.implementation.NodeLabel;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
@@ -14,8 +14,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ExportNetworkConfigurationTest {

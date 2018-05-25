@@ -9,7 +9,7 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class EdgeMapping {
 
-    @XmlAttribute(name="referenceIdColumn")
+    @XmlAttribute(name = "referenceIdColumn")
     private String referenceIdColumn;
 
     @XmlElement(name = "column")

@@ -8,10 +8,11 @@ import javax.script.ScriptException;
 
 /**
  * This class is used to evaluate javascriptcode.
+ *
  * @param <T>
  * @param <V>
  */
-public abstract class ValueScriptExpression<T,V> implements ValueExpression<T,V> {
+public abstract class ValueScriptExpression<T, V> implements ValueExpression<T, V> {
 
     private Logger logger = Logger.getLogger(ValueScriptExpression.class);
 

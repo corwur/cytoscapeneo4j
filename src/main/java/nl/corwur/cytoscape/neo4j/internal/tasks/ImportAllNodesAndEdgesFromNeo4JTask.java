@@ -1,8 +1,8 @@
 package nl.corwur.cytoscape.neo4j.internal.tasks;
 
 import nl.corwur.cytoscape.neo4j.internal.Services;
-import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.DefaultImportStrategy;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
+import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.DefaultImportStrategy;
 
 import java.text.MessageFormat;
 
@@ -11,7 +11,7 @@ import java.text.MessageFormat;
  */
 public class ImportAllNodesAndEdgesFromNeo4JTask extends AbstractImportTask {
 
-    public static final String MATCH_ALL_NODES_AND_EDGES = "match (n:{0})-[r*0..]-(m:{0}) RETURN n,r,m";
+    public static final String MATCH_ALL_NODES_AND_EDGES = "match (n:{0})-[r*0..1]-(m:{0}) RETURN n,r,m";
 
     public ImportAllNodesAndEdgesFromNeo4JTask(Services services, String networkName, String visualStyleTitle) {
         super(services, networkName, visualStyleTitle, new DefaultImportStrategy(), CypherQuery.builder().query(formatQuery(networkName)).build());

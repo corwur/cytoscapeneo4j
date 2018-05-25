@@ -3,13 +3,28 @@ package nl.corwur.cytoscape.neo4j.internal.tasks.exportneo4j;
 import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphEdge;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphNode;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.*;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.GraphImplementation;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.NodeLabel;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.p1.PropertyKey;
-import org.cytoscape.model.*;
-import java.util.*;
-import java.util.function.Predicate;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.AddEdge;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.AddNode;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.Command;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.CommandBuilder;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.RemoveEdge;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.RemoveNode;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.UpdateEdge;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.UpdateNode;
+import nl.corwur.cytoscape.neo4j.internal.graph.implementation.GraphImplementation;
+import nl.corwur.cytoscape.neo4j.internal.graph.implementation.NodeLabel;
+import nl.corwur.cytoscape.neo4j.internal.graph.implementation.PropertyKey;
+import org.cytoscape.model.CyEdge;
+import org.cytoscape.model.CyIdentifiable;
+import org.cytoscape.model.CyNetwork;
+import org.cytoscape.model.CyNode;
+import org.cytoscape.model.CyRow;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -35,8 +50,8 @@ public class ExportDifference {
 
     public Command compute() {
         visitedNode.clear();
-        for(CyNode cyNode : cyNetwork.getNodeList()) {
-            if(nodeExistsInGraph(cyNode)) {
+        for (CyNode cyNode : cyNetwork.getNodeList()) {
+            if (nodeExistsInGraph(cyNode)) {
                 visit(cyNode);
                 commandBuilder.updateNode(refId(cyNode), labels(cyNode), properties(cyNode));
             } else {
@@ -44,33 +59,38 @@ public class ExportDifference {
             }
         }
 
-        unvisitedNodes().forEach( removeNode -> commandBuilder.removeNode(new PropertyKey<>("id",removeNode.getId())));
+        unvisitedNodes().forEach(removeNode -> commandBuilder.removeNode(new PropertyKey<>("id", removeNode.getId())));
 
         visitedEdges.clear();
-        for(CyEdge cyEdge : cyNetwork.getEdgeList()) {
-            if(edgeExistsInGraph(cyEdge)) {
+        for (CyEdge cyEdge : cyNetwork.getEdgeList()) {
+            if (edgeExistsInGraph(cyEdge)) {
                 visit(cyEdge);
                 commandBuilder.updateEdge(refId(cyEdge.getSource()), refId(cyEdge.getTarget()), properties(cyEdge));
             } else {
                 PropertyKey<Long> startId = nodeId(cyEdge.getSource());
                 PropertyKey<Long> endId = nodeId(cyEdge.getTarget());
-                commandBuilder.addEdge(startId, endId, properties(cyEdge));
+                commandBuilder.addEdge(startId, endId, properties(cyEdge), relationship(cyEdge));
             }
         }
-        unvisitedEdges().forEach(removeEdge -> commandBuilder.removeEdge(new PropertyKey<>("id",removeEdge.getId())));
+        unvisitedEdges().forEach(removeEdge -> commandBuilder.removeEdge(new PropertyKey<>("id", removeEdge.getId())));
         return commandBuilder.sort(this::compareCommands).build();
+    }
+
+    private String relationship(CyEdge cyEdge) {
+        return cyNetwork.getRow(cyEdge).get("name", String.class, "relationship");
     }
 
     private int compareCommands(Command command1, Command command2) {
         return Integer.compare(arity(command1), arity(command2));
     }
+
     private int arity(Command command) {
-        if(command instanceof RemoveNode) return 0;
-        if(command instanceof AddNode) return 1;
-        if(command instanceof AddEdge) return 2;
-        if(command instanceof UpdateNode) return 3;
-        if(command instanceof UpdateEdge) return 4;
-        if(command instanceof RemoveEdge) return 5;
+        if (command instanceof RemoveNode) return 0;
+        if (command instanceof AddNode) return 1;
+        if (command instanceof AddEdge) return 2;
+        if (command instanceof UpdateNode) return 3;
+        if (command instanceof UpdateEdge) return 4;
+        if (command instanceof RemoveEdge) return 5;
         else return 6;
     }
 
@@ -84,20 +104,20 @@ public class ExportDifference {
 
     private void visit(CyNode cyNode) {
         GraphNode node = graph
-                .getNodeById(cyNetwork.getRow(cyNode).get(REFID,Long.class))
+                .getNodeById(cyNetwork.getRow(cyNode).get(REFID, Long.class))
                 .orElseThrow(() -> new IllegalStateException("Could not find node for cyNode SUID: " + cyNode.getSUID()));
         visitedNode.add(node);
     }
 
     private void visit(CyEdge cyEdge) {
         GraphEdge edge = graph
-                .getEdgeById(cyNetwork.getRow(cyEdge).get(REFID,Long.class))
+                .getEdgeById(cyNetwork.getRow(cyEdge).get(REFID, Long.class))
                 .orElseThrow(() -> new IllegalStateException("Could not find edge for cyEdge SUID: " + cyEdge.getSUID()));
         visitedEdges.add(edge);
     }
 
-    private PropertyKey<Long>  nodeId(CyNode node) {
-        if(nodeExistsInGraph(node))  {
+    private PropertyKey<Long> nodeId(CyNode node) {
+        if (nodeExistsInGraph(node)) {
             return refId(node);
         } else {
             return suid(node);
@@ -112,14 +132,14 @@ public class ExportDifference {
         return new PropertyKey<>(SUID, node.getSUID());
     }
 
-    private Map<String,Object> properties(CyIdentifiable cyIdentifiable) {
+    private Map<String, Object> properties(CyIdentifiable cyIdentifiable) {
         CyRow cyRow = cyNetwork.getRow(cyIdentifiable);
         return cyRow.getAllValues();
     }
 
     private List<NodeLabel> labels(CyNode cyNode) {
         CyRow cyRow = cyNetwork.getRow(cyNode);
-        if(cyRow.isSet("_neo4jlabels")) {
+        if (cyRow.isSet("_neo4jlabels")) {
             return cyRow.getList("_neo4jlabels", String.class).stream()
                     .map(NodeLabel::create)
                     .collect(Collectors.toList());
@@ -128,21 +148,25 @@ public class ExportDifference {
     }
 
     private boolean nodeExistsInGraph(CyNode cyNode) {
-        return nodeExistsInGraph(cyNetwork.getRow(cyNode));
+        CyRow cyRow = cyNetwork.getRow(cyNode);
+        return nodeExistsInGraph(cyRow);
     }
+
     private boolean edgeExistsInGraph(CyEdge cyEdge) {
-        return edgeExistsInGraph(cyNetwork.getRow(cyEdge));
+        CyRow cyRow = cyNetwork.getRow(cyEdge);
+        return edgeExistsInGraph(cyRow);
     }
 
     private boolean nodeExistsInGraph(CyRow row) {
         return refId(row).map(graph::containsNodeId).orElse(false);
     }
+
     private boolean edgeExistsInGraph(CyRow row) {
-        return refId(row).map(graph::containsNodeId).orElse(false);
+        return refId(row).map(graph::containsEdgeId).orElse(false);
     }
 
     private Optional<Long> refId(CyRow row) {
-        if(row.isSet(REFID)) {
+        if (row.isSet(REFID)) {
             return Optional.ofNullable(row.get(REFID, Long.class));
         } else {
             return Optional.empty();

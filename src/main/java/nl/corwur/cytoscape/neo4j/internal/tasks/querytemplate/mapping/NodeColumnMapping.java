@@ -1,16 +1,17 @@
 package nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping;
 
-import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.values.ValueExpression;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphNode;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.values.ValueExpression;
 
 /**
  * This class implements a mapping from a node to Cytoscape.
+ *
  * @param <T>
  */
 public class NodeColumnMapping<T> {
     private final String columnName;
     private final Class<T> columnType;
-    private final ValueExpression<GraphNode,T> valueExpression;
+    private final ValueExpression<GraphNode, T> valueExpression;
 
     public NodeColumnMapping(String columnName, Class<T> columnType, ValueExpression<GraphNode, T> valueExpression) {
         this.columnName = columnName;
