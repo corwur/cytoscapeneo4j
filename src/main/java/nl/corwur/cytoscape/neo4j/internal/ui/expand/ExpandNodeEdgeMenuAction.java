@@ -14,6 +14,8 @@ import org.cytoscape.view.model.View;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.StatementResult;
 
+import java.util.ArrayList;
+
 import javax.swing.*;
 
 
@@ -29,41 +31,42 @@ public class ExpandNodeEdgeMenuAction implements CyNodeViewContextMenuFactory {
         super();
         this.importGraphStrategy = new DefaultImportStrategy();
         this.services = services;
-
     }
 
-	public void addMenuItems(Record record) {
-		String edge = record.get("r","");
-		JMenuItem menuItem = new JMenuItem(edge);
-		menuItem.addActionListener(new ExpandNodeTask(nodeView, networkView, this.services, true, edge));
-		menu.add(menuItem);
-
+	public void addMenuItemsEdges(Record record) {
+		String result = record.get("r","");
+		JMenuItem menuItem = new JMenuItem(result);
+		menuItem.addActionListener(new ExpandNodeTask(nodeView, networkView, this.services, true, result, null));
+		this.menu.add(menuItem);
     }
-
+		
+	
+	
     @Override
     public CyMenuItem createMenuItem(CyNetworkView networkView, View<CyNode> nodeView) {
         this.networkView = networkView;
         this.nodeView = nodeView;
         CyNode cyNode = (CyNode) nodeView.getModel();
+		try {
+	        Long refid = networkView.getModel().getRow(cyNode).get(this.importGraphStrategy.getRefIDName(), Long.class);
 
-        Long refid = networkView.getModel().getRow(cyNode).get(this.importGraphStrategy.getRefIDName(), Long.class);
-        String query = "match (n)-[r]-() where ID(n) = " + refid + " return distinct type(r) as r";
-        CypherQuery cypherQuery = CypherQuery.builder().query(query).build();
-        StatementResult result = this.getEdges(cypherQuery);
+	        String query = "match (n)-[r]-() where ID(n) = " + refid + " return distinct type(r) as r";
+	        CypherQuery cypherQuery = CypherQuery.builder().query(query).build();
+	        StatementResult result = this.services.getNeo4jClient().getResults(cypherQuery);
+	        this.menu = new JMenu("Expand node on:");
+	        result.forEachRemaining(this::addMenuItemsEdges);
+	        CyMenuItem cyMenuItem = new CyMenuItem(this.menu, 0.5f);
+	        
+	        return cyMenuItem;
 
-        this.menu = new JMenu("Expand node on:");
-        result.forEachRemaining(this::addMenuItems);
-        CyMenuItem cyMenuItem = new CyMenuItem(this.menu, 0.5f);
+		} catch (Neo4jClientException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
 
-        return cyMenuItem;
+		return null;
+
     }
 
-    private StatementResult getEdges(CypherQuery query) {
-        try {
-            return services.getNeo4jClient().getResults(query);
-        } catch (Neo4jClientException e) {
-            throw new IllegalStateException(e.getMessage(), e);
-        }
-    }
 
 }

@@ -35,7 +35,7 @@ public class ExpandNodeMenuAction extends AbstractNodeViewTaskFactory {
     @Override
     public TaskIterator createTaskIterator(View<CyNode> nodeView, CyNetworkView networkView) {
         if (this.isReady(nodeView, networkView)) {
-            return new TaskIterator(new ExpandNodeTask(nodeView, networkView, this.services, this.redoLayout, null));
+            return new TaskIterator(new ExpandNodeTask(nodeView, networkView, this.services, this.redoLayout, null, null));
         } else {
             return null;
         }

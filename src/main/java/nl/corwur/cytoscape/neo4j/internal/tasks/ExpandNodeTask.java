@@ -28,14 +28,16 @@ public class ExpandNodeTask extends AbstractNodeViewTask implements Task, Action
     private final ImportGraphStrategy importGraphStrategy;
     private Boolean redoLayout;
     private String edge;
+	private String node;
 
 
-	public ExpandNodeTask(View<CyNode> nodeView, CyNetworkView networkView, Services services, Boolean redoLayout, String edge) {
+	public ExpandNodeTask(View<CyNode> nodeView, CyNetworkView networkView, Services services, Boolean redoLayout, String edge, String node) {
 		super(nodeView, networkView);
 		this.services = services;
 		this.importGraphStrategy = new DefaultImportStrategy();
 		this.redoLayout = redoLayout;
 		this.edge = edge;
+		this.node = node;
 	}
 	
 	private void expand() throws InterruptedException, ExecutionException {
@@ -43,11 +45,14 @@ public class ExpandNodeTask extends AbstractNodeViewTask implements Task, Action
 		
 		Long refid = this.netView.getModel().getRow(cyNode).get(this.importGraphStrategy.getRefIDName(), Long.class);
 		String query;
-		if (this.edge == null) {
+		if (this.edge == null && this.node == null) {
 			query = "match p=(n)-[r]-() where ID(n) = " + refid +" return p"; 
 		}
-		else {
+		else if (this.node == null){
 			query = "match p=(n)-[:"+this.edge+"]-() where ID(n) = " + refid +" return p";
+		}
+		else {
+			query = "match p=(n)-[r]-(:" + this.node + ") where ID(n) = " + refid +" return p"; 
 		}
 		CypherQuery cypherQuery = CypherQuery.builder().query(query).build();
 		

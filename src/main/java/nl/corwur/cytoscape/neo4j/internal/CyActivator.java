@@ -7,6 +7,7 @@ import nl.corwur.cytoscape.neo4j.internal.tasks.TaskFactory;
 import nl.corwur.cytoscape.neo4j.internal.ui.connect.ConnectInstanceMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.expand.ConnectNodesMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.expand.ExpandNodeEdgeMenuAction;
+import nl.corwur.cytoscape.neo4j.internal.ui.expand.ExpandNodeLabelMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.expand.ExpandNodeMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.expand.ExpandNodesMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.exportnetwork.ExportNetworkMenuAction;
@@ -117,6 +118,9 @@ public class CyActivator extends AbstractCyActivator {
         expandProperties.setProperty(IN_CONTEXT_MENU, "true");
         ExpandNodeEdgeMenuAction expandNodeEdgeMenuAction = new ExpandNodeEdgeMenuAction(services);
         registerAllServices(context, expandNodeEdgeMenuAction, expandProperties);
+        ExpandNodeLabelMenuAction expandNodeLabelMenuAction = new ExpandNodeLabelMenuAction(services);
+        registerAllServices(context, expandNodeLabelMenuAction, expandProperties);
+        
     }
 
     private Services createServices(BundleContext context) {
