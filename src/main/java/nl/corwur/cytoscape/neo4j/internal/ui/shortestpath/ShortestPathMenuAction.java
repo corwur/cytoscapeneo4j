@@ -1,13 +1,10 @@
 package nl.corwur.cytoscape.neo4j.internal.ui.shortestpath;
 
+import nl.corwur.cytoscape.neo4j.internal.Services;
+import nl.corwur.cytoscape.neo4j.internal.tasks.ShortestPathTask;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.task.NetworkTaskFactory;
 import org.cytoscape.work.TaskIterator;
-
-import nl.corwur.cytoscape.neo4j.internal.Services;
-import nl.corwur.cytoscape.neo4j.internal.tasks.ConnectNodesTask;
-import nl.corwur.cytoscape.neo4j.internal.tasks.ShortestPathTask;
-import nl.corwur.cytoscape.neo4j.internal.ui.expand.ConnectNodesMenuAction;
 
 public class ShortestPathMenuAction implements NetworkTaskFactory {
 

@@ -12,10 +12,11 @@ public final class Neo4jGraphImplementation implements GraphImplementation {
 
     private static final String START_ID = "startId";
     private static final String END_ID = "endId";
-    private static final String RELATIONSHIP = "relationship";
     private static final String PROPS = "props";
     private static final String EDGE_ID = "edgeId";
     private static final String NODE_ID = "nodeId";
+    //TODO: move shared global statics to a separate class
+    private static final String NETWORK_PROPERTY = "_cytoscape_network";
     private final Neo4jClient neo4jClient;
     private final String networkLabel;
 
@@ -32,13 +33,12 @@ public final class Neo4jGraphImplementation implements GraphImplementation {
     public void addEdge(PropertyKey<Long> start, PropertyKey<Long> end, String relationship, Map<String, Object> properties) throws GraphImplementationException {
         CypherQuery cypherQuery = CypherQuery.builder()
                 .query(
-                        "MATCH (s:" + networkLabel + " {" + start.getName() + ":$" + START_ID + "}), " +
-                                "(e:" + networkLabel + " {" + end.getName() + ":$" + END_ID + "}) " +
-                                "CREATE (s) -[:" + RELATIONSHIP + " $" + PROPS + "]-> (e)"
+                        "MATCH (s {" + start.getName() + ":$" + START_ID + ", " + matchNetworkProperty() + "}), " +
+                                "(e {" + end.getName() + ":$" + END_ID + ", " + matchNetworkProperty() + "}) " +
+                                "CREATE (s) -[:" + relationship + " $" + PROPS + "]-> (e)"
                 )
                 .params(START_ID, start.getValue())
                 .params(END_ID, end.getValue())
-                .params(RELATIONSHIP, relationship)
                 .params(PROPS, properties)
                 .build();
         executeQuery(cypherQuery);
@@ -48,9 +48,9 @@ public final class Neo4jGraphImplementation implements GraphImplementation {
     public void updateEdge(PropertyKey<Long> startId, PropertyKey<Long> endId, Map<String, Object> properties) throws GraphImplementationException {
         CypherQuery cypherQuery = CypherQuery.builder()
                 .query(
-                        "MATCH (s:" + networkLabel + " {" + startId.getName() + ":$" + START_ID + "}) " +
+                        "MATCH (s {" + startId.getName() + ":$" + START_ID + ", " + matchNetworkProperty() + "}) " +
                                 " -[r]- " +
-                                "(e:" + networkLabel + " {" + endId.getName() + ":$" + END_ID + "}) " +
+                                "(e {" + endId.getName() + ":$" + END_ID + ", " + matchNetworkProperty() +"}) " +
                                 "SET r = $" + PROPS
                 )
                 .params(START_ID, startId.getValue())
@@ -64,8 +64,10 @@ public final class Neo4jGraphImplementation implements GraphImplementation {
     public void removeEdge(PropertyKey<Long> edgeId) throws GraphImplementationException {
         CypherQuery cypherQuery = CypherQuery.builder()
                 .query(
-                        "MATCH (s:" + networkLabel + " ) - [r] - (e:" + networkLabel + ") " +
+                        "MATCH (s) - [r] - (e) " +
                                 removeEdgeWhere(edgeId) +
+                                " AND  s." + NETWORK_PROPERTY + "='" + networkLabel + "'" +
+                                " AND  e." + NETWORK_PROPERTY + "='" + networkLabel + "'" +
                                 "DELETE r"
                 )
                 .params(EDGE_ID, edgeId.getValue())
@@ -84,7 +86,7 @@ public final class Neo4jGraphImplementation implements GraphImplementation {
     @Override
     public void removeAllEdgesFromNode(PropertyKey<Long> nodeId) throws GraphImplementationException {
         CypherQuery removerRelationsQuery = CypherQuery.builder().query(
-                "MATCH(n:" + networkLabel + " {" + nodeId.getName() + ":$" + NODE_ID + "}) - [r] - (e) DELETE r")
+                "MATCH(n {" + nodeId.getName() + ":$" + NODE_ID + ", " + matchNetworkProperty() + "}) - [r] - (e) DELETE r")
                 .params(NODE_ID, nodeId.getValue())
                 .build();
         executeQuery(removerRelationsQuery);
@@ -94,19 +96,20 @@ public final class Neo4jGraphImplementation implements GraphImplementation {
     public void removeNode(PropertyKey<Long> nodeId) throws GraphImplementationException {
         if("id".equalsIgnoreCase(nodeId.getName())) {
             CypherQuery removerQuery = CypherQuery.builder().query(
-                    "MATCH(n:" + networkLabel + ") WHERE id(n) = $" + NODE_ID + "  DELETE n")
+                    "MATCH(n) WHERE id(n) = $" + NODE_ID +
+                            " AND  n." + NETWORK_PROPERTY + "='" + networkLabel + "'" +
+                            "  DELETE n")
                     .params(NODE_ID, nodeId.getValue())
                     .build();
             executeQuery(removerQuery);
         } else {
             CypherQuery removerQuery = CypherQuery.builder().query(
-                    "MATCH(n:" + networkLabel + " {" + nodeId.getName() + ":$" + NODE_ID + "}) DELETE n")
+                    "MATCH(n {" + nodeId.getName() + ":$" + NODE_ID + ", " + matchNetworkProperty() +  "}) DELETE n")
                     .params(NODE_ID, nodeId.getValue())
                     .build();
             executeQuery(removerQuery);
         }
     }
-
 
     @Override
     public void addNode(List<NodeLabel> labels, Map<String, Object> properties) throws GraphImplementationException {
@@ -116,36 +119,30 @@ public final class Neo4jGraphImplementation implements GraphImplementation {
                         (str, label) -> str + ":" + label.getLabel(),
                         (s1, s2) -> s1 + s2
                 );
-
         CypherQuery insertQuery = CypherQuery.builder().query(
-                "CREATE(n:" + networkLabel + " $" + PROPS + ") " + (nodeLabelClause.isEmpty() ? "" : " SET n" + nodeLabelClause))
+                "CREATE(n $" + PROPS + ") SET n." + NETWORK_PROPERTY + "='" + networkLabel + "' "
+                        + (nodeLabelClause.isEmpty() ? "" : ", n" + nodeLabelClause))
                 .params(PROPS, properties)
                 .build();
         executeQuery(insertQuery);
-
     }
 
     @Override
     public void updateNode(PropertyKey<Long> nodeId, List<NodeLabel> labels, Map<String, Object> properties) throws GraphImplementationException {
-        String nodeIdSetClause = "n." + nodeId.getName() + "=$" + NODE_ID;
         String nodeLabelClause = labels.stream()
                 .reduce(
                         "",
                         (str, label) -> str + ":" + label.getLabel(),
                         (s1, s2) -> s1 + s2
                 );
-
         CypherQuery updateQuery = CypherQuery.builder().query(
-                "MATCH(n:" + networkLabel + " {" + nodeId.getName() + ":$" + NODE_ID + "}) " +
-                        "SET n = $" + PROPS + ", " +
-                        nodeIdSetClause +
+                "MATCH(n {" + nodeId.getName() + ":$" + NODE_ID + ", " + matchNetworkProperty() +" }) " +
+                        "SET n = $" + PROPS + " " +
                         (nodeLabelClause.isEmpty() ? "" : ", n." + nodeLabelClause))
                 .params(NODE_ID, nodeId.getValue())
                 .params(PROPS, properties)
                 .build();
-
         executeQuery(updateQuery);
-
     }
 
     private void executeQuery(CypherQuery cypherQuery) throws GraphImplementationException {
@@ -156,4 +153,7 @@ public final class Neo4jGraphImplementation implements GraphImplementation {
         }
     }
 
+    private String matchNetworkProperty() {
+        return NETWORK_PROPERTY + ":'" + networkLabel + "'";
+    }
 }

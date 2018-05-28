@@ -1,11 +1,11 @@
 package nl.corwur.cytoscape.neo4j.internal.tasks;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.HashMap;
-
-
+import nl.corwur.cytoscape.neo4j.internal.Services;
+import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
+import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
+import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClientException;
+import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.DefaultImportStrategy;
+import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.ImportGraphToCytoscape;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyRow;
 import org.cytoscape.task.AbstractNetworkTask;
@@ -13,12 +13,10 @@ import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.work.Task;
 import org.cytoscape.work.TaskMonitor;
 
-import nl.corwur.cytoscape.neo4j.internal.Services;
-import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
-import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
-import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClientException;
-import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.DefaultImportStrategy;
-import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.ImportGraphToCytoscape;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class ShortestPathTask extends AbstractNetworkTask implements Task {
 

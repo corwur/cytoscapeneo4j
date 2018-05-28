@@ -1,21 +1,19 @@
 package nl.corwur.cytoscape.neo4j.internal;
 
-import nl.corwur.cytoscape.neo4j.internal.tasks.TaskFactory;
+import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
+import nl.corwur.cytoscape.neo4j.internal.tasks.AbstractImportTask;
+import nl.corwur.cytoscape.neo4j.internal.tasks.ExportNetworkToNeo4jTask;
 import nl.corwur.cytoscape.neo4j.internal.tasks.ImportQueryTemplateTask;
+import nl.corwur.cytoscape.neo4j.internal.tasks.TaskFactory;
 import nl.corwur.cytoscape.neo4j.internal.tasks.exportneo4j.ExportNetworkConfiguration;
 import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.CypherQueryTemplate;
-import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
-import nl.corwur.cytoscape.neo4j.internal.tasks.ExportNetworkToNeo4jTask;
-import nl.corwur.cytoscape.neo4j.internal.tasks.AbstractImportTask;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TaskFactoryTest {

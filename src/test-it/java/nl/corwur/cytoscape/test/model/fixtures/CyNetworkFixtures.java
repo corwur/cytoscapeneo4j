@@ -7,6 +7,7 @@ import org.cytoscape.equations.internal.EquationParserImpl;
 import org.cytoscape.equations.internal.interpreter.InterpreterImpl;
 import org.cytoscape.event.CyEventHelper;
 import org.cytoscape.event.DummyCyEventHelper;
+import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.SavePolicy;
@@ -24,7 +25,8 @@ import static org.mockito.Mockito.when;
 
 public class CyNetworkFixtures {
 
-    public static final String MY_NAME = "my_name";
+    public static final String MY_PROPERTY = "my_property";
+    public static final String NAME = "name";
 
     public enum CyFixture {
         NETWORK_WITH_3_NODES_1_EDGE(createNetworkWith3NodesAnd1Edge());
@@ -43,15 +45,20 @@ public class CyNetworkFixtures {
     private static CyNetwork createNetworkWith3NodesAnd1Edge() {
         CyRootNetwork cyRootNetwork = getPublicRootInstance(new DummyCyEventHelper(), SavePolicy.SESSION_FILE);
         CyNetwork cyNetwork = cyRootNetwork.addSubNetwork();
-        cyNetwork.getDefaultNodeTable().createColumn(MY_NAME, String.class, false);
+        cyNetwork.getDefaultNodeTable().createColumn(MY_PROPERTY, String.class, false);
         cyNetwork.getDefaultNodeTable().createListColumn("list", String.class, false);
         CyNode a = cyNetwork.addNode();
         CyNode b = cyNetwork.addNode();
         CyNode c = cyNetwork.addNode();
-        cyNetwork.addEdge(a,b, true);
-        cyNetwork.getRow(a).set(MY_NAME, "a");
-        cyNetwork.getRow(b).set(MY_NAME, "b");
-        cyNetwork.getRow(c).set(MY_NAME, "c");
+        CyEdge ab = cyNetwork.addEdge(a,b, true);
+        cyNetwork.getRow(a).set(MY_PROPERTY, "a property");
+        cyNetwork.getRow(a).set(NAME, "a");
+        cyNetwork.getRow(b).set(MY_PROPERTY, "b property");
+        cyNetwork.getRow(b).set(NAME, "b");
+        cyNetwork.getRow(c).set(MY_PROPERTY, "c property");
+        cyNetwork.getRow(c).set(NAME, "c");
+        cyNetwork.getRow(ab).set(NAME, "AB");
+
         return cyNetwork;
     }
 

@@ -14,7 +14,6 @@ import nl.corwur.cytoscape.neo4j.internal.ui.importgraph.all.ImportAllNodesAndEd
 import nl.corwur.cytoscape.neo4j.internal.ui.importgraph.query.ImportCypherQueryMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.importgraph.querytemplate.ImportQueryTemplateMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.shortestpath.ShortestPathMenuAction;
-
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.CySwingApplication;
 import org.cytoscape.event.CyEventHelper;
@@ -32,7 +31,6 @@ import org.osgi.framework.BundleContext;
 import java.util.Properties;
 
 import static org.cytoscape.work.ServiceProperties.APPS_MENU;
-import static org.cytoscape.work.ServiceProperties.INSERT_SEPARATOR_BEFORE;
 import static org.cytoscape.work.ServiceProperties.IN_CONTEXT_MENU;
 import static org.cytoscape.work.ServiceProperties.PREFERRED_MENU;
 import static org.cytoscape.work.ServiceProperties.TITLE;

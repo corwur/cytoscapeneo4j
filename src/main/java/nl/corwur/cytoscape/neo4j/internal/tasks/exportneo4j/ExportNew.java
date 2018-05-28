@@ -47,7 +47,6 @@ public class ExportNew {
         return cyNetwork.getRow(cyEdge).get("name", String.class, "relationship");
     }
 
-
     private PropertyKey<Long> suid(CyIdentifiable cyIdentifiable) {
         return new PropertyKey<>(SUID, cyIdentifiable.getSUID());
     }
@@ -61,12 +60,17 @@ public class ExportNew {
 
     private List<NodeLabel> getNodeLabels(CyIdentifiable cyIdentifiable) {
         CyRow cyRow = cyNetwork.getRow(cyIdentifiable);
+        List<NodeLabel> labels = new ArrayList<>();
+        String name = cyRow.get("name", String.class);
+        if(name != null) {
+           labels.add(NodeLabel.create(name));
+        }
         if (cyRow.isSet(NEO4JLABELS)) {
-            return cyRow.getList(NEO4JLABELS, String.class).stream()
+             List<NodeLabel> neo4jLabels = cyRow.getList(NEO4JLABELS, String.class).stream()
                     .map(NodeLabel::create)
                     .collect(Collectors.toList());
-        } else {
-            return new ArrayList<>();
+             labels.addAll(neo4jLabels);
         }
+        return labels;
     }
 }

@@ -1,12 +1,14 @@
 package nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.template.xml;
 
-import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.CopyAllMappingStrategy;
 import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.CypherQueryTemplate;
+import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.CopyAllMappingStrategy;
 import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.GraphMapping;
 import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.template.Reader;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class ReaderTest {
 

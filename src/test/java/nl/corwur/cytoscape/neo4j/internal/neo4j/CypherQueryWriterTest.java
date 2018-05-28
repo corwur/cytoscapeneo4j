@@ -1,14 +1,12 @@
 package nl.corwur.cytoscape.neo4j.internal.neo4j;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.StringWriter;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class CypherQueryWriterTest {
 

@@ -1,6 +1,8 @@
 package nl.corwur.cytoscape.neo4j.internal;
 
 import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
+import nl.corwur.cytoscape.neo4j.internal.graph.GraphEdge;
+import nl.corwur.cytoscape.neo4j.internal.graph.GraphNode;
 import nl.corwur.cytoscape.neo4j.internal.graph.commands.Command;
 import nl.corwur.cytoscape.neo4j.internal.graph.commands.CommandException;
 import nl.corwur.cytoscape.neo4j.internal.graph.implementation.GraphImplementationException;
@@ -62,8 +64,14 @@ public class CyNeo4jGraphIT {
         exportNew.compute().execute();
 
         Graph importGraph = neo4jClient.getGraph(importAllNodesAndEdges(networkLabel));
-        assertEquals(3, importGraph.nodes().size());
-        assertEquals(1, importGraph.edges().size());
+
+        assertEquals("All nodes should be imported", 3, importGraph.nodes().size());
+        assertEquals("All edges should be imported",1, importGraph.edges().size());
+        assertTrue("Edge does not have name AB", importGraph.edges().stream().allMatch(this::oneEdgeWithNameAB));
+        assertTrue("All nodes must have a name",  importGraph.nodes().stream().allMatch(this::nodeHasNonEmptyName));
+        assertTrue("All nodes must have at exactly one label ",importGraph.nodes().stream().allMatch(this::nodeHasOneLabel));
+        assertTrue("The node name must equals the node label", importGraph.nodes().stream().allMatch(this::nodeNameEqualsLabel));
+
     }
 
     @Test
@@ -118,8 +126,21 @@ public class CyNeo4jGraphIT {
         assertEquals(20, importGraph.edges().size());
     }
 
+    private boolean oneEdgeWithNameAB(GraphEdge edge) {
+        return  edge.getProperty("name", String.class).filter(name -> "AB".equals(name)).isPresent();
+    }
 
+    private boolean nodeNameEqualsLabel(GraphNode node) {
+        return node.getProperty("name", String.class).filter( name -> name.equals(node.getLabels().get(0))).isPresent();
+    }
 
+    private boolean nodeHasOneLabel(GraphNode node) {
+        return node.getLabels().size() == 1;
+    }
+
+    private boolean nodeHasNonEmptyName(GraphNode node) {
+        return node.getProperty("name", String.class).filter(name -> !name.isEmpty()).isPresent();
+    }
 
 
     private String randomLabel() {

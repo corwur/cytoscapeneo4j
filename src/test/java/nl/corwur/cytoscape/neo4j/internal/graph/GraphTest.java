@@ -2,10 +2,6 @@ package nl.corwur.cytoscape.neo4j.internal.graph;
 
 import org.junit.Test;
 
-import java.util.HashMap;
-
-import static org.junit.Assert.*;
-
 public class GraphTest {
 
     @Test

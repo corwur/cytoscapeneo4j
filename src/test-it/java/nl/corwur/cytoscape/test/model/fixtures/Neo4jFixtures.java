@@ -64,7 +64,7 @@ public class Neo4jFixtures {
     }
 
     private void createEdge(int start, int end) throws GraphImplementationException {
-        gi.addEdge(new PropertyKey("nodeId", start), new PropertyKey("nodeId", end), "REL", Collections.emptyMap());
+        gi.addEdge(new PropertyKey("nodeId", start), new PropertyKey("nodeId", end), "REL_" + start + "_" + end, Collections.emptyMap());
     }
 
 }
