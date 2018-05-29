@@ -4,6 +4,7 @@ import nl.corwur.cytoscape.neo4j.internal.Services;
 import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.CypherQuery;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClientException;
+import nl.corwur.cytoscape.neo4j.internal.tasks.ExpandNodeTask.Direction;
 import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.DefaultImportStrategy;
 import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.ImportGraphStrategy;
 import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.ImportGraphToCytoscape;
@@ -27,12 +28,14 @@ public class ExpandNodesTask extends AbstractNetworkTask implements Task {
     private final transient Services services;
     private final ImportGraphStrategy importGraphStrategy;
     private Boolean onlySelected;
-
-    public ExpandNodesTask(Services services, CyNetwork network, Boolean onlySelected) {
+    private Direction direction;
+    
+    public ExpandNodesTask(Services services, CyNetwork network, Boolean onlySelected, Direction direction) {
         super(network);
         this.services = services;
         this.importGraphStrategy = new DefaultImportStrategy();
         this.onlySelected = onlySelected;
+        this.direction = direction;
     }
 
     @Override
@@ -49,7 +52,13 @@ public class ExpandNodesTask extends AbstractNetworkTask implements Task {
             }
         }
         String idsQuery = "[" + String.join(",", ids) + "]";
-        String query = "match p=(n)-[r]-(m) where ID(n) in " + idsQuery + " return p";
+        String query = "";
+        switch (this.direction) {
+        	case BIDIRECTIONAL :query = "match p=(n)-[r]-(m) where ID(n) in " + idsQuery + " return p"; break;
+        	case IN :query = "match p=(n)<-[r]-(m) where ID(n) in " + idsQuery + " return p"; break;
+        	case OUT :query = "match p=(n)-[r]->(m) where ID(n) in " + idsQuery + " return p"; break;
+        }
+        	
         CypherQuery cypherQuery = CypherQuery.builder().query(query).build();
 
         CompletableFuture<Graph> result = CompletableFuture.supplyAsync(() -> getGraph(cypherQuery));
