@@ -39,10 +39,10 @@ public class ExpandNodeLabelMenuAction implements CyNodeViewContextMenuFactory {
 	public void addMenuItemsNodes(Record record) {
 		ListValue result = (ListValue) record.get("r");
         ArrayList<String> nodeLabels = new ArrayList<String>();
-        result.asList().forEach(v -> nodeLabels.add((String)v));
+        result.asList().forEach(v -> nodeLabels.add("`" + (String)v + "`"));
         String nodeLabel = String.join(":", nodeLabels);
-		String menuTitle = this.direction == Direction.IN ? "<-" : "-";
-		menuTitle = menuTitle + nodeLabel + (this.direction == Direction.OUT ? "->" : "-");
+		String menuTitle = this.direction == Direction.IN ? "<- " : " - ";
+		menuTitle = menuTitle + nodeLabel.replace("`","") + (this.direction == Direction.OUT ? " ->" : " - ");
         
         JMenuItem menuItem = new JMenuItem(menuTitle);
 		

@@ -37,11 +37,11 @@ public class ExpandNodeEdgeMenuAction implements CyNodeViewContextMenuFactory {
 
 	public void addMenuItemsEdges(Record record) {
 		String result = record.get("r","");
-		String menuTitle = this.direction == Direction.IN ? "<-" : "-";
-		menuTitle = menuTitle + result + (this.direction == Direction.OUT ? "->" : "-");
+		String menuTitle = this.direction == Direction.IN ? "<- " : " - ";
+		menuTitle = menuTitle + result + (this.direction == Direction.OUT ? " ->" : " - ");
 		JMenuItem menuItem = new JMenuItem(menuTitle);
 		ExpandNodeTask expandNodeTask = new ExpandNodeTask(nodeView, networkView, this.services, true);
-		expandNodeTask.setEdge(result);
+		expandNodeTask.setEdge("`" + result + "`");
 		menuItem.addActionListener(expandNodeTask);
 		
 		this.menu.add(menuItem);
