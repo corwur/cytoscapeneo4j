@@ -2,11 +2,13 @@ package nl.corwur.cytoscape.neo4j.internal;
 
 import nl.corwur.cytoscape.neo4j.internal.configuration.AppConfiguration;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClient;
+import nl.corwur.cytoscape.neo4j.internal.tasks.ExpandNodeTask.Direction;
 import nl.corwur.cytoscape.neo4j.internal.tasks.TaskExecutor;
 import nl.corwur.cytoscape.neo4j.internal.tasks.TaskFactory;
 import nl.corwur.cytoscape.neo4j.internal.ui.connect.ConnectInstanceMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.expand.ConnectNodesMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.expand.ExpandNodeEdgeMenuAction;
+import nl.corwur.cytoscape.neo4j.internal.ui.expand.ExpandNodeLabelMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.expand.ExpandNodeMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.expand.ExpandNodesMenuAction;
 import nl.corwur.cytoscape.neo4j.internal.ui.exportnetwork.ExportNetworkMenuAction;
@@ -77,14 +79,26 @@ public class CyActivator extends AbstractCyActivator {
 
         expandProperties = new Properties();
         expandProperties.setProperty(PREFERRED_MENU, "Apps.Cypher Queries");
-        expandProperties.setProperty(TITLE, "Expand all nodes");
-        ExpandNodesMenuAction expandNodesMenuAction = ExpandNodesMenuAction.create(services, false);
+        expandProperties.setProperty(TITLE, "Expand all nodes, bidirectional");
+        ExpandNodesMenuAction expandNodesMenuAction = ExpandNodesMenuAction.create(services, false, Direction.BIDIRECTIONAL);
+        registerAllServices(context, expandNodesMenuAction, expandProperties);
+        expandProperties.setProperty(TITLE, "Expand all nodes, incoming only");
+        expandNodesMenuAction = ExpandNodesMenuAction.create(services, false, Direction.IN);
+        registerAllServices(context, expandNodesMenuAction, expandProperties);
+        expandProperties.setProperty(TITLE, "Expand all nodes, outgoing only");
+        expandNodesMenuAction = ExpandNodesMenuAction.create(services, false, Direction.OUT);
         registerAllServices(context, expandNodesMenuAction, expandProperties);
 
         expandProperties = new Properties();
         expandProperties.setProperty(PREFERRED_MENU, "Apps.Cypher Queries");
-        expandProperties.setProperty(TITLE, "Expand all selected nodes");
-        expandNodesMenuAction = ExpandNodesMenuAction.create(services, true);
+        expandProperties.setProperty(TITLE, "Expand all selected nodes, bidirectional");
+        expandNodesMenuAction = ExpandNodesMenuAction.create(services, true, Direction.BIDIRECTIONAL);
+        registerAllServices(context, expandNodesMenuAction, expandProperties);
+        expandProperties.setProperty(TITLE, "Expand all selected nodes, incoming only");
+        expandNodesMenuAction = ExpandNodesMenuAction.create(services, true, Direction.IN);
+        registerAllServices(context, expandNodesMenuAction, expandProperties);
+        expandProperties.setProperty(TITLE, "Expand all selected nodes, outgoing only");
+        expandNodesMenuAction = ExpandNodesMenuAction.create(services, true, Direction.OUT);
         registerAllServices(context, expandNodesMenuAction, expandProperties);
 
         Properties shortestPathProperties = new Properties();
@@ -102,19 +116,32 @@ public class CyActivator extends AbstractCyActivator {
         expandProperties.setProperty(APPS_MENU, "Apps");
         expandProperties.setProperty(IN_CONTEXT_MENU, "true");
 
+        /*
         expandProperties.setProperty(TITLE, "Expand node");
         ExpandNodeMenuAction expandNodeMenuAction = ExpandNodeMenuAction.create(services, false);
         registerAllServices(context, expandNodeMenuAction, expandProperties);
-
-        expandProperties.setProperty(TITLE, "Expand node, redo default layout");
-        expandNodeMenuAction = ExpandNodeMenuAction.create(services, true);
+         */
+        expandProperties.setProperty(TITLE, "Expand node, bidirectional");
+        ExpandNodeMenuAction expandNodeMenuAction = ExpandNodeMenuAction.create(services, true, Direction.BIDIRECTIONAL);
         registerAllServices(context, expandNodeMenuAction, expandProperties);
+
+        expandProperties.setProperty(TITLE, "Expand node, incoming edges");
+        expandNodeMenuAction = ExpandNodeMenuAction.create(services, true, Direction.IN);
+        registerAllServices(context, expandNodeMenuAction, expandProperties);
+
+        expandProperties.setProperty(TITLE, "Expand node, outgoing edges");
+        expandNodeMenuAction = ExpandNodeMenuAction.create(services, true, Direction.OUT);
+        registerAllServices(context, expandNodeMenuAction, expandProperties);
+
 
         expandProperties = new Properties();
         expandProperties.setProperty(PREFERRED_MENU, "Neo4j");
         expandProperties.setProperty(IN_CONTEXT_MENU, "true");
         ExpandNodeEdgeMenuAction expandNodeEdgeMenuAction = new ExpandNodeEdgeMenuAction(services);
         registerAllServices(context, expandNodeEdgeMenuAction, expandProperties);
+        ExpandNodeLabelMenuAction expandNodeLabelMenuAction = new ExpandNodeLabelMenuAction(services);
+        registerAllServices(context, expandNodeLabelMenuAction, expandProperties);
+        
     }
 
     private Services createServices(BundleContext context) {
