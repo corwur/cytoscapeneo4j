@@ -5,6 +5,7 @@ import nl.corwur.cytoscape.neo4j.internal.graph.implementation.GraphImplementati
 import nl.corwur.cytoscape.neo4j.internal.graph.implementation.PropertyKey;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jClient;
 import nl.corwur.cytoscape.neo4j.internal.neo4j.Neo4jGraphImplementation;
+import nl.corwur.cytoscape.neo4j.internal.tasks.TaskConstants;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,7 +20,7 @@ public class Neo4jFixtures {
 
     public Neo4jFixtures(Neo4jClient neo4jClient, String networkLabel) {
         this.neo4jClient = neo4jClient;
-        this.gi = Neo4jGraphImplementation.create(neo4jClient, networkLabel);
+        this.gi = Neo4jGraphImplementation.create(neo4jClient, TaskConstants.NEO4J_PROPERTY_CYTOSCAPE_NETWORK, networkLabel);
     }
     interface CreateGraph {
         void create(Neo4jClient neo4jClient, String networkLabel) throws GraphImplementationException;

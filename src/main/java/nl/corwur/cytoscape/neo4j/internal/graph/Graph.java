@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Represents a graph
@@ -104,6 +105,18 @@ public class Graph implements GraphObject {
 
     public boolean containsEdgeId(long edgeId) {
         return edgeTable.containsKey(edgeId);
+    }
+
+    public GraphNode createNode() {
+        long id = nodes().stream().max((n1,n2) -> Long.compare(n1.getId(), n2.getId())).map(GraphNode::getId).orElse(1l);
+        return new GraphNode(id);
+    }
+
+    public GraphEdge createEdge(Predicate<GraphNode> selectA, Predicate<GraphNode> selectB) {
+        GraphNode a = nodes().stream().filter(selectA).findFirst().orElseThrow(() -> new IllegalArgumentException("Could not a find node for predicate"));
+        GraphNode b = nodes().stream().filter(selectB).findFirst().orElseThrow(() -> new IllegalArgumentException("Could not a find node for predicate"));
+        long id = edges().stream().max((e1, e2) -> Long.compare(e1.getId(), e2.getId())).map(GraphEdge::getId).orElse(1l);
+        return new GraphEdge(id, a.getId(),b.getId());
     }
 
     private static final class GraphBuilder implements GraphVisitor {

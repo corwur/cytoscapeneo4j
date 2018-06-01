@@ -16,25 +16,29 @@ public final class Neo4jGraphImplementation implements GraphImplementation {
     private static final String EDGE_ID = "edgeId";
     private static final String NODE_ID = "nodeId";
     //TODO: move shared global statics to a separate class
-    private static final String NETWORK_PROPERTY = "_cytoscape_network";
+    private final String cytoscapeNetworkPorpertyName;
     private final Neo4jClient neo4jClient;
     private final String networkLabel;
 
-    private Neo4jGraphImplementation(Neo4jClient neo4jClient, String networkLabel) {
+    private Neo4jGraphImplementation(Neo4jClient neo4jClient, String cytoscapeNetworkPorpertyName, String networkLabel) {
         this.neo4jClient = neo4jClient;
+        this.cytoscapeNetworkPorpertyName = cytoscapeNetworkPorpertyName;
         this.networkLabel = networkLabel;
     }
 
-    public static Neo4jGraphImplementation create(Neo4jClient neo4jClient, String networkLabel) {
-        return new Neo4jGraphImplementation(neo4jClient, networkLabel);
+    public static Neo4jGraphImplementation create(Neo4jClient neo4jClient, String cytoscapeNetworkPorpertyName, String networkLabel) {
+        return new Neo4jGraphImplementation(neo4jClient, cytoscapeNetworkPorpertyName, networkLabel);
     }
 
     @Override
     public void addEdge(PropertyKey<Long> start, PropertyKey<Long> end, String relationship, Map<String, Object> properties) throws GraphImplementationException {
         CypherQuery cypherQuery = CypherQuery.builder()
                 .query(
-                        "MATCH (s {" + start.getName() + ":$" + START_ID + ", " + matchNetworkProperty() + "}), " +
-                                "(e {" + end.getName() + ":$" + END_ID + ", " + matchNetworkProperty() + "}) " +
+                        "MATCH (s {" + matchNetworkProperty() + "}), " +
+                                "(e {" + matchNetworkProperty() + "}) " +
+                                "WHERE " +
+                                    nodeWhere("s", start, START_ID) + " AND " +
+                                    nodeWhere("e", end, END_ID) + " " +
                                 "CREATE (s) -[:" + relationship + " $" + PROPS + "]-> (e)"
                 )
                 .params(START_ID, start.getValue())
@@ -44,13 +48,17 @@ public final class Neo4jGraphImplementation implements GraphImplementation {
         executeQuery(cypherQuery);
     }
 
+
     @Override
     public void updateEdge(PropertyKey<Long> startId, PropertyKey<Long> endId, Map<String, Object> properties) throws GraphImplementationException {
         CypherQuery cypherQuery = CypherQuery.builder()
                 .query(
-                        "MATCH (s {" + startId.getName() + ":$" + START_ID + ", " + matchNetworkProperty() + "}) " +
+                        "MATCH (s {" + matchNetworkProperty() + "}) " +
                                 " -[r]- " +
-                                "(e {" + endId.getName() + ":$" + END_ID + ", " + matchNetworkProperty() +"}) " +
+                                "(e {" + matchNetworkProperty() +"}) " +
+                                "WHERE " +
+                                nodeWhere("s", startId, START_ID) + " AND " +
+                                nodeWhere("e", endId, END_ID)  + " " +
                                 "SET r = $" + PROPS
                 )
                 .params(START_ID, startId.getValue())
@@ -60,14 +68,22 @@ public final class Neo4jGraphImplementation implements GraphImplementation {
         executeQuery(cypherQuery);
     }
 
+    private String nodeWhere(String nodeAlias, PropertyKey<Long> nodeId, String param) {
+        if("id".equalsIgnoreCase(nodeId.getName())) {
+            return "id(" + nodeAlias + ") = $" + param + " ";
+        } else {
+            return nodeAlias + "." + nodeId.getName() + " = $" + param + " ";
+        }
+    }
+
     @Override
     public void removeEdge(PropertyKey<Long> edgeId) throws GraphImplementationException {
         CypherQuery cypherQuery = CypherQuery.builder()
                 .query(
                         "MATCH (s) - [r] - (e) " +
                                 removeEdgeWhere(edgeId) +
-                                " AND  s." + NETWORK_PROPERTY + "='" + networkLabel + "'" +
-                                " AND  e." + NETWORK_PROPERTY + "='" + networkLabel + "'" +
+                                " AND  s." + cytoscapeNetworkPorpertyName + "='" + networkLabel + "'" +
+                                " AND  e." + cytoscapeNetworkPorpertyName + "='" + networkLabel + "'" +
                                 "DELETE r"
                 )
                 .params(EDGE_ID, edgeId.getValue())
@@ -97,7 +113,7 @@ public final class Neo4jGraphImplementation implements GraphImplementation {
         if("id".equalsIgnoreCase(nodeId.getName())) {
             CypherQuery removerQuery = CypherQuery.builder().query(
                     "MATCH(n) WHERE id(n) = $" + NODE_ID +
-                            " AND  n." + NETWORK_PROPERTY + "='" + networkLabel + "'" +
+                            " AND  n." + cytoscapeNetworkPorpertyName + "='" + networkLabel + "'" +
                             "  DELETE n")
                     .params(NODE_ID, nodeId.getValue())
                     .build();
@@ -120,7 +136,7 @@ public final class Neo4jGraphImplementation implements GraphImplementation {
                         (s1, s2) -> s1 + s2
                 );
         CypherQuery insertQuery = CypherQuery.builder().query(
-                "CREATE(n $" + PROPS + ") SET n." + NETWORK_PROPERTY + "='" + networkLabel + "' "
+                "CREATE(n $" + PROPS + ") SET n." + cytoscapeNetworkPorpertyName + "='" + networkLabel + "' "
                         + (nodeLabelClause.isEmpty() ? "" : ", n" + nodeLabelClause))
                 .params(PROPS, properties)
                 .build();
@@ -154,6 +170,6 @@ public final class Neo4jGraphImplementation implements GraphImplementation {
     }
 
     private String matchNetworkProperty() {
-        return NETWORK_PROPERTY + ":'" + networkLabel + "'";
+        return cytoscapeNetworkPorpertyName + ":'" + networkLabel + "'";
     }
 }

@@ -125,7 +125,7 @@ public class ExportDifference {
     }
 
     private PropertyKey<Long> refId(CyNode node) {
-        return new PropertyKey<>(REFID, cyNetwork.getRow(node).get(REFID, Long.class));
+        return new PropertyKey<>("id", cyNetwork.getRow(node).get(REFID, Long.class));
     }
 
     private PropertyKey<Long> suid(CyNode node) {

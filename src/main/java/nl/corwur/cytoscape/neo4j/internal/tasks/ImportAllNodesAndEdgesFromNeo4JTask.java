@@ -11,13 +11,16 @@ import java.text.MessageFormat;
  */
 public class ImportAllNodesAndEdgesFromNeo4JTask extends AbstractImportTask {
 
-    public static final String MATCH_ALL_NODES_AND_EDGES = "match (n '{'_cytoscape_network:''{0}'''}')-[r*0..1]-(m '{'_cytoscape_network:''{0}'''}') RETURN n,r,m";
-
     public ImportAllNodesAndEdgesFromNeo4JTask(Services services, String networkName, String visualStyleTitle) {
-        super(services, networkName, visualStyleTitle, new DefaultImportStrategy(), CypherQuery.builder().query(formatQuery(networkName)).build());
+        super(
+                services,
+                networkName,
+                visualStyleTitle,
+                new DefaultImportStrategy(),
+                CypherQuery.builder().query(formatQuery(networkName)).build());
     }
 
     private static String formatQuery(String network) {
-        return MessageFormat.format(MATCH_ALL_NODES_AND_EDGES, network);
+        return MessageFormat.format(TaskConstants.MATCH_ALL_NODES_AND_EDGES, network);
     }
 }

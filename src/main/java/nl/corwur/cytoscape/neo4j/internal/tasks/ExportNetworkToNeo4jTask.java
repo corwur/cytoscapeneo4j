@@ -39,7 +39,11 @@ public class ExportNetworkToNeo4jTask extends AbstractTask {
             if (cyNetwork == null) {
                 taskMonitor.showMessage(TaskMonitor.Level.WARN, "No network selected");
             } else {
-                GraphImplementation graphImplementation = Neo4jGraphImplementation.create(services.getNeo4jClient(), exportNetworkConfiguration.getNodeLabel().getLabel());
+                GraphImplementation graphImplementation = Neo4jGraphImplementation.create(
+                        services.getNeo4jClient(),
+                        TaskConstants.NEO4J_PROPERTY_CYTOSCAPE_NETWORK,
+                        exportNetworkConfiguration.getNodeLabel().getLabel()
+                );
                 Command command = getCypherQuery(cyNetwork).map(cypherQuery -> {
                     try {
                         Graph grapInDb = services.getNeo4jClient().getGraph(cypherQuery);
@@ -52,10 +56,6 @@ public class ExportNetworkToNeo4jTask extends AbstractTask {
                 taskMonitor.setStatusMessage("Updating graph");
                 // @TODO proper export: Label names from shared names and correct edge names and properties
                 command.execute();
-                taskMonitor.setStatusMessage("Exporting nodes");
-//                cyNetwork.getNodeList().forEach(node -> copyNodeToNeo4j(cyNetwork, node));
-                taskMonitor.setStatusMessage("Exporting edges");
-//                cyNetwork.getEdgeList().forEach(edge -> copyEdgeToNeo4j(cyNetwork, edge));
             }
 
         } catch (Exception e) {
@@ -73,5 +73,4 @@ public class ExportNetworkToNeo4jTask extends AbstractTask {
             return Optional.empty();
         }
     }
-
 }
