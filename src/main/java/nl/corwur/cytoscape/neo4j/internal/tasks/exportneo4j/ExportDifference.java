@@ -9,7 +9,7 @@ import nl.corwur.cytoscape.neo4j.internal.graph.commands.Command;
 import nl.corwur.cytoscape.neo4j.internal.graph.commands.CommandBuilder;
 import nl.corwur.cytoscape.neo4j.internal.graph.commands.RemoveEdge;
 import nl.corwur.cytoscape.neo4j.internal.graph.commands.RemoveNode;
-import nl.corwur.cytoscape.neo4j.internal.graph.commands.UpdateEdge;
+import nl.corwur.cytoscape.neo4j.internal.graph.commands.UpdateDirectedEdgeByStartAndEndNodeId;
 import nl.corwur.cytoscape.neo4j.internal.graph.commands.UpdateNode;
 import nl.corwur.cytoscape.neo4j.internal.graph.implementation.GraphImplementation;
 import nl.corwur.cytoscape.neo4j.internal.graph.implementation.NodeLabel;
@@ -65,7 +65,7 @@ public class ExportDifference {
         for (CyEdge cyEdge : cyNetwork.getEdgeList()) {
             if (edgeExistsInGraph(cyEdge)) {
                 visit(cyEdge);
-                commandBuilder.updateEdge(refId(cyEdge.getSource()), refId(cyEdge.getTarget()), properties(cyEdge));
+                commandBuilder.updateEdgeById(refId(cyEdge), properties(cyEdge));
             } else {
                 PropertyKey<Long> startId = nodeId(cyEdge.getSource());
                 PropertyKey<Long> endId = nodeId(cyEdge.getTarget());
@@ -85,13 +85,13 @@ public class ExportDifference {
     }
 
     private int arity(Command command) {
-        if (command instanceof RemoveNode) return 0;
-        if (command instanceof AddNode) return 1;
-        if (command instanceof AddEdge) return 2;
-        if (command instanceof UpdateNode) return 3;
-        if (command instanceof UpdateEdge) return 4;
-        if (command instanceof RemoveEdge) return 5;
-        else return 6;
+        if (command instanceof RemoveEdge) return 0;
+        if (command instanceof RemoveNode) return 1;
+        if (command instanceof AddNode) return 2;
+        if (command instanceof AddEdge) return 3;
+        if (command instanceof UpdateNode) return 4;
+        if (command instanceof UpdateDirectedEdgeByStartAndEndNodeId) return 5;
+        return 6;
     }
 
     private Stream<GraphEdge> unvisitedEdges() {
@@ -126,6 +126,10 @@ public class ExportDifference {
 
     private PropertyKey<Long> refId(CyNode node) {
         return new PropertyKey<>("id", cyNetwork.getRow(node).get(REFID, Long.class));
+    }
+
+    private PropertyKey<Long> refId(CyEdge edge) {
+        return new PropertyKey<>("id", cyNetwork.getRow(edge).get(REFID, Long.class));
     }
 
     private PropertyKey<Long> suid(CyNode node) {

@@ -18,6 +18,7 @@ import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.DefaultImportStrateg
 import nl.corwur.cytoscape.neo4j.internal.tasks.importgraph.ImportGraphToCytoscape;
 import nl.corwur.cytoscape.test.model.fixtures.CyNetworkFixtures;
 import nl.corwur.cytoscape.test.model.fixtures.Neo4jFixtures;
+import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.junit.After;
@@ -25,10 +26,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static nl.corwur.cytoscape.test.model.fixtures.CyNetworkFixtures.CyFixture.NETWORK_WITH_3_NODES_1_EDGE;
 import static nl.corwur.cytoscape.test.model.fixtures.CyNetworkFixtures.emptyNetwork;
@@ -74,14 +78,14 @@ public class CyNeo4jGraphIT {
     }
 
     @Test
-    public void testExportDifference() throws CommandException, Neo4jClientException {
+    public void testExportDifference_AddNode_AddEdge() throws CommandException, Neo4jClientException {
         //Given network label
         Steps.newInstance(neo4jClient)
                 .givenRandomNetwork()
                 .whenExportGraph(NETWORK_WITH_3_NODES_1_EDGE)
                 .whenImportGraph()
                 .whenAddNode()
-                .whenAddEdge(propertyExists("name", "b"), propertyExists("name", "c"))
+                .whenAddEdge(matchNodeProperty("name", "b"), matchNodeProperty("name", "c"))
                 .whenExportDifference()
                 .whenImportGraph()
                 .thenNetworkHas(4, Steps.Types.NODES)
@@ -89,20 +93,47 @@ public class CyNeo4jGraphIT {
     }
 
     @Test
+    public void testExportDifference_RemoveNode_RemoveEdge() throws CommandException, Neo4jClientException, GraphImplementationException {
+        //Given network label
+        Steps.newInstance(neo4jClient)
+                .givenRandomNetwork()
+                .givenNeo4jFixture(GRAPH_5_STAR)
+                .whenImportGraph()
+                .whenDetachNode(matchNodeProperty("nodeId", 1l))
+                .whenRemoveNode(matchNodeProperty("nodeId", 1l))
+                .whenRemoveEdge(matchEdge(matchNodeProperty("nodeId", 2l), matchNodeProperty("nodeId", 3l)))
+                .whenExportDifference()
+                .whenImportGraph()
+                .thenNetworkHas(4, Steps.Types.NODES)
+                .thenNetworkHas(11, Steps.Types.EDGES);
+    }
+
+
+    @Test
     public void testImport5StarGraph() throws Neo4jClientException, GraphImplementationException {
         Steps.newInstance(neo4jClient)
                 .givenRandomNetwork()
-                .whenCreateNeo4jGraph(GRAPH_5_STAR)
+                .givenNeo4jFixture(GRAPH_5_STAR)
                 .whenImportGraph()
                 .thenNetworkHas(5, Steps.Types.NODES)
                 .thenNetworkHas(20, Steps.Types.EDGES);
 
     }
 
-    private BiPredicate<CyNetwork, CyNode> propertyExists(String key, String value) {
+    private <T> BiPredicate<CyNetwork, CyNode> matchNodeProperty(String key, T value) {
         return (network, node) ->
                 network.getRow(node).isSet(key) &&
-                        network.getRow(node).get(key, String.class).equals(value);
+                        network.getRow(node).get(key, value.getClass()).equals(value);
+    }
+
+    private BiPredicate<CyNetwork, CyEdge> matchEdge(BiPredicate<CyNetwork, CyNode> selectSource, BiPredicate<CyNetwork, CyNode> selectTarget) {
+        return (network, edge) -> {
+            Predicate<CyNode> predicateSource = cyNode -> selectSource.test(network, cyNode);
+            Predicate<CyNode> predicateTarget = cyNode -> selectTarget.test(network, cyNode);
+            CyNode source = network.getNodeList().stream().filter(predicateSource).findFirst().orElseThrow(() -> new IllegalArgumentException("CyNode not found"));
+            CyNode target = network.getNodeList().stream().filter(predicateTarget).findFirst().orElseThrow(() -> new IllegalArgumentException("CyNode not found"));
+            return edge.getSource().equals(source) && edge.getTarget().equals(target);
+        };
     }
 
     private boolean oneEdgeWithNameAB(GraphEdge edge) {
@@ -123,30 +154,8 @@ public class CyNeo4jGraphIT {
 
     private static final class Steps {
 
-
-        public Steps(Neo4jClient neo4jClient) {
-            this.neo4jClient = neo4jClient;
-        }
-
-        public Steps thenGraphEdgesAllMatch(String message, Predicate<GraphEdge> predicate) {
-            assertTrue(message, graph.edges().stream().allMatch(predicate));
-            return this;
-        }
-
-        public Steps thenGraphNodesAllMatch(String message, Predicate<GraphNode> predicate) {
-            assertTrue(message, graph.nodes().stream().allMatch(predicate));
-            return this;
-        }
-
-        public Steps whenCreateNeo4jGraph(Neo4jFixtures.Neo4jFixture neo4jFixture) throws GraphImplementationException {
-            neo4jFixture.create(neo4jClient, networkLabel);
-            return this;
-        }
-
         public enum Types {
             NODES, EDGES;
-
-
         }
 
         private String networkLabel;
@@ -154,12 +163,18 @@ public class CyNeo4jGraphIT {
         private Neo4jGraphImplementation graphImplementation;
         private Graph graph;
         private CyNetwork cyNetwork;
-        private GraphNode node;
-        private GraphEdge edge;
-
 
         public static Steps newInstance(Neo4jClient neo4jClient) {
             return new Steps(neo4jClient);
+        }
+
+        private Steps(Neo4jClient neo4jClient) {
+            this.neo4jClient = neo4jClient;
+        }
+
+        public Steps givenNeo4jFixture(Neo4jFixtures.Neo4jFixture neo4jFixture) throws GraphImplementationException {
+            neo4jFixture.create(neo4jClient, networkLabel);
+            return this;
         }
 
         public Steps givenRandomNetwork() {
@@ -194,12 +209,45 @@ public class CyNeo4jGraphIT {
             return this;
         }
 
+        public Steps whenDetachNode(BiPredicate<CyNetwork, CyNode> selectNode) {
+            Predicate<CyNode> nodePredicate = cyNode -> selectNode.test(cyNetwork, cyNode);
+            CyNode cyNode = cyNetwork.getNodeList().stream().filter(nodePredicate).findFirst().orElseThrow(() -> new IllegalArgumentException("CyNode not found"));
+            List<CyEdge> edgestoRemove = cyNetwork.getEdgeList().stream().filter(cyEdge -> cyEdge.getSource().equals(cyNode) || cyEdge.getTarget().equals(cyNode)).collect(Collectors.toList());
+            cyNetwork.removeEdges(edgestoRemove);
+            return this;
+        }
+
+        public Steps whenRemoveNode(BiPredicate<CyNetwork, CyNode> selectNode) {
+            Predicate<CyNode> nodePredicate = cyNode -> selectNode.test(cyNetwork, cyNode);
+            CyNode cyNode = cyNetwork.getNodeList().stream().filter(nodePredicate).findFirst().orElseThrow(() -> new IllegalArgumentException("CyNode not found"));
+            cyNetwork.removeNodes(Arrays.asList(cyNode));
+            return this;
+        }
+
+        public Steps whenRemoveEdge(BiPredicate<CyNetwork, CyEdge> selectEdge) {
+            Predicate<CyEdge> edgePredicate = cyEdge-> selectEdge.test(cyNetwork, cyEdge);
+            CyEdge cyEdge = cyNetwork.getEdgeList().stream().filter(edgePredicate).findFirst().orElseThrow(() -> new IllegalArgumentException("CyEdge not found"));
+            cyNetwork.removeEdges(Arrays.asList(cyEdge));
+            return this;
+        }
+
+
         public Steps whenAddEdge(BiPredicate<CyNetwork, CyNode> selectSource, BiPredicate<CyNetwork, CyNode> selectTarget) {
             Predicate<CyNode> sourcePredicate = cyNode -> selectSource.test(cyNetwork, cyNode);
             Predicate<CyNode> targetPredicate = cyNode -> selectTarget.test(cyNetwork, cyNode);
             CyNode source = cyNetwork.getNodeList().stream().filter(sourcePredicate).findFirst().orElseThrow(() -> new IllegalArgumentException("CyNode not found"));
             CyNode target = cyNetwork.getNodeList().stream().filter(targetPredicate).findFirst().orElseThrow(() -> new IllegalArgumentException("CyNode not found"));
             cyNetwork.addEdge(source, target, true);
+            return this;
+        }
+
+        public Steps thenGraphEdgesAllMatch(String message, Predicate<GraphEdge> predicate) {
+            assertTrue(message, graph.edges().stream().allMatch(predicate));
+            return this;
+        }
+
+        public Steps thenGraphNodesAllMatch(String message, Predicate<GraphNode> predicate) {
+            assertTrue(message, graph.nodes().stream().allMatch(predicate));
             return this;
         }
 

@@ -48,10 +48,17 @@ public class CommandBuilder {
         return this;
     }
 
-    public CommandBuilder updateEdge(PropertyKey<Long> startId, PropertyKey<Long> endId, Map<String, Object> properties) {
-        UpdateEdge updateEdge = UpdateEdge.create(startId, endId, properties);
-        updateEdge.setGraphImplementation(graphImplementation);
-        commandList.add(updateEdge);
+    public CommandBuilder updateDirectedEdge(PropertyKey<Long> startId, PropertyKey<Long> endId, Map<String, Object> properties) {
+        UpdateDirectedEdgeByStartAndEndNodeId updateDirectedEdgeByStartAndEndNodeId = UpdateDirectedEdgeByStartAndEndNodeId.create(startId, endId, properties);
+        updateDirectedEdgeByStartAndEndNodeId.setGraphImplementation(graphImplementation);
+        commandList.add(updateDirectedEdgeByStartAndEndNodeId);
+        return this;
+    }
+
+    public CommandBuilder updateEdgeById(PropertyKey<Long> edgeId, Map<String, Object> properties) {
+        UpdateEdgeById updateEdgeById = UpdateEdgeById.create(edgeId, properties);
+        updateEdgeById.setGraphImplementation(graphImplementation);
+        commandList.add(updateEdgeById);
         return this;
     }
 

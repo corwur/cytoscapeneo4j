@@ -37,8 +37,8 @@ public final class Neo4jGraphImplementation implements GraphImplementation {
                         "MATCH (s {" + matchNetworkProperty() + "}), " +
                                 "(e {" + matchNetworkProperty() + "}) " +
                                 "WHERE " +
-                                    nodeWhere("s", start, START_ID) + " AND " +
-                                    nodeWhere("e", end, END_ID) + " " +
+                                    where("s", start, START_ID) + " AND " +
+                                    where("e", end, END_ID) + " " +
                                 "CREATE (s) -[:" + relationship + " $" + PROPS + "]-> (e)"
                 )
                 .params(START_ID, start.getValue())
@@ -50,15 +50,15 @@ public final class Neo4jGraphImplementation implements GraphImplementation {
 
 
     @Override
-    public void updateEdge(PropertyKey<Long> startId, PropertyKey<Long> endId, Map<String, Object> properties) throws GraphImplementationException {
+    public void updateDirectedEdge(PropertyKey<Long> startId, PropertyKey<Long> endId, Map<String, Object> properties) throws GraphImplementationException {
         CypherQuery cypherQuery = CypherQuery.builder()
                 .query(
                         "MATCH (s {" + matchNetworkProperty() + "}) " +
-                                " -[r]- " +
+                                " -[r]-> " +
                                 "(e {" + matchNetworkProperty() +"}) " +
                                 "WHERE " +
-                                nodeWhere("s", startId, START_ID) + " AND " +
-                                nodeWhere("e", endId, END_ID)  + " " +
+                                where("s", startId, START_ID) + " AND " +
+                                where("e", endId, END_ID)  + " " +
                                 "SET r = $" + PROPS
                 )
                 .params(START_ID, startId.getValue())
@@ -67,12 +67,27 @@ public final class Neo4jGraphImplementation implements GraphImplementation {
                 .build();
         executeQuery(cypherQuery);
     }
-
-    private String nodeWhere(String nodeAlias, PropertyKey<Long> nodeId, String param) {
+    @Override
+    public void updateEdgeById(PropertyKey<Long> edgeId , Map<String, Object> properties) throws GraphImplementationException {
+        CypherQuery cypherQuery = CypherQuery.builder()
+                .query(
+                        "MATCH (s {" + matchNetworkProperty() + "}) " +
+                                " -[r]-> " +
+                                "(e {" + matchNetworkProperty() +"}) " +
+                                "WHERE " +
+                                where("r", edgeId, EDGE_ID) + " " +
+                                "SET r = $" + PROPS
+                )
+                .params(EDGE_ID, edgeId.getValue())
+                .params(PROPS, properties)
+                .build();
+        executeQuery(cypherQuery);
+    }
+    private String where(String alias, PropertyKey<Long> nodeId, String param) {
         if("id".equalsIgnoreCase(nodeId.getName())) {
-            return "id(" + nodeAlias + ") = $" + param + " ";
+            return "id(" + alias + ") = $" + param + " ";
         } else {
-            return nodeAlias + "." + nodeId.getName() + " = $" + param + " ";
+            return alias + "." + nodeId.getName() + " = $" + param + " ";
         }
     }
 
