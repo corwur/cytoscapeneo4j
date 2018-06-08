@@ -18,65 +18,67 @@ import org.cytoscape.work.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 public class ExpandNodeTask extends AbstractNodeViewTask implements Task, ActionListener {
 
-    public enum Direction {
-        IN,
-        OUT,
-        BIDIRECTIONAL;
-    }
-
+	public enum Direction {
+		IN,
+		OUT,
+		BIDIRECTIONAL;
+	}
     private final transient Services services;
     private final ImportGraphStrategy importGraphStrategy;
     private Boolean redoLayout;
     private String edge;
     private String node;
-    private Direction direction;
+	private Direction direction; 
+    
+	public ExpandNodeTask(View<CyNode> nodeView, CyNetworkView networkView, Services services, Boolean redoLayout) {
+		super(nodeView, networkView);
+		this.services = services;
+		this.importGraphStrategy = new DefaultImportStrategy();
+		this.redoLayout = redoLayout;
+		this.edge = null;
+		this.node = null;
+		this.direction = ExpandNodeTask.Direction.BIDIRECTIONAL;
+	}
+	
+	public void setNode(String node) {
+		this.node = node;
+	}
 
-    public ExpandNodeTask(View<CyNode> nodeView, CyNetworkView networkView, Services services, Boolean redoLayout) {
-        super(nodeView, networkView);
-        this.services = services;
-        this.importGraphStrategy = new DefaultImportStrategy();
-        this.redoLayout = redoLayout;
-        this.edge = null;
-        this.node = null;
-        this.direction = ExpandNodeTask.Direction.BIDIRECTIONAL;
-    }
+	public void setEdge(String edge) {
+		this.edge = edge;
+	}
 
-    public void setNode(String node) {
-        this.node = node;
-    }
+	public void setDirection(Direction direction) {
+		this.direction = direction;
+	}
 
-    public void setEdge(String edge) {
-        this.edge = edge;
-    }
-
-    public void setDirection(Direction direction) {
-        this.direction = direction;
-    }
-
-
-    private void expand() throws InterruptedException, ExecutionException {
-        CyNode cyNode = (CyNode) this.nodeView.getModel();
-
-        Long refid = this.netView.getModel().getRow(cyNode).get(this.importGraphStrategy.getRefIDName(), Long.class);
-        String directionLeft = this.direction == Direction.IN ? "<-" : "";
-        String directionRight = this.direction == Direction.OUT ? "->" : "";
-
-        String query;
-        if (this.edge == null && this.node == null) {
-            query = "match p=(n)" + directionLeft + "-[r]-" + directionRight + "() where ID(n) = " + refid + " return p";
-        } else if (this.node == null) {
-            query = "match p=(n)" + directionLeft + "-[:" + this.edge + "]-" + directionRight + "() where ID(n) = " + refid + " return p";
-        } else {
-            query = "match p=(n)" + directionLeft + "-[r]-" + directionRight + "(:" + this.node + ") where ID(n) = " + refid + " return p";
-        }
-        CypherQuery cypherQuery = CypherQuery.builder().query(query).build();
-
+	
+	private void expand() throws InterruptedException, ExecutionException {
+		CyNode cyNode = (CyNode)this.nodeView.getModel();
+		
+		Long refid = this.netView.getModel().getRow(cyNode).get(this.importGraphStrategy.getRefIDName(), Long.class);
+		String directionLeft = this.direction == Direction.IN ? "<" : "";
+		String directionRight = this.direction == Direction.OUT ? ">" : "";
+		
+		String query;
+		if (this.edge == null && this.node == null) {
+			query = "match p=(n)" + directionLeft +  "-[r]-" + directionRight + "() where ID(n) = " + refid +" return p"; 
+		}
+		else if (this.node == null){
+			query = "match p=(n)" + directionLeft +  "-[:"+this.edge+"]-" + directionRight + "() where ID(n) = " + refid +" return p";
+		}
+		else {
+			query = "match p=(n)" + directionLeft +  "-[r]-" + directionRight + "(:" + this.node + ") where ID(n) = " + refid +" return p"; 
+		}
+		CypherQuery cypherQuery = CypherQuery.builder().query(query).build();
+		
         CompletableFuture<Graph> result = CompletableFuture.supplyAsync(() -> getGraph(cypherQuery));
 
         while (!result.isDone()) {
