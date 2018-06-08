@@ -64,8 +64,8 @@ public class ExpandNodeTask extends AbstractNodeViewTask implements Task, Action
 		CyNode cyNode = (CyNode)this.nodeView.getModel();
 		
 		Long refid = this.netView.getModel().getRow(cyNode).get(this.importGraphStrategy.getRefIDName(), Long.class);
-		String directionLeft = this.direction == Direction.IN ? "<-" : "";
-		String directionRight = this.direction == Direction.OUT ? "->" : "";
+		String directionLeft = this.direction == Direction.IN ? "<" : "";
+		String directionRight = this.direction == Direction.OUT ? ">" : "";
 		
 		String query;
 		if (this.edge == null && this.node == null) {
