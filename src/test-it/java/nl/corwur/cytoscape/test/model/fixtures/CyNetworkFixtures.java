@@ -50,7 +50,7 @@ public class CyNetworkFixtures {
         CyNode a = cyNetwork.addNode();
         CyNode b = cyNetwork.addNode();
         CyNode c = cyNetwork.addNode();
-        CyEdge ab = cyNetwork.addEdge(a,b, true);
+        CyEdge ab = cyNetwork.addEdge(a, b, true);
         cyNetwork.getRow(a).set(MY_PROPERTY, "a property");
         cyNetwork.getRow(a).set(NAME, "a");
         cyNetwork.getRow(b).set(MY_PROPERTY, "b property");

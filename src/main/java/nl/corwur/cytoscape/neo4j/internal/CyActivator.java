@@ -67,7 +67,7 @@ public class CyActivator extends AbstractCyActivator {
 
         Properties expandProperties = new Properties();
         expandProperties.setProperty(PREFERRED_MENU, "Apps.Cypher Queries");
-        expandProperties.setProperty(TITLE,"Connect all nodes");
+        expandProperties.setProperty(TITLE, "Connect all nodes");
         ConnectNodesMenuAction connectNodesMenuAction = ConnectNodesMenuAction.create(services, false);
         registerAllServices(context, connectNodesMenuAction, expandProperties);
 
@@ -103,7 +103,7 @@ public class CyActivator extends AbstractCyActivator {
 
         Properties shortestPathProperties = new Properties();
         shortestPathProperties.setProperty(PREFERRED_MENU, "Apps.Cypher Queries");
-        shortestPathProperties.setProperty(TITLE,"Get shortest paths between selected nodes");
+        shortestPathProperties.setProperty(TITLE, "Get shortest paths between selected nodes");
         ShortestPathMenuAction shortestPathMenuAction = ShortestPathMenuAction.create(services);
         registerAllServices(context, shortestPathMenuAction, shortestPathProperties);
 
@@ -141,7 +141,7 @@ public class CyActivator extends AbstractCyActivator {
         registerAllServices(context, expandNodeEdgeMenuAction, expandProperties);
         ExpandNodeLabelMenuAction expandNodeLabelMenuAction = new ExpandNodeLabelMenuAction(services);
         registerAllServices(context, expandNodeLabelMenuAction, expandProperties);
-        
+
     }
 
     private Services createServices(BundleContext context) {

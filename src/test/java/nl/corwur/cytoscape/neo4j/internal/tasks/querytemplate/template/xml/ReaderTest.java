@@ -18,8 +18,8 @@ public class ReaderTest {
         CypherQueryTemplate template = reader.read(getClass().getResourceAsStream("/gene-detail-copyall.xml"));
         assertNotNull(template);
         assertTrue(template.getMapping() instanceof CopyAllMappingStrategy);
-        assertEquals("Copy All Network",((CopyAllMappingStrategy)template.getMapping()).getNetworkName());
-        assertEquals("referenceId",((CopyAllMappingStrategy)template.getMapping()).getReferenceColumn());
+        assertEquals("Copy All Network", ((CopyAllMappingStrategy) template.getMapping()).getNetworkName());
+        assertEquals("referenceId", ((CopyAllMappingStrategy) template.getMapping()).getReferenceColumn());
     }
 
     @Test
@@ -28,10 +28,10 @@ public class ReaderTest {
         CypherQueryTemplate template = reader.read(getClass().getResourceAsStream("/gene-detail.xml"));
         assertNotNull(template);
         assertTrue(template.getMapping() instanceof GraphMapping);
-        assertTrue(((GraphMapping)template.getMapping()).getNodeColumnMapping().size() >0 );
-        assertTrue(((GraphMapping)template.getMapping()).getEdgeColumnMapping().size() >0 );
-        assertNotNull(((GraphMapping)template.getMapping()).getNodeReferenceIdColumn());
-        assertNotNull(((GraphMapping)template.getMapping()).getEdgeReferenceIdColumn());
+        assertTrue(((GraphMapping) template.getMapping()).getNodeColumnMapping().size() > 0);
+        assertTrue(((GraphMapping) template.getMapping()).getEdgeColumnMapping().size() > 0);
+        assertNotNull(((GraphMapping) template.getMapping()).getNodeReferenceIdColumn());
+        assertNotNull(((GraphMapping) template.getMapping()).getEdgeReferenceIdColumn());
     }
 
 }

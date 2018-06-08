@@ -79,7 +79,6 @@ public class CyNeo4jGraphIT {
 
     @Test
     public void testExportDifference_AddNode_AddEdge() throws CommandException, Neo4jClientException {
-        //Given network label
         Steps.newInstance(neo4jClient)
                 .givenRandomNetwork()
                 .whenExportGraph(NETWORK_WITH_3_NODES_1_EDGE)
@@ -94,7 +93,6 @@ public class CyNeo4jGraphIT {
 
     @Test
     public void testExportDifference_RemoveNode_RemoveEdge() throws CommandException, Neo4jClientException, GraphImplementationException {
-        //Given network label
         Steps.newInstance(neo4jClient)
                 .givenRandomNetwork()
                 .givenNeo4jFixture(GRAPH_5_STAR)
@@ -108,7 +106,6 @@ public class CyNeo4jGraphIT {
                 .thenNetworkHas(11, Steps.Types.EDGES);
     }
 
-
     @Test
     public void testImport5StarGraph() throws Neo4jClientException, GraphImplementationException {
         Steps.newInstance(neo4jClient)
@@ -117,8 +114,62 @@ public class CyNeo4jGraphIT {
                 .whenImportGraph()
                 .thenNetworkHas(5, Steps.Types.NODES)
                 .thenNetworkHas(20, Steps.Types.EDGES);
+    }
+
+    @Test
+    public void testAddNodeProperty() throws Neo4jClientException, GraphImplementationException, CommandException {
+        Steps.newInstance(neo4jClient)
+                .givenRandomNetwork()
+                .givenCyNetwork(NETWORK_WITH_3_NODES_1_EDGE)
+                .whenAddNodeColumn("my_int", Integer.class, 1)
+                .whenExportDifference()
+                .whenImportGraph()
+                .thenGraphNodesAllMatch("Not all nodes have the expected property", nodeHasProperty("my_int", 1l));
 
     }
+
+    @Test
+    public void testUpdateNodeProperty() throws Neo4jClientException, GraphImplementationException, CommandException {
+        Steps.newInstance(neo4jClient)
+                .givenRandomNetwork()
+                .givenCyNetwork(NETWORK_WITH_3_NODES_1_EDGE)
+                .whenAddNodeColumn("my_int", Integer.class, 1)
+                .whenExportDifference()
+                .whenImportGraph()
+                .whenUpdateNodeProperty(matchNodeProperty("name", "a"), "my_int", 2l)
+                .whenExportDifference()
+                .whenImportGraph()
+                .thenNodesExists("There should exists a node with the expected property", matchNodeProperty("my_int", 2l));
+    }
+
+    @Test
+    public void testRemoveNodeProperty() throws Neo4jClientException, GraphImplementationException, CommandException {
+        Steps.newInstance(neo4jClient)
+                .givenRandomNetwork()
+                .givenCyNetwork(NETWORK_WITH_3_NODES_1_EDGE)
+                .whenRemoveNodeColumn(CyNetworkFixtures.MY_PROPERTY)
+                .whenExportDifference()
+                .whenImportGraph()
+                .thenGraphNodesAllMatch("There should not exists a node with this property [" + CyNetworkFixtures.MY_PROPERTY + "]",
+                        nodeHasProperty(CyNetworkFixtures.MY_PROPERTY, Long.class).negate()
+                );
+
+    }
+
+    private <T> Predicate<GraphNode> nodeHasProperty(String key, Class<T> clz) {
+        return node -> node
+                .getProperty(key, clz)
+                .isPresent();
+    }
+
+
+    private <T> Predicate<GraphNode> nodeHasProperty(String key, T value) {
+        return node -> node
+                .getProperty(key, value.getClass())
+                .filter( p -> p.equals(value))
+                .isPresent();
+    }
+
 
     private <T> BiPredicate<CyNetwork, CyNode> matchNodeProperty(String key, T value) {
         return (network, node) ->
@@ -154,6 +205,10 @@ public class CyNeo4jGraphIT {
 
     private static final class Steps {
 
+        public Steps whenRemoveNodeColumn(String my_property) {
+            return this;
+        }
+
         public enum Types {
             NODES, EDGES;
         }
@@ -172,6 +227,11 @@ public class CyNeo4jGraphIT {
             this.neo4jClient = neo4jClient;
         }
 
+        public Steps givenCyNetwork(CyNetworkFixtures.CyFixture cyFixture) {
+            cyNetwork = cyFixture.getNetwork();
+            return this;
+        }
+
         public Steps givenNeo4jFixture(Neo4jFixtures.Neo4jFixture neo4jFixture) throws GraphImplementationException {
             neo4jFixture.create(neo4jClient, networkLabel);
             return this;
@@ -180,6 +240,22 @@ public class CyNeo4jGraphIT {
         public Steps givenRandomNetwork() {
             this.networkLabel = randomLabel();
             graphImplementation = Neo4jGraphImplementation.create(neo4jClient, TaskConstants.NEO4J_PROPERTY_CYTOSCAPE_NETWORK, networkLabel);
+            cyNetwork = emptyNetwork();
+            return this;
+        }
+
+        public <T> Steps whenAddNodeColumn(String columnName, Class<T> columnClass, T defaultValue) {
+            if(cyNetwork.getDefaultNodeTable().getColumn(columnName) != null) {
+                cyNetwork.getDefaultNodeTable().deleteColumn(columnName);
+            }
+            cyNetwork.getDefaultNodeTable().createColumn(columnName, columnClass, false, defaultValue);
+            return this;
+        }
+
+        public <T> Steps whenUpdateNodeProperty(BiPredicate<CyNetwork, CyNode> selectNode, String columnName, T value) {
+            Predicate<CyNode> nodePredicate = cyNode -> selectNode.test(cyNetwork, cyNode);
+            CyNode cyNode = cyNetwork.getNodeList().stream().filter(nodePredicate).findFirst().orElseThrow(() -> new IllegalArgumentException("Node not found in network"));
+            cyNetwork.getRow(cyNode).set(columnName, value);
             return this;
         }
 
@@ -225,7 +301,7 @@ public class CyNeo4jGraphIT {
         }
 
         public Steps whenRemoveEdge(BiPredicate<CyNetwork, CyEdge> selectEdge) {
-            Predicate<CyEdge> edgePredicate = cyEdge-> selectEdge.test(cyNetwork, cyEdge);
+            Predicate<CyEdge> edgePredicate = cyEdge -> selectEdge.test(cyNetwork, cyEdge);
             CyEdge cyEdge = cyNetwork.getEdgeList().stream().filter(edgePredicate).findFirst().orElseThrow(() -> new IllegalArgumentException("CyEdge not found"));
             cyNetwork.removeEdges(Arrays.asList(cyEdge));
             return this;
@@ -277,6 +353,12 @@ public class CyNeo4jGraphIT {
                     assertEquals("Unexpected number of edges in graph.", expected, cyNetwork.getEdgeList().size());
                     break;
             }
+            return this;
+        }
+
+        public Steps thenNodesExists(String message, BiPredicate<CyNetwork, CyNode> predicate) {
+            Predicate<CyNode> nodePredicate = (cyNode) -> predicate.test(this.cyNetwork, cyNode);
+            assertTrue(message, cyNetwork.getNodeList().stream().anyMatch(nodePredicate));
             return this;
         }
 

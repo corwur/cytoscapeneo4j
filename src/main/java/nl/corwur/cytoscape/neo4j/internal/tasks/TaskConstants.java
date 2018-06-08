@@ -6,8 +6,7 @@ public final class TaskConstants {
     public static final String MATCH_ALL_NODES_AND_EDGES = "match (n '{'" + NEO4J_PROPERTY_CYTOSCAPE_NETWORK + ":''{0}'''}')-[r*0..1]-(m '{'_cytoscape_network:''{0}'''}') RETURN n,r,m";
 
 
-
-    private TaskConstants () {
+    private TaskConstants() {
 
     }
 }

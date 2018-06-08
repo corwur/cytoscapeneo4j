@@ -6,7 +6,6 @@ package nl.corwur.cytoscape.neo4j.internal.ui.expand;
 import nl.corwur.cytoscape.neo4j.internal.Services;
 import nl.corwur.cytoscape.neo4j.internal.tasks.ExpandNodeTask;
 import nl.corwur.cytoscape.neo4j.internal.tasks.ExpandNodeTask.Direction;
-
 import org.cytoscape.model.CyNode;
 import org.cytoscape.task.AbstractNodeViewTaskFactory;
 import org.cytoscape.view.model.CyNetworkView;
@@ -39,10 +38,10 @@ public class ExpandNodeMenuAction extends AbstractNodeViewTaskFactory {
     @Override
     public TaskIterator createTaskIterator(View<CyNode> nodeView, CyNetworkView networkView) {
         if (this.isReady(nodeView, networkView)) {
-        	ExpandNodeTask expandNodeTask = new ExpandNodeTask(nodeView, networkView, this.services, this.redoLayout);
-        	expandNodeTask.setDirection(this.direction);
+            ExpandNodeTask expandNodeTask = new ExpandNodeTask(nodeView, networkView, this.services, this.redoLayout);
+            expandNodeTask.setDirection(this.direction);
             return new TaskIterator(expandNodeTask);
-            
+
         } else {
             return null;
         }

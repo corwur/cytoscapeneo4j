@@ -31,7 +31,7 @@ public class TaskFactoryTest {
     public void createImportGraphTask() throws Exception {
         TaskFactory taskFactory = TaskFactory.create(services);
         AbstractImportTask task = taskFactory.createImportAllNodesAndEdgesFromNeo4jTask("Network", "default");
-        assertNotNull("create import graph should not return null",task);
+        assertNotNull("create import graph should not return null", task);
     }
 
     @Test
@@ -39,7 +39,7 @@ public class TaskFactoryTest {
         TaskFactory taskFactory = TaskFactory.create(services);
         ExportNetworkConfiguration exportNetworkConfiguration = mock(ExportNetworkConfiguration.class);
         ExportNetworkToNeo4jTask task = taskFactory.createExportNetworkToNeo4jTask(exportNetworkConfiguration);
-        assertNotNull("create export network to Neo4j should not return null",task);
+        assertNotNull("create export network to Neo4j should not return null", task);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class TaskFactoryTest {
         TaskFactory taskFactory = TaskFactory.create(services);
         CypherQueryTemplate query = mock(CypherQueryTemplate.class);
         ImportQueryTemplateTask task = taskFactory.createImportQueryTemplateTask("Networkname", query, "visualStyle");
-        assertNotNull("create retrieve data from query-template should not return null",task);
+        assertNotNull("create retrieve data from query-template should not return null", task);
     }
 
     @Test
@@ -55,6 +55,6 @@ public class TaskFactoryTest {
         TaskFactory taskFactory = TaskFactory.create(services);
         CypherQuery query = mock(CypherQuery.class);
         AbstractImportTask task = taskFactory.createImportQueryTask("Networkname", query, "visualStyle");
-        assertNotNull("create execute cypher-query should not return null",task);
+        assertNotNull("create execute cypher-query should not return null", task);
     }
 }

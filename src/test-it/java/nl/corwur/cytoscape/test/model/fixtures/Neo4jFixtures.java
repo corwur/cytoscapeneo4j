@@ -22,6 +22,7 @@ public class Neo4jFixtures {
         this.neo4jClient = neo4jClient;
         this.gi = Neo4jGraphImplementation.create(neo4jClient, TaskConstants.NEO4J_PROPERTY_CYTOSCAPE_NETWORK, networkLabel);
     }
+
     interface CreateGraph {
         void create(Neo4jClient neo4jClient, String networkLabel) throws GraphImplementationException;
     }
@@ -46,20 +47,20 @@ public class Neo4jFixtures {
     }
 
     private void createStarGraph(int n) throws GraphImplementationException {
-        for(int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
             createNode(i);
         }
-        for(int i = 0; i < n; i++) {
-            for(int j = 0; j < n; j++) {
-                if(i != j) {
-                    createEdge(i,j);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i != j) {
+                    createEdge(i, j);
                 }
             }
         }
     }
 
     private void createNode(int i) throws GraphImplementationException {
-        Map<String,Object> props = new HashMap<>();
+        Map<String, Object> props = new HashMap<>();
         props.put("nodeId", i);
         gi.addNode(Collections.emptyList(), props);
     }

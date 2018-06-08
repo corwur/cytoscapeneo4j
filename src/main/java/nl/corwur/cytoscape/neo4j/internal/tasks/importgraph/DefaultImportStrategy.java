@@ -176,7 +176,7 @@ public class DefaultImportStrategy implements ImportGraphStrategy {
 
     private void setEntry(CyTable cyTable, CyIdentifiable cyId, String key, Object value) {
         CyColumn cyColumn = cyTable.getColumn(key);
-        if(cyColumn != null && cyColumn.getType().isInstance(value)) {
+        if (cyColumn != null && cyColumn.getType().isInstance(value)) {
             cyTable.getRow(cyId.getSUID()).set(key, value);
         }
     }

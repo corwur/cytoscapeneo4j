@@ -16,14 +16,14 @@ public class CypherQueryWriterTest {
         CypherQueryWriter writer = new CypherQueryWriter(stringWriter);
         writer.write(
                 CypherQuery.builder().query("cypherquery")
-                    .params("param1",1)
-                    .params("param2", 1l)
-                    .params("param3", "string")
-                    .params("param4", 1.0)
-                    .params("param5", 2.0f)
-                .build()
+                        .params("param1", 1)
+                        .params("param2", 1l)
+                        .params("param3", "string")
+                        .params("param4", 1.0)
+                        .params("param5", 2.0f)
+                        .build()
         );
-        CypherQuery query= new GsonBuilder().create().fromJson(stringWriter.toString(), CypherQuery.class);
+        CypherQuery query = new GsonBuilder().create().fromJson(stringWriter.toString(), CypherQuery.class);
         assertEquals("cypherquery", query.getQuery());
         //assertEquals(1, query.getParams().get("param1"));
         //assertEquals(1l, query.getParams().get("param1"));

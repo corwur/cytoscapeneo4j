@@ -19,6 +19,7 @@ public class ExpandNodesMenuAction implements NetworkTaskFactory {
     private final transient Services services;
     private Boolean onlySelected;
     private Direction direction;
+
     /**
      *
      */

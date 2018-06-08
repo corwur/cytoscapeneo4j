@@ -29,7 +29,7 @@ public class ExpandNodesTask extends AbstractNetworkTask implements Task {
     private final ImportGraphStrategy importGraphStrategy;
     private Boolean onlySelected;
     private Direction direction;
-    
+
     public ExpandNodesTask(Services services, CyNetwork network, Boolean onlySelected, Direction direction) {
         super(network);
         this.services = services;
@@ -54,11 +54,17 @@ public class ExpandNodesTask extends AbstractNetworkTask implements Task {
         String idsQuery = "[" + String.join(",", ids) + "]";
         String query = "";
         switch (this.direction) {
-        	case BIDIRECTIONAL :query = "match p=(n)-[r]-(m) where ID(n) in " + idsQuery + " return p"; break;
-        	case IN :query = "match p=(n)<-[r]-(m) where ID(n) in " + idsQuery + " return p"; break;
-        	case OUT :query = "match p=(n)-[r]->(m) where ID(n) in " + idsQuery + " return p"; break;
+            case BIDIRECTIONAL:
+                query = "match p=(n)-[r]-(m) where ID(n) in " + idsQuery + " return p";
+                break;
+            case IN:
+                query = "match p=(n)<-[r]-(m) where ID(n) in " + idsQuery + " return p";
+                break;
+            case OUT:
+                query = "match p=(n)-[r]->(m) where ID(n) in " + idsQuery + " return p";
+                break;
         }
-        	
+
         CypherQuery cypherQuery = CypherQuery.builder().query(query).build();
 
         CompletableFuture<Graph> result = CompletableFuture.supplyAsync(() -> getGraph(cypherQuery));
