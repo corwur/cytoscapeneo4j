@@ -1,5 +1,6 @@
 package nl.corwur.cytoscape.neo4j.internal.tasks.exportneo4j;
 
+import com.google.gson.Gson;
 import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphEdge;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphNode;
@@ -21,12 +22,15 @@ import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyRow;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static nl.corwur.cytoscape.neo4j.internal.tasks.TaskConstants.CYCOLUMN_NEO4J_LABELS;
 
 public class ExportDifference {
 
@@ -143,10 +147,21 @@ public class ExportDifference {
 
     private List<NodeLabel> labels(CyNode cyNode) {
         CyRow cyRow = cyNetwork.getRow(cyNode);
-        if (cyRow.isSet("_neo4jlabels")) {
-            return cyRow.getList("_neo4jlabels", String.class).stream()
-                    .map(NodeLabel::create)
-                    .collect(Collectors.toList());
+        if (cyRow.isSet(CYCOLUMN_NEO4J_LABELS) ) {
+            if (cyRow.getRaw(CYCOLUMN_NEO4J_LABELS) instanceof List) {
+                List<String> labels = cyRow.getList(CYCOLUMN_NEO4J_LABELS, String.class);
+                if (labels != null) {
+                    return labels.stream()
+                            .map(NodeLabel::create)
+                            .collect(Collectors.toList());
+
+                }
+            } else {
+                String labelsAsString = cyRow.get(CYCOLUMN_NEO4J_LABELS, String.class, "[]");
+                return parseLabels(labelsAsString).stream()
+                        .map(NodeLabel::create)
+                        .collect(Collectors.toList());
+            }
         }
         return Collections.emptyList();
     }
@@ -175,5 +190,10 @@ public class ExportDifference {
         } else {
             return Optional.empty();
         }
+    }
+
+    private List<String> parseLabels(String labels) {
+        Gson gson = new Gson();
+        return Arrays.asList(gson.fromJson(labels, String[].class));
     }
 }

@@ -169,10 +169,10 @@ public final class Neo4jGraphImplementation implements GraphImplementation {
                         (s1, s2) -> s1 + s2
                 );
         CypherQuery updateQuery = CypherQuery.builder().query(
-                "MATCH(n {" + matchNetworkProperty() + " }) " +
+                "MATCH(n) " +
                         "WHERE " + nodeIdClause("n", nodeId) + " " +
-                        "SET n = $" + PROPS + " " +
-                        (nodeLabelClause.isEmpty() ? "" : ", n." + nodeLabelClause))
+                        "SET n = $" + PROPS + ", n." + cytoscapeNetworkPorpertyName + " = '" + networkLabel + "' " +
+                        (nodeLabelClause.isEmpty() ? "" : ", n" + nodeLabelClause))
                 .params(NODE_ID, nodeId.getValue())
                 .params(PROPS, properties)
                 .build();
@@ -183,7 +183,7 @@ public final class Neo4jGraphImplementation implements GraphImplementation {
         if("id".equals(nodeId.getName())) {
             return "id(" + nodeAlias + ")=$" + NODE_ID;
         } else {
-            return nodeAlias + "." + nodeId.getName() + "=$" + NODE_ID;
+            return nodeAlias + "." + nodeId.getName() + "=$" + NODE_ID + " AND " + whereNetworkProperty(nodeAlias);
         }
     }
 
@@ -198,4 +198,9 @@ public final class Neo4jGraphImplementation implements GraphImplementation {
     private String matchNetworkProperty() {
         return cytoscapeNetworkPorpertyName + ":'" + networkLabel + "'";
     }
+
+    private String whereNetworkProperty(String nodeALias) {
+        return nodeALias + "." + cytoscapeNetworkPorpertyName + " = '" + networkLabel + "'";
+    }
+
 }

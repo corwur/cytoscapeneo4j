@@ -31,6 +31,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.BiPredicate;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -76,6 +77,34 @@ public class CyNeo4jGraphIT {
                 .thenGraphNodesAllMatch("All nodes must have at exactly one label", this::nodeHasOneLabel)
                 .thenGraphNodesAllMatch("The node name must equals the node label", this::nodeNameEqualsLabel);
     }
+
+    @Test
+    public void testImportQueryExport() throws CommandException, Neo4jClientException, GraphImplementationException {
+
+
+        Function query = (networkLabel) ->
+                MessageFormat.format(
+                        "MATCH (n) -[r]-> (m) WHERE n.{0} = ''{1}'' AND m.{0} = ''{1}''  RETURN n,r,m LIMIT 5",
+                        TaskConstants.NEO4J_PROPERTY_CYTOSCAPE_NETWORK,
+                        networkLabel
+                );
+
+        Steps.newInstance(neo4jClient)
+                .givenRandomNetwork()
+                .givenNeo4jFixture(GRAPH_5_STAR)
+                .whenImportQuery(query)
+                .whenExportDifferenceFromQuery(query)
+                .whenImportGraph()
+                .thenGraphHas("All nodes should be imported", 5, Steps.Types.NODES)
+                .thenGraphHas("All nodes should have an edge", graphHasAtLeastEdges(5))
+                .thenGraphNodesAllMatch("All nodes must have a network property",
+                        nodeHasProperty(TaskConstants.NEO4J_PROPERTY_CYTOSCAPE_NETWORK, String.class));
+    }
+
+    private Predicate<Graph> graphHasAtLeastEdges(int count) {
+        return (graph) -> graph.edges().size() >= count;
+    }
+
 
     @Test
     public void testExportDifference_AddNode_AddEdge() throws CommandException, Neo4jClientException {
@@ -127,6 +156,7 @@ public class CyNeo4jGraphIT {
                 .thenGraphNodesAllMatch("Not all nodes have the expected property", nodeHasProperty("my_int", 1l));
 
     }
+
 
     @Test
     public void testUpdateNodeProperty() throws Neo4jClientException, GraphImplementationException, CommandException {
@@ -205,24 +235,20 @@ public class CyNeo4jGraphIT {
 
     private static final class Steps {
 
-        public Steps whenRemoveNodeColumn(String my_property) {
-            return this;
-        }
-
         public enum Types {
             NODES, EDGES;
-        }
 
+
+        }
         private String networkLabel;
         private Neo4jClient neo4jClient;
+
         private Neo4jGraphImplementation graphImplementation;
         private Graph graph;
         private CyNetwork cyNetwork;
-
         public static Steps newInstance(Neo4jClient neo4jClient) {
             return new Steps(neo4jClient);
         }
-
         private Steps(Neo4jClient neo4jClient) {
             this.neo4jClient = neo4jClient;
         }
@@ -241,6 +267,18 @@ public class CyNeo4jGraphIT {
             this.networkLabel = randomLabel();
             graphImplementation = Neo4jGraphImplementation.create(neo4jClient, TaskConstants.NEO4J_PROPERTY_CYTOSCAPE_NETWORK, networkLabel);
             cyNetwork = emptyNetwork();
+            return this;
+        }
+
+        public Steps whenRemoveNodeColumn(String columnName) {
+            cyNetwork.getDefaultNodeTable().deleteColumn(columnName);
+            return this;
+        }
+
+        public Steps whenImportQuery(Function<String, String> cypherQuery) throws Neo4jClientException {
+            CypherQuery query = CypherQuery.builder().query(cypherQuery.apply(networkLabel)).build();
+            graph = neo4jClient.getGraph(query);
+            importGraphToCytoscape();
             return this;
         }
 
@@ -266,9 +304,16 @@ public class CyNeo4jGraphIT {
 
         public Steps whenImportGraph() throws Neo4jClientException {
             this.graph = neo4jClient.getGraph(importAllNodesAndEdges(networkLabel));
-            this.cyNetwork = emptyNetwork();
-            ImportGraphToCytoscape importGraphToCytoscape = new ImportGraphToCytoscape(cyNetwork, new DefaultImportStrategy(), () -> false);
-            importGraphToCytoscape.importGraph(graph);
+            importGraphToCytoscape();
+            return this;
+        }
+
+        public Steps whenExportDifferenceFromQuery(Function<String, String> query) throws CommandException, Neo4jClientException {
+            CypherQuery cypherQuery = CypherQuery.builder().query(query.apply(networkLabel)).build();
+            Graph neo4jGraph = neo4jClient.getGraph(cypherQuery );
+            ExportDifference exportDifference = ExportDifference.create(neo4jGraph, cyNetwork, graphImplementation);
+            Command command = exportDifference.compute();
+            command.execute();
             return this;
         }
 
@@ -344,6 +389,12 @@ public class CyNeo4jGraphIT {
             return this;
         }
 
+        public Steps thenGraphHas(String message, Predicate<Graph> predicate) {
+            assertTrue(message, predicate.test(graph));
+            return this;
+        }
+
+
         public Steps thenNetworkHas(int expected, Types types) {
             switch (types) {
                 case NODES:
@@ -371,6 +422,11 @@ public class CyNeo4jGraphIT {
             String query = MessageFormat.format(TaskConstants.MATCH_ALL_NODES_AND_EDGES, networkLabel);
             return CypherQuery.builder().query(query).build();
         }
-    }
 
+        private void importGraphToCytoscape() {
+            this.cyNetwork = emptyNetwork();
+            ImportGraphToCytoscape importGraphToCytoscape = new ImportGraphToCytoscape(cyNetwork, new DefaultImportStrategy(), () -> false);
+            importGraphToCytoscape.importGraph(graph);
+        }
+    }
 }

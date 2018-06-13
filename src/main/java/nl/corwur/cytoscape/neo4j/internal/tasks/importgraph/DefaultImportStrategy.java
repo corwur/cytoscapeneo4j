@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static nl.corwur.cytoscape.neo4j.internal.tasks.TaskConstants.CYCOLUMN_NEO4J_LABELS;
+
 /**
  * This class implements an import strategy that copies all labels and properties to cytoscape
  */
@@ -100,8 +102,8 @@ public class DefaultImportStrategy implements ImportGraphStrategy {
                 setEntry(cyTable, cyNode, entry.getKey(), entry.getValue());
             }
         }
-        createListColumn(cyTable, "_neo4j_labels", String.class);
-        setEntry(cyTable, cyNode, "_neo4j_labels", graphNode.getLabels());
+        createListColumn(cyTable, CYCOLUMN_NEO4J_LABELS, String.class);
+        setEntry(cyTable, cyNode, CYCOLUMN_NEO4J_LABELS, graphNode.getLabels());
     }
 
     private boolean nodeExists(CyNetwork network, long nodeId) {

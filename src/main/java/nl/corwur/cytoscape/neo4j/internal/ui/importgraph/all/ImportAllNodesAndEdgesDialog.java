@@ -19,23 +19,13 @@ public class ImportAllNodesAndEdgesDialog extends JDialog { //NOSONAR, hierarchy
         this.network = "Network";
     }
 
-    public ImportAllNodesAndEdgesDialog(Frame owner, String[] visualStyles, String cypherQuery, String network) {
-        super(owner);
-        this.visualStyles = visualStyles;
-        this.network = network;
-    }
-
     public void showDialog() {
-
         setTitle("Execute Cypher Query");
-
-
         JComboBox visualStyleComboBox = new JComboBox(visualStyles);
         JLabel visualStyleLabel = new JLabel("Visual Style");
         JTextField networkNameField = new JTextField(network, 30);
-        JLabel networkNameLabel = new JLabel("Network, (all neo4j nodes with this label)");
+        JLabel networkNameLabel = new JLabel("Network, (all neo4j nodes with this network property)");
         JLabel warning = new JLabel("This could result in a very large graph!");
-
 
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(e -> {

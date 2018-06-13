@@ -12,6 +12,8 @@ import org.cytoscape.model.CyNetwork;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
+import static nl.corwur.cytoscape.neo4j.internal.tasks.TaskConstants.CYCOLUMN_NEO4J_LABELS;
+
 public class ExportNetworkMenuAction extends AbstractCyAction {
 
     /**
@@ -47,7 +49,7 @@ public class ExportNetworkMenuAction extends AbstractCyAction {
                 label,
                 "shared name",
                 "refid",
-                "_neo4j_labels",
+                CYCOLUMN_NEO4J_LABELS,
                 "_neo4j_properties"
         );
         if (label != null) {
@@ -57,7 +59,7 @@ public class ExportNetworkMenuAction extends AbstractCyAction {
     }
 
     private Label getNodeLabel() {
-        String message = "Enter node label for this network";
+        String message = "Enter the name for this network";
         CyNetwork currentNetwork = services.getCyApplicationManager().getCurrentNetwork();
         String initialValue = currentNetwork.getRow(currentNetwork).get(CyNetwork.NAME, String.class);
 
@@ -67,7 +69,7 @@ public class ExportNetworkMenuAction extends AbstractCyAction {
                 try {
                     return NodeLabel.create(label);
                 } catch (Exception e) {
-                    message = "Error in node label ([A-Za-z0-9])";
+                    message = "Error in network name ([A-Za-z0-9])";
                 }
             } else {
                 return null;
