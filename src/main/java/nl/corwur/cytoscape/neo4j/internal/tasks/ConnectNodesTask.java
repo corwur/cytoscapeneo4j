@@ -14,7 +14,6 @@ import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyRow;
 import org.cytoscape.task.AbstractNetworkTask;
 import org.cytoscape.view.model.CyNetworkView;
-import org.cytoscape.work.Task;
 import org.cytoscape.work.TaskMonitor;
 
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * @author sven
  */
-public class ConnectNodesTask extends AbstractNetworkTask implements Task {
+public class ConnectNodesTask extends AbstractNetworkTask {
     private final transient Services services;
     private final ImportGraphStrategy importGraphStrategy;
     private Boolean onlySelected;

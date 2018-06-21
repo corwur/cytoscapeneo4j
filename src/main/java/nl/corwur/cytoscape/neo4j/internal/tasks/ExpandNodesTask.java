@@ -15,7 +15,6 @@ import org.cytoscape.task.AbstractNetworkTask;
 import org.cytoscape.view.layout.CyLayoutAlgorithm;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.View;
-import org.cytoscape.work.Task;
 import org.cytoscape.work.TaskMonitor;
 
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-public class ExpandNodesTask extends AbstractNetworkTask implements Task {
+public class ExpandNodesTask extends AbstractNetworkTask {
     private final transient Services services;
     private final ImportGraphStrategy importGraphStrategy;
     private Boolean onlySelected;

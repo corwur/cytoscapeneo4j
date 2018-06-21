@@ -32,9 +32,11 @@ public class ExportNetworkToNeo4jTask extends AbstractTask {
     }
 
     @Override
-    public void run(TaskMonitor taskMonitor) throws Exception {
+    public void run(TaskMonitor taskMonitor) {
         try {
-            taskMonitor.setStatusMessage("Export network to Neo4j");
+            taskMonitor.setTitle("Export network to Neo4j");
+            taskMonitor.setProgress(0);
+            taskMonitor.setStatusMessage("Exporting network to Neo4j");
             CyNetwork cyNetwork = services.getCyApplicationManager().getCurrentNetwork();
             if (cyNetwork == null) {
                 taskMonitor.showMessage(TaskMonitor.Level.WARN, "No network selected");
@@ -56,6 +58,7 @@ public class ExportNetworkToNeo4jTask extends AbstractTask {
                 taskMonitor.setStatusMessage("Updating graph");
                 // @TODO proper export: Label names from shared names and correct edge names and properties
                 command.execute();
+                taskMonitor.showMessage(TaskMonitor.Level.INFO, "Export completed");
             }
 
         } catch (Exception e) {

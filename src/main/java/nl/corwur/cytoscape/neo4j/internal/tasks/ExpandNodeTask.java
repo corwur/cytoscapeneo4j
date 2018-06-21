@@ -12,7 +12,6 @@ import org.cytoscape.task.AbstractNodeViewTask;
 import org.cytoscape.view.layout.CyLayoutAlgorithm;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.View;
-import org.cytoscape.work.Task;
 import org.cytoscape.work.TaskMonitor;
 
 import java.awt.event.ActionEvent;
@@ -22,13 +21,13 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-public class ExpandNodeTask extends AbstractNodeViewTask implements Task, ActionListener {
+public class ExpandNodeTask extends AbstractNodeViewTask implements ActionListener {
 
 	public enum Direction {
 		IN,
 		OUT,
-		BIDIRECTIONAL;
-	}
+        BIDIRECTIONAL
+    }
     private final transient Services services;
     private final ImportGraphStrategy importGraphStrategy;
     private Boolean redoLayout;
@@ -60,7 +59,7 @@ public class ExpandNodeTask extends AbstractNodeViewTask implements Task, Action
 
 	
 	private void expand() throws InterruptedException, ExecutionException {
-		CyNode cyNode = (CyNode)this.nodeView.getModel();
+        CyNode cyNode = this.nodeView.getModel();
 		
 		Long refid = this.netView.getModel().getRow(cyNode).get(this.importGraphStrategy.getRefIDName(), Long.class);
 		String directionLeft = this.direction == Direction.IN ? "<" : "";

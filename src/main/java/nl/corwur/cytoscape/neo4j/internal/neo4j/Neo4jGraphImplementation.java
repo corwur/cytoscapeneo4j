@@ -146,12 +146,7 @@ public final class Neo4jGraphImplementation implements GraphImplementation {
 
     @Override
     public void addNode(List<NodeLabel> labels, Map<String, Object> properties) throws GraphImplementationException {
-        String nodeLabelClause = labels.stream()
-                .reduce(
-                        "",
-                        (str, label) -> str + ":" + label.getLabel(),
-                        (s1, s2) -> s1 + s2
-                );
+        String nodeLabelClause = getNodeLabelsClause(labels);
         CypherQuery insertQuery = CypherQuery.builder().query(
                 "CREATE(n $" + PROPS + ") SET n." + cytoscapeNetworkPorpertyName + "='" + networkLabel + "' "
                         + (nodeLabelClause.isEmpty() ? "" : ", n" + nodeLabelClause))
@@ -162,12 +157,7 @@ public final class Neo4jGraphImplementation implements GraphImplementation {
 
     @Override
     public void updateNode(PropertyKey<Long> nodeId, List<NodeLabel> labels, Map<String, Object> properties) throws GraphImplementationException {
-        String nodeLabelClause = labels.stream()
-                .reduce(
-                        "",
-                        (str, label) -> str + ":" + label.getLabel(),
-                        (s1, s2) -> s1 + s2
-                );
+        String nodeLabelClause = getNodeLabelsClause(labels);
         CypherQuery updateQuery = CypherQuery.builder().query(
                 "MATCH(n) " +
                         "WHERE " + nodeIdClause("n", nodeId) + " " +
@@ -177,6 +167,15 @@ public final class Neo4jGraphImplementation implements GraphImplementation {
                 .params(PROPS, properties)
                 .build();
         executeQuery(updateQuery);
+    }
+
+    private String getNodeLabelsClause(List<NodeLabel> labels) {
+        return labels.stream()
+                .reduce(
+                        "",
+                        (str, label) -> str + ":`" + label.getLabel() + "`",
+                        (s1, s2) -> s1 + s2
+                );
     }
 
     private String nodeIdClause(String nodeAlias, PropertyKey<Long> nodeId) {

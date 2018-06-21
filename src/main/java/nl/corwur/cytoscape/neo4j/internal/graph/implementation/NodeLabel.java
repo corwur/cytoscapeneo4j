@@ -8,10 +8,6 @@ public class NodeLabel extends Label {
     }
 
     public static NodeLabel create(String label) {
-        if (label.matches("[\\w\\d\\s]+")) {
-            return new NodeLabel(label);
-        }
-        throw new IllegalStateException();
+        return new NodeLabel(label);
     }
-
 }

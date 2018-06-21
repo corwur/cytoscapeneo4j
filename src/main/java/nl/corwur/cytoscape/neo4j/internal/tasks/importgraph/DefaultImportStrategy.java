@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import static nl.corwur.cytoscape.neo4j.internal.tasks.TaskConstants.CYCOLUMN_NEO4J_LABELS;
 
@@ -74,7 +75,7 @@ public class DefaultImportStrategy implements ImportGraphStrategy {
             if (!(v instanceof String)) {
                 quoted.add((String) v);
             } else {
-                quoted.add("\"" + (String) v + "\"");
+                quoted.add("\"" + v + "\"");
             }
         });
         return "[" + String.join(",", quoted) + "]";
@@ -91,19 +92,30 @@ public class DefaultImportStrategy implements ImportGraphStrategy {
         CyTable cyTable = network.getDefaultNodeTable();
         CyNode cyNode = getOrCreateNode(network, nodeId);
 
-        for (Map.Entry<String, Object> entry : graphNode.getProperties().entrySet()) {
+        graphNode.getProperties().entrySet().stream()
+                .filter(this::isCyColumn)
+                .forEach(mapToColumn(cyTable, cyNode));
+
+        createListColumn(cyTable, CYCOLUMN_NEO4J_LABELS, String.class);
+        setEntry(cyTable, cyNode, CYCOLUMN_NEO4J_LABELS, graphNode.getLabels());
+    }
+
+    private Consumer<Map.Entry<String, Object>> mapToColumn(CyTable cyTable, CyNode cyNode) {
+        return entry -> {
             if (entry.getValue() instanceof List) {
-                @SuppressWarnings("unchecked")
-                String value = createJSONArray((List<Object>) entry.getValue());
-                createColumn(cyTable, entry.getKey(), String.class);
-                setEntry(cyTable, cyNode, entry.getKey(), value);
+                createListColumn(cyTable, entry.getKey(), String.class);
+                setEntry(cyTable, cyNode, entry.getKey(), entry.getValue());
             } else {
                 createColumn(cyTable, entry.getKey(), entry.getValue().getClass());
                 setEntry(cyTable, cyNode, entry.getKey(), entry.getValue());
             }
-        }
-        createListColumn(cyTable, CYCOLUMN_NEO4J_LABELS, String.class);
-        setEntry(cyTable, cyNode, CYCOLUMN_NEO4J_LABELS, graphNode.getLabels());
+        };
+    }
+
+    private boolean isCyColumn(Map.Entry<String, Object> entry) {
+        return !(
+                CYCOLUMN_NEO4J_LABELS.equals(entry.getKey())
+        );
     }
 
     private boolean nodeExists(CyNetwork network, long nodeId) {
