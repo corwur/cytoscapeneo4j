@@ -39,7 +39,7 @@ public final class Neo4jGraphImplementation implements GraphImplementation {
                                 "WHERE " +
                                 where("s", start, START_ID) + " AND " +
                                 where("e", end, END_ID) + " " +
-                                "CREATE (s) -[:" + relationship + " $" + PROPS + "]-> (e)"
+                                "CREATE (s) -[:`" + relationship + "` $" + PROPS + "]-> (e)"
                 )
                 .params(START_ID, start.getValue())
                 .params(END_ID, end.getValue())
