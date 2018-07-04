@@ -123,7 +123,7 @@ class ConnectDialog extends JDialog { //NOSONAR , hierarchy level > 5
             ok = true;
             dispose();
         } else {
-            JOptionPane.showMessageDialog(this, " Invalid connection parameters");
+            JOptionPane.showMessageDialog(this, "Cannot connect to Neo4j");
         }
     }
 
