@@ -5,6 +5,9 @@ Queries can be parameterized and stored for reuse.
 
 The plugin can be downloaded from the [Cytoscape App Store](http://apps.cytoscape.org/apps/cytoscapeneo4jplugin)
 
+Citation: [Mining functional annotations across species; Sven Warris, Steven Dijkxhoorn, Teije van Sloten, T.L.H. van de Vossenberg, bioRxiv, 2018](https://www.biorxiv.org/content/early/2018/07/16/369785)
+
+
 ## Features
 Connects to Neo4j with a username/password using the Bolt interface.
 
