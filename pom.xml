@@ -28,6 +28,7 @@
         <maven-surefire-plugin.version>2.21.0</maven-surefire-plugin.version>
         <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
         <maven-enforcer-plugin.version>3.0.0-M1</maven-enforcer-plugin.version>
+        <maven.test.skip>true</maven.test.skip>
     </properties>
 
     <profiles>
@@ -185,6 +186,12 @@
 
     <!-- Dependencies needed to compile this project. -->
     <dependencies>
+	    <dependency>
+		    <groupId>javax.xml.bind</groupId>
+		    <artifactId>jaxb-api</artifactId>
+		    <version>2.1</version>
+		</dependency>
+    
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
