@@ -5,16 +5,16 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>nl.corwur</groupId>
     <artifactId>cytoscape-neo4j-plugin</artifactId>
-    <version>0.3</version>
+    <version>0.4</version>
     <name>Cytoscape Neo4j Plugin</name>
 
     <properties>
         <bundle.symbolicName>nl.corwur.cytoscape.neo4j</bundle.symbolicName>
         <bundle.namespace>nl.corwur.cytoscape.neo4j</bundle.namespace>
-        <cytoscape.version>3.5.0</cytoscape.version>
+        <cytoscape.version>3.8.0</cytoscape.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <org.osgi.core.version>4.2.0</org.osgi.core.version>
-        <neo4j-java-driver.version>1.4.0</neo4j-java-driver.version>
+        <org.osgi.core.version>6.0.0</org.osgi.core.version>
+        <neo4j-java-driver.version>4.0.1</neo4j-java-driver.version>
         <pax-logging-api.version>1.5.2</pax-logging-api.version>
         <junit.version>4.12</junit.version>
         <log4j.version>1.2.17</log4j.version>
@@ -28,6 +28,7 @@
         <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
         <maven-enforcer-plugin.version>3.0.0-M1</maven-enforcer-plugin.version>
         <maven.test.skip>true</maven.test.skip>
+        <com.google.protobuf.version>3.11.4</com.google.protobuf.version>
     </properties>
 
     <profiles>
@@ -124,8 +125,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+ 			       <release>11</release>
                 </configuration>
             </plugin>
             <!-- Generates the OSGi metadata based on the osgi.bnd file. -->
@@ -146,7 +146,10 @@
                             gson,neo4j-java-driver;scope=compile|runtime
                         </Embed-Dependency>
                         <Embed-Transitive>true</Embed-Transitive>
-
+                        <Import-Package>
+                            com.google.protobuf
+                        </Import-Package>
+						
                     </instructions>
                     <archive>
                         <manifestEntries>
@@ -274,10 +277,16 @@
         <dependency>
             <groupId>org.cytoscape</groupId>
             <artifactId>event-api</artifactId>
-            <version>3.6.1</version>
+            <version>3.8.0</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
+        <dependency>
+    		<groupId>com.google.protobuf</groupId>
+    		<artifactId>protobuf-java</artifactId>
+    		<version>3.11.4</version>
+		</dependency>
+        
     </dependencies>
     <packaging>bundle</packaging>
 

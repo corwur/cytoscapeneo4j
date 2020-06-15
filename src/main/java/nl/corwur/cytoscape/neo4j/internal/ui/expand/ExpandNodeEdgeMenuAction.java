@@ -12,8 +12,8 @@ import org.cytoscape.application.swing.CyNodeViewContextMenuFactory;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.View;
-import org.neo4j.driver.v1.Record;
-import org.neo4j.driver.v1.StatementResult;
+import org.neo4j.driver.Record;
+import org.neo4j.driver.Result;
 
 import javax.swing.*;
 
@@ -58,7 +58,7 @@ public class ExpandNodeEdgeMenuAction implements CyNodeViewContextMenuFactory {
             this.direction = Direction.BIDIRECTIONAL;
             String query = "match (n)-[r]-() where ID(n) = " + refid + " return distinct type(r) as r";
             CypherQuery cypherQuery = CypherQuery.builder().query(query).build();
-            StatementResult result = this.services.getNeo4jClient().getResults(cypherQuery);
+            Result result = this.services.getNeo4jClient().getResults(cypherQuery);
             result.forEachRemaining(this::addMenuItemsEdges);
 
             this.direction = Direction.IN;

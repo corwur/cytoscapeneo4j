@@ -12,8 +12,8 @@ import org.cytoscape.model.CyNode;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.View;
 import org.neo4j.driver.internal.value.ListValue;
-import org.neo4j.driver.v1.Record;
-import org.neo4j.driver.v1.StatementResult;
+import org.neo4j.driver.Record;
+import org.neo4j.driver.Result;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ public class ExpandNodeLabelMenuAction implements CyNodeViewContextMenuFactory {
             this.direction = Direction.BIDIRECTIONAL;
             String query = "match (n)-[]-(r) where ID(n) = " + refid + " return distinct labels(r) as r";
             CypherQuery cypherQuery = CypherQuery.builder().query(query).build();
-            StatementResult result = this.services.getNeo4jClient().getResults(cypherQuery);
+            Result result = this.services.getNeo4jClient().getResults(cypherQuery);
             result.forEachRemaining(this::addMenuItemsNodes);
 
             direction = Direction.IN;

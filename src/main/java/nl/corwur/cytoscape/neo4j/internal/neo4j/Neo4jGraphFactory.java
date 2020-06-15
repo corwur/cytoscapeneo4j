@@ -8,13 +8,13 @@ import nl.corwur.cytoscape.neo4j.internal.graph.GraphObjectList;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphPath;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphResult;
 import nl.corwur.cytoscape.neo4j.internal.graph.GraphUnspecifiedType;
-import org.neo4j.driver.v1.Record;
-import org.neo4j.driver.v1.Value;
-import org.neo4j.driver.v1.types.Entity;
-import org.neo4j.driver.v1.types.Node;
-import org.neo4j.driver.v1.types.Path;
-import org.neo4j.driver.v1.types.Relationship;
-import org.neo4j.driver.v1.util.Pair;
+import org.neo4j.driver.Record;
+import org.neo4j.driver.Value;
+import org.neo4j.driver.types.Entity;
+import org.neo4j.driver.types.Node;
+import org.neo4j.driver.types.Path;
+import org.neo4j.driver.types.Relationship;
+import org.neo4j.driver.util.Pair;
 
 import java.util.List;
 
@@ -89,7 +89,7 @@ class Neo4jGraphFactory {
         return graphEdge;
     }
 
-    private GraphNode create(org.neo4j.driver.v1.types.Node node) {
+    private GraphNode create(org.neo4j.driver.types.Node node) {
         GraphNode graphNode = new GraphNode(node.id());
         graphNode.setProperties(node.asMap());
         for (String label : node.labels()) {
