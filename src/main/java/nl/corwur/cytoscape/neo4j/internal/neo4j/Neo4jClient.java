@@ -2,7 +2,6 @@ package nl.corwur.cytoscape.neo4j.internal.neo4j;
 
 import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
 import org.neo4j.driver.AuthTokens;
-import org.neo4j.driver.Config;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
 import org.neo4j.driver.Session;
