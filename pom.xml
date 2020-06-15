@@ -9,6 +9,7 @@
     <name>Cytoscape Neo4j Plugin</name>
 
     <properties>
+     	<maven.test.skip>true</maven.test.skip>
         <bundle.symbolicName>nl.corwur.cytoscape.neo4j</bundle.symbolicName>
         <bundle.namespace>nl.corwur.cytoscape.neo4j</bundle.namespace>
         <cytoscape.version>3.8.0</cytoscape.version>
@@ -287,6 +288,12 @@
     		<version>3.11.4</version>
 		</dependency>
         
+        <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
+		<dependency>
+	    	<groupId>javax.xml.bind</groupId>
+	    	<artifactId>jaxb-api</artifactId>
+	    	<version>2.3.1</version>	
+		</dependency>
     </dependencies>
     <packaging>bundle</packaging>
 
