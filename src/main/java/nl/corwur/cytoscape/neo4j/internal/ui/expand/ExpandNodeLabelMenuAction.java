@@ -11,11 +11,12 @@ import org.cytoscape.application.swing.CyNodeViewContextMenuFactory;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.View;
-import org.neo4j.driver.internal.value.ListValue;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Result;
+import org.neo4j.driver.internal.value.ListValue;
 
-import javax.swing.*;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import java.util.ArrayList;
 
 public class ExpandNodeLabelMenuAction implements CyNodeViewContextMenuFactory {

@@ -9,18 +9,20 @@
     <name>Cytoscape Neo4j Plugin</name>
 
     <properties>
+        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
      	<maven.test.skip>true</maven.test.skip>
         <bundle.symbolicName>nl.corwur.cytoscape.neo4j</bundle.symbolicName>
         <bundle.namespace>nl.corwur.cytoscape.neo4j</bundle.namespace>
         <cytoscape.version>3.8.0</cytoscape.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <org.osgi.core.version>6.0.0</org.osgi.core.version>
-        <neo4j-java-driver.version>4.0.1</neo4j-java-driver.version>
+        <neo4j-java-driver.version>4.0.2</neo4j-java-driver.version>
         <pax-logging-api.version>1.5.2</pax-logging-api.version>
         <junit.version>4.12</junit.version>
         <log4j.version>1.2.17</log4j.version>
         <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
-        <maven-bundle-plugin.version>3.5.0</maven-bundle-plugin.version>
+        <maven-bundle-plugin.version>4.2.1</maven-bundle-plugin.version>
         <mockito-core.version>2.11.0</mockito-core.version>
         <pitest-maven.version>1.3.2</pitest-maven.version>
         <gson.version>2.8.2</gson.version>
@@ -28,7 +30,6 @@
         <maven-surefire-plugin.version>2.21.0</maven-surefire-plugin.version>
         <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
         <maven-enforcer-plugin.version>3.0.0-M1</maven-enforcer-plugin.version>
-        <maven.test.skip>true</maven.test.skip>
         <com.google.protobuf.version>3.11.4</com.google.protobuf.version>
     </properties>
 
@@ -140,17 +141,9 @@
                         <Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
                         <Bundle-Version>${project.version}</Bundle-Version>
                         <Export-Package>${bundle.namespace}</Export-Package>
-
-                        <Private-Package>${bundle.namespace}.internal.*</Private-Package>
+                        <Private-Package>${bundle.namespace}.internal.*,org.neo4j.driver.internal.shaded.*,org.neo4j.driver.*,org.reactivestreams.*,com.google.gson.*</Private-Package>
                         <Bundle-Activator>${bundle.namespace}.internal.CyActivator</Bundle-Activator>
-                        <Embed-Dependency>
-                            gson,neo4j-java-driver;scope=compile|runtime
-                        </Embed-Dependency>
-                        <Embed-Transitive>true</Embed-Transitive>
-                        <Import-Package>
-                            com.google.protobuf
-                        </Import-Package>
-						
+                        <Import-Package>org.cytoscape.*,javax.xml.bind.*,org.apache.log4j.*,javax.swing.*</Import-Package>
                     </instructions>
                     <archive>
                         <manifestEntries>
@@ -169,6 +162,46 @@
                         <excludedClass>nl.corwur.cytoscape.neo4j.internal.Services</excludedClass>
                     </excludedClasses>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>io.netty:*</include>
+                                    <include>com.google.code.gson:*</include>
+                                    <include>org.reactivestreams:*</include>
+                                    <include>org.neo4j.driver:*</include>
+                                </includes>
+                            </artifactSet>
+                            <relocations>
+                                <relocation>
+                                    <pattern>io.netty</pattern>
+                                    <shadedPattern>org.neo4j.driver.internal.shaded.io.netty</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                            </transformers>
+                            <filters>
+                                <filter>
+                                    <artifact>io.netty:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/native-image/**</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -240,6 +273,11 @@
             <artifactId>neo4j-java-driver</artifactId>
             <version>${neo4j-java-driver.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-handler</artifactId>
+            <version>4.1.50.Final</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -285,10 +323,13 @@
         <dependency>
     		<groupId>com.google.protobuf</groupId>
     		<artifactId>protobuf-java</artifactId>
-    		<version>3.11.4</version>
+    		<version>${com.google.protobuf.version}</version>
 		</dependency>
-        
-        <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-tcnative</artifactId>
+            <version>2.0.31.Final</version>
+        </dependency>
 		<dependency>
 	    	<groupId>javax.xml.bind</groupId>
 	    	<artifactId>jaxb-api</artifactId>
@@ -296,5 +337,4 @@
 		</dependency>
     </dependencies>
     <packaging>bundle</packaging>
-
 </project>
