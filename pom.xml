@@ -31,69 +31,11 @@
         <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
         <maven-enforcer-plugin.version>3.0.0-M1</maven-enforcer-plugin.version>
         <com.google.protobuf.version>3.11.4</com.google.protobuf.version>
+        <jaxb-api.version>2.3.1</jaxb-api.version>
+        <netty-tcnative.version>2.0.31.Final</netty-tcnative.version>
+        <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
+        <required-maven-version>3.0.5</required-maven-version>
     </properties>
-
-    <profiles>
-        <profile>
-            <id>it-test</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>${maven-failsafe-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>integration-test</id>
-                                <goals>
-                                    <goal>integration-test</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>verify</id>
-                                <goals>
-                                    <goal>verify</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <version>${build-helper-maven-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>add-test-source</id>
-                                <phase>generate-test-sources</phase>
-                                <goals>
-                                    <goal>add-test-source</goal>
-                                </goals>
-                                <configuration>
-                                    <sources>
-                                        <source>src/test-it/java</source>
-                                    </sources>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>add-test-resource</id>
-                                <phase>generate-test-resources</phase>
-                                <goals>
-                                    <goal>add-test-resource</goal>
-                                </goals>
-                                <configuration>
-                                    <resources>
-                                        <resource>
-                                            <directory>src/test-it/resources</directory>
-                                        </resource>
-                                    </resources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
     <build>
         <plugins>
@@ -115,7 +57,7 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>3.0.5</version>
+                                    <version>${required-maven-version}</version>
                                 </requireMavenVersion>
                             </rules>
                         </configuration>
@@ -153,20 +95,9 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-maven</artifactId>
-                <version>${pitest-maven.version}</version>
-                <configuration>
-                    <timestampedReports>false</timestampedReports>
-                    <excludedClasses>
-                        <excludedClass>nl.corwur.cytoscape.neo4j.internal.Services</excludedClass>
-                    </excludedClasses>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>${maven-shade-plugin.version}</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -222,12 +153,7 @@
 
     <!-- Dependencies needed to compile this project. -->
     <dependencies>
-	    <dependency>
-		    <groupId>javax.xml.bind</groupId>
-		    <artifactId>jaxb-api</artifactId>
-		    <version>2.1</version>
-		</dependency>
-    
+
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
@@ -285,10 +211,14 @@
             <version>${gson.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.ops4j.pax.logging</groupId>
-            <artifactId>pax-logging-api</artifactId>
-            <version>${pax-logging-api.version}</version>
-            <scope>provided</scope>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-tcnative</artifactId>
+            <version>${netty-tcnative.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>${jaxb-api.version}</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
@@ -310,31 +240,16 @@
         <dependency>
             <groupId>org.cytoscape</groupId>
             <artifactId>model-impl</artifactId>
-            <version>3.6.1</version>
+            <version>${cytoscape.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.cytoscape</groupId>
             <artifactId>event-api</artifactId>
-            <version>3.8.0</version>
+            <version>${cytoscape.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
-        <dependency>
-    		<groupId>com.google.protobuf</groupId>
-    		<artifactId>protobuf-java</artifactId>
-    		<version>${com.google.protobuf.version}</version>
-		</dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-tcnative</artifactId>
-            <version>2.0.31.Final</version>
-        </dependency>
-		<dependency>
-	    	<groupId>javax.xml.bind</groupId>
-	    	<artifactId>jaxb-api</artifactId>
-	    	<version>2.3.1</version>	
-		</dependency>
     </dependencies>
     <packaging>bundle</packaging>
 </project>
