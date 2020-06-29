@@ -24,10 +24,14 @@ public class Neo4jClient {
                             connectionParameter.getPasswordAsString()
                     )
             );
-            return true;
+            return isConnected();
         } catch (AuthenticationException | ServiceUnavailableException e) {
             logger.warn("Cannot connect to Neo4j", e);
             return false;
+        } catch (Exception e) {
+            logger.warn("Cannot connect to Neo4j, unknown error", e);
+            return false;
+        	
         }
     }
 
