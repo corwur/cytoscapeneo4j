@@ -24,6 +24,7 @@ public class Neo4jClient {
                             connectionParameter.getPasswordAsString()
                     )
             );
+            driver.verifyConnectivity();
             return true;
         } catch (AuthenticationException | ServiceUnavailableException e) {
             logger.warn("Cannot connect to Neo4j", e);
