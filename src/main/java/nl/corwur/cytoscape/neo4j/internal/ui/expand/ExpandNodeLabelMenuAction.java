@@ -12,12 +12,12 @@ import org.cytoscape.model.CyNode;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.View;
 import org.neo4j.driver.Record;
-import org.neo4j.driver.Result;
 import org.neo4j.driver.internal.value.ListValue;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ExpandNodeLabelMenuAction implements CyNodeViewContextMenuFactory {
 
@@ -65,20 +65,20 @@ public class ExpandNodeLabelMenuAction implements CyNodeViewContextMenuFactory {
             this.direction = Direction.BIDIRECTIONAL;
             String query = "match (n)-[]-(r) where ID(n) = " + refid + " return distinct labels(r) as r";
             CypherQuery cypherQuery = CypherQuery.builder().query(query).build();
-            Result result = this.services.getNeo4jClient().getResults(cypherQuery);
-            result.forEachRemaining(this::addMenuItemsNodes);
+            List<Record> result = this.services.getNeo4jClient().getResults(cypherQuery);
+            result.forEach(this::addMenuItemsNodes);
 
             direction = Direction.IN;
             query = "match (n)<-[]-(r) where ID(n) = " + refid + " return distinct labels(r) as r";
             cypherQuery = CypherQuery.builder().query(query).build();
             result = this.services.getNeo4jClient().getResults(cypherQuery);
-            result.forEachRemaining(this::addMenuItemsNodes);
+            result.forEach(this::addMenuItemsNodes);
 
             this.direction = Direction.OUT;
             query = "match (n)-[]->(r) where ID(n) = " + refid + " return distinct labels(r) as r";
             cypherQuery = CypherQuery.builder().query(query).build();
             result = this.services.getNeo4jClient().getResults(cypherQuery);
-            result.forEachRemaining(this::addMenuItemsNodes);
+            result.forEach(this::addMenuItemsNodes);
 
 
             CyMenuItem cyMenuItem = new CyMenuItem(this.menu, 0.5f);

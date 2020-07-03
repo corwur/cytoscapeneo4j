@@ -13,7 +13,9 @@ import org.cytoscape.model.CyNode;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.View;
 import org.neo4j.driver.Record;
-import org.neo4j.driver.Result;
+
+
+import java.util.List;
 
 import javax.swing.*;
 
@@ -41,7 +43,6 @@ public class ExpandNodeEdgeMenuAction implements CyNodeViewContextMenuFactory {
         ExpandNodeTask expandNodeTask = new ExpandNodeTask(nodeView, networkView, this.services, true);
         expandNodeTask.setEdge("`" + result + "`");
         menuItem.addActionListener(expandNodeTask);
-
         this.menu.add(menuItem);
     }
 
@@ -56,22 +57,23 @@ public class ExpandNodeEdgeMenuAction implements CyNodeViewContextMenuFactory {
             this.menu = new JMenu("Expand node on:");
 
             this.direction = Direction.BIDIRECTIONAL;
-            String query = "match (n)-[r]-() where ID(n) = " + refid + " return distinct type(r) as r";
+            String query = "match (n)-[r]-() where ID(n) = " + refid + " return distinct type(r) as r;";
             CypherQuery cypherQuery = CypherQuery.builder().query(query).build();
-            Result result = this.services.getNeo4jClient().getResults(cypherQuery);
-            result.forEachRemaining(this::addMenuItemsEdges);
+            List<Record> result = this.services.getNeo4jClient().getResults(cypherQuery);
+            
+            result.forEach(this::addMenuItemsEdges);
 
             this.direction = Direction.IN;
-            query = "match (n)<-[r]-() where ID(n) = " + refid + " return distinct type(r) as r";
+            query = "match (n)<-[r]-() where ID(n) = " + refid + " return distinct type(r) as r;";
             cypherQuery = CypherQuery.builder().query(query).build();
             result = this.services.getNeo4jClient().getResults(cypherQuery);
-            result.forEachRemaining(this::addMenuItemsEdges);
+            result.forEach(this::addMenuItemsEdges);
 
             this.direction = Direction.OUT;
-            query = "match (n)-[r]->() where ID(n) = " + refid + " return distinct type(r) as r";
+            query = "match (n)-[r]->() where ID(n) = " + refid + " return distinct type(r) as r;";
             cypherQuery = CypherQuery.builder().query(query).build();
             result = this.services.getNeo4jClient().getResults(cypherQuery);
-            result.forEachRemaining(this::addMenuItemsEdges);
+            result.forEach(this::addMenuItemsEdges);
 
             CyMenuItem cyMenuItem = new CyMenuItem(this.menu, 0.5f);
 
@@ -81,7 +83,6 @@ public class ExpandNodeEdgeMenuAction implements CyNodeViewContextMenuFactory {
             e.printStackTrace();
             System.out.println(e.getMessage());
         }
-
         return null;
 
     }

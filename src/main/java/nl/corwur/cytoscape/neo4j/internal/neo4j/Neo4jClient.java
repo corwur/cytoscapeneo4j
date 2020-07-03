@@ -1,9 +1,13 @@
 package nl.corwur.cytoscape.neo4j.internal.neo4j;
 
 import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
+
+import java.util.List;
+
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
+import org.neo4j.driver.Record;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.exceptions.AuthenticationException;
@@ -49,10 +53,10 @@ public class Neo4jClient {
         }
     }
 
-    public Result getResults(CypherQuery cypherQuery) throws Neo4jClientException {
+    public List<Record> getResults(CypherQuery cypherQuery) throws Neo4jClientException {
         try (Session session = driver.session()) {
             Result statementResult = session.run(cypherQuery.getQuery(), cypherQuery.getParams());
-            return statementResult;
+            return statementResult.list();
         } catch (Exception e) {
             throw new Neo4jClientException(e.getMessage(), e);
         }
