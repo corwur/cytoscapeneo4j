@@ -4,15 +4,17 @@ public class ConnectionParameter {
     private final String host;
     private final String username;
     private final char[] password;
+    private final String database;
 
-    public ConnectionParameter(String url, String username, char[] password) {
+    public ConnectionParameter(String url, String username, char[] password, String database) {
         this.host = url;
         this.username = username;
         this.password = password;
+        this.database = database;
     }
 
     String getBoltUrl() {
-        return "bolt://" + host;
+        return "neo4j://" + host;
     }
 
     String getUsername() {
@@ -21,5 +23,9 @@ public class ConnectionParameter {
 
     String getPasswordAsString() {
         return new String(password);
+    }
+
+    public String getDatabase() {
+        return database;
     }
 }
