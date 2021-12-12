@@ -13,15 +13,17 @@ class ConnectDialog extends JDialog { //NOSONAR , hierarchy level > 5
     private static final String OK_CMD = "ok";
     private JTextField usernameField = new JTextField("neo4j");
     private JTextField hostnameField = new JTextField("localhost");
+    private JTextField databaseField = new JTextField("database");
     private JPasswordField password = new JPasswordField();
     private boolean ok = false;
     private final transient Predicate<ConnectionParameter> connectionCheck;
 
-    ConnectDialog(JFrame jFrame, Predicate<ConnectionParameter> connectionCheck, String hostname, String username) {
+    ConnectDialog(JFrame jFrame, Predicate<ConnectionParameter> connectionCheck, String hostname, String username, String database) {
         super(jFrame);
         this.connectionCheck = connectionCheck;
         usernameField.setText(username);
         hostnameField.setText(hostname);
+        databaseField.setText(database);
     }
 
     void showConnectDialog() {
@@ -31,7 +33,7 @@ class ConnectDialog extends JDialog { //NOSONAR , hierarchy level > 5
         setModal(true);
         setResizable(true);
         pack();
-        setSize(380, 200);
+        setSize(380, 240);
         setVisible(true);
     }
 
@@ -47,8 +49,12 @@ class ConnectDialog extends JDialog { //NOSONAR , hierarchy level > 5
         usernameField.setText(username);
     }
 
+    void setDatabaseField(String database){
+        databaseField.setText(database);
+    }
+
     private ConnectionParameter getParameters() {
-        return new ConnectionParameter(hostnameField.getText(), usernameField.getText(), password.getPassword());
+        return new ConnectionParameter(hostnameField.getText(), usernameField.getText(), password.getPassword(), databaseField.getText());
     }
 
     private void init() {
@@ -57,7 +63,6 @@ class ConnectDialog extends JDialog { //NOSONAR , hierarchy level > 5
 
         JPanel topPanel = new JPanel(new GridBagLayout());
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-
 
         JButton okButton = new JButton("Connect");
         okButton.addActionListener(e -> ok());
@@ -68,6 +73,7 @@ class ConnectDialog extends JDialog { //NOSONAR , hierarchy level > 5
         cancelButton.setActionCommand(CANCEL_CMD);
 
         JLabel hostnameLabel = new JLabel("Hostname");
+        JLabel databaseLabel = new JLabel("Database");
         JLabel usernameLabel = new JLabel("Username");
         JLabel passwordLabel = new JLabel("Password");
         password = new JPasswordField();
@@ -77,6 +83,8 @@ class ConnectDialog extends JDialog { //NOSONAR , hierarchy level > 5
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
+
+        //Hostname
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 0;
@@ -88,26 +96,41 @@ class ConnectDialog extends JDialog { //NOSONAR , hierarchy level > 5
         gbc.weightx = 1;
         topPanel.add(hostnameField, gbc);
 
+        //Database name
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.fill = GridBagConstraints.NONE;
         gbc.weightx = 0;
-        topPanel.add(usernameLabel, gbc);
+        topPanel.add(databaseLabel, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 0;
-        topPanel.add(usernameField, gbc);
+        topPanel.add(databaseField, gbc);
 
+        //Username
         gbc.gridx = 0;
         gbc.gridy = 2;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 0;
+        topPanel.add(usernameLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 0;
+        topPanel.add(usernameField, gbc);
+
+        //Password
+        gbc.gridx = 0;
+        gbc.gridy = 3;
         gbc.fill = GridBagConstraints.NONE;
         gbc.weightx = 0;
         topPanel.add(passwordLabel, gbc);
 
         gbc.gridx = 1;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 0;
         topPanel.add(password, gbc);
@@ -128,7 +151,7 @@ class ConnectDialog extends JDialog { //NOSONAR , hierarchy level > 5
     }
 
     public static void main(String[] args) {
-        ConnectDialog connectDialog = new ConnectDialog(null, connectionParameter -> true, "localhost", "neo4j");
+        ConnectDialog connectDialog = new ConnectDialog(null, connectionParameter -> true, "localhost", "neo4j", "neo4j");
         connectDialog.showConnectDialog();
 
     }
@@ -141,4 +164,7 @@ class ConnectDialog extends JDialog { //NOSONAR , hierarchy level > 5
         return usernameField.getText();
     }
 
+    public String getDatabase() {
+        return databaseField.getText();
+    }
 }
