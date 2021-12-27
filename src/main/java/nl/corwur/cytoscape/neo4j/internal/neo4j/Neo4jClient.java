@@ -54,11 +54,14 @@ public class Neo4jClient {
     }
 
     public List<Record> getResults(CypherQuery cypherQuery) throws Neo4jClientException {
+    	if (driver == null) {
+            throw new Neo4jClientException("No Neo4j database connection or driver available.");
+    	}
         try (Session session = driver.session()) {
             Result statementResult = session.run(cypherQuery.getQuery(), cypherQuery.getParams());
             return statementResult.list();
         } catch (Exception e) {
-            throw new Neo4jClientException(e.getMessage(), e);
+            throw new Neo4jClientException("No Neo4j session available or error getting results.");
         }
     }
 
