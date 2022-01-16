@@ -1,7 +1,7 @@
 package nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.mapping.values;
 
-import org.apache.log4j.Logger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -14,7 +14,7 @@ import javax.script.ScriptException;
  */
 public abstract class ValueScriptExpression<T, V> implements ValueExpression<T, V> {
 
-    private Logger logger = Logger.getLogger(ValueScriptExpression.class);
+    private Logger logger = LoggerFactory.getLogger(ValueScriptExpression.class);
 
     private final String script;
     private final String varName;
@@ -33,7 +33,7 @@ public abstract class ValueScriptExpression<T, V> implements ValueExpression<T, 
         try {
             return type.cast(engine.eval(script));
         } catch (ScriptException | ClassCastException e) {
-            logger.error(e);
+            logger.error("{}",e);
             return null;
         }
     }

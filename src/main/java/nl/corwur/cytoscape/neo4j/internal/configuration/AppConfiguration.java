@@ -1,7 +1,7 @@
 package nl.corwur.cytoscape.neo4j.internal.configuration;
 
-import org.apache.log4j.Logger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,7 +16,7 @@ import java.util.Properties;
  */
 public class AppConfiguration {
 
-    private static final Logger LOG = Logger.getLogger(AppConfiguration.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AppConfiguration.class);
     private static final String TEMPLATEDIR = "templatedir";
     private static final String NEO4J_HOST = "neo4j.host";
     private static final String NEO4J_USERNAME = "neo4j.username";

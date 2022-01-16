@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>nl.corwur</groupId>
     <artifactId>cytoscape-neo4j-plugin</artifactId>
-    <version>0.4</version>
+    <version>0.5</version>
     <name>Cytoscape Neo4j Plugin</name>
 
     <properties>
@@ -14,12 +14,12 @@
      	<maven.test.skip>true</maven.test.skip>
         <bundle.symbolicName>nl.corwur.cytoscape.neo4j</bundle.symbolicName>
         <bundle.namespace>nl.corwur.cytoscape.neo4j</bundle.namespace>
-        <cytoscape.version>3.8.0</cytoscape.version>
+        <cytoscape.version>3.9.0</cytoscape.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <org.osgi.core.version>6.0.0</org.osgi.core.version>
         <neo4j-java-driver.version>4.0.2</neo4j-java-driver.version>
         <junit.version>4.12</junit.version>
-        <log4j.version>1.2.17</log4j.version>
+        <pax-logging.version>1.5.3</pax-logging.version>
         <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
         <maven-bundle-plugin.version>4.2.1</maven-bundle-plugin.version>
         <mockito-core.version>3.3.3</mockito-core.version>
@@ -80,7 +80,7 @@
                         <Export-Package>${bundle.namespace}</Export-Package>
                         <Private-Package>${bundle.namespace}.internal.*,org.neo4j.driver.*,org.reactivestreams.*,com.google.gson.*</Private-Package>
                         <Bundle-Activator>${bundle.namespace}.internal.CyActivator</Bundle-Activator>
-                        <Import-Package>org.cytoscape.*,javax.xml.bind.*,org.apache.log4j.*,javax.swing.*,javax.security.cert</Import-Package>
+                        <Import-Package>org.cytoscape.*,javax.xml.bind.*,javax.swing.*,javax.security.cert,org.slf4j.*</Import-Package>
                     </instructions>
                     <archive>
                         <manifestEntries>
@@ -164,10 +164,18 @@
             <version>${jaxb-api.version}</version>
         </dependency>
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>${log4j.version}</version>
+            <groupId>org.ops4j.pax.logging</groupId>
+            <artifactId>pax-logging-api</artifactId>
+            <version>${pax-logging.version}</version>
+            <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.logging</groupId>
+            <artifactId>pax-logging-service</artifactId>
+            <version>${pax-logging.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

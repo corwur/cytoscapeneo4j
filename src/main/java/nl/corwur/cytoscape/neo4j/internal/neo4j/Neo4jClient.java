@@ -1,5 +1,7 @@
 package nl.corwur.cytoscape.neo4j.internal.neo4j;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
@@ -10,7 +12,7 @@ import org.neo4j.driver.exceptions.AuthenticationException;
 import org.neo4j.driver.exceptions.ServiceUnavailableException;
 
 public class Neo4jClient {
-    private static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(Neo4jClient.class);
+    private static Logger logger = LoggerFactory.getLogger(Neo4jClient.class);
 
     private Driver driver;
     private Neo4jGraphFactory neo4JGraphFactory = new Neo4jGraphFactory();
