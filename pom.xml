@@ -17,8 +17,8 @@
         <cytoscape.version>3.9.0</cytoscape.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <org.osgi.core.version>6.0.0</org.osgi.core.version>
-        <neo4j-java-driver.version>4.0.2</neo4j-java-driver.version>
-        <junit.version>4.12</junit.version>
+        <neo4j-java-driver.version>4.4.1</neo4j-java-driver.version>
+        <junit.version>4.13.1</junit.version>
         <pax-logging.version>1.5.3</pax-logging.version>
         <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
         <maven-bundle-plugin.version>4.2.1</maven-bundle-plugin.version>
@@ -175,7 +175,6 @@
             <version>${pax-logging.version}</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

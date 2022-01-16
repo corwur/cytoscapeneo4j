@@ -20,6 +20,7 @@ public class AppConfiguration {
     private static final String TEMPLATEDIR = "templatedir";
     private static final String NEO4J_HOST = "neo4j.host";
     private static final String NEO4J_USERNAME = "neo4j.username";
+    private static final String NEO4J_DATABASE = "neo4j.database";
     private Properties properties = new Properties();
 
     public String getTemplateDirectory() {
@@ -33,6 +34,8 @@ public class AppConfiguration {
     public String getNeo4jUsername() {
         return properties.getProperty(NEO4J_USERNAME);
     }
+
+    public String getNeo4jDatabase() { return properties.getProperty(NEO4J_DATABASE); }
 
     public void setTemplateDirectory(String templateDir) {
         properties.setProperty(TEMPLATEDIR, templateDir);
@@ -55,6 +58,7 @@ public class AppConfiguration {
     private void setDefaultProperties() {
         properties.setProperty(NEO4J_HOST, "localhost");
         properties.setProperty(NEO4J_USERNAME, "neo4j");
+        properties.setProperty(NEO4J_DATABASE, "neo4j");
         properties.setProperty(TEMPLATEDIR, "");
     }
 
@@ -72,8 +76,11 @@ public class AppConfiguration {
         return Paths.get(tmpDir, "corwur-cyneo4j.properties");
     }
 
-    public void setConnectionParameters(String hostname, String username) {
+    public void setConnectionParameters(String hostname, String username, String database) {
         properties.setProperty(NEO4J_HOST, hostname);
         properties.setProperty(NEO4J_USERNAME, username);
+        properties.setProperty(NEO4J_DATABASE, database);
     }
+
+
 }
