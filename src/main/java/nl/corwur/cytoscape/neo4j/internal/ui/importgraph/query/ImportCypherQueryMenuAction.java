@@ -42,7 +42,6 @@ public class ImportCypherQueryMenuAction extends AbstractCyAction {
         do {
             cypherQueryDialog.showDialog();
             if (!cypherQueryDialog.isExecuteQuery()) {
-                finished = true;
                 break;
             }
             String query = cypherQueryDialog.getCypherQuery();

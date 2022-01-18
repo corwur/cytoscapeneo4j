@@ -20,7 +20,7 @@ public class Neo4jClient {
     public boolean connect(ConnectionParameter connectionParameter) {
         try {
             driver = GraphDatabase.driver(
-                    connectionParameter.getBoltUrl(),
+                    connectionParameter.getUrl(),
                     AuthTokens.basic(
                             connectionParameter.getUsername(),
                             connectionParameter.getPasswordAsString()
@@ -36,7 +36,11 @@ public class Neo4jClient {
     }
 
     private Session getSession(){
-        return driver.session(SessionConfig.builder().withDatabase(database).build());
+        if(driver.supportsMultiDb()) {
+            return driver.session(SessionConfig.builder().withDatabase(database).build());
+        } else {
+            return driver.session(SessionConfig.builder().build());
+        }
     }
 
     public void executeQuery(CypherQuery cypherQuery) throws Neo4jClientException {

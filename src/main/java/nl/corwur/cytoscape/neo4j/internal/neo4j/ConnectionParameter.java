@@ -1,20 +1,41 @@
 package nl.corwur.cytoscape.neo4j.internal.neo4j;
 
 public class ConnectionParameter {
-    private final String host;
+
+    public enum Protocol {
+        BOLT("bolt"),
+        NEO4J("neo4j");
+
+
+        private final String protocol;
+        Protocol(String protocol) {
+            this.protocol = protocol;
+        }
+
+    }
+
+    private final int port;
+    private final Protocol protocol;
+    private final String hostname;
     private final String username;
     private final char[] password;
     private final String database;
 
-    public ConnectionParameter(String url, String username, char[] password, String database) {
-        this.host = url;
+    public ConnectionParameter(Protocol protocol, String hostname, int port, String username, char[] password, String database) {
+        this.protocol = protocol;
+        this.hostname = hostname;
         this.username = username;
         this.password = password;
         this.database = database;
+        this.port = port;
     }
 
-    String getBoltUrl() {
-        return "neo4j://" + host;
+    String getUrl() {
+        return protocol.protocol + "://" + hostname + ":" + port;
+    }
+
+    Protocol getProtocol() {
+        return protocol;
     }
 
     String getUsername() {
