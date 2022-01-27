@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>nl.corwur</groupId>
     <artifactId>cytoscape-neo4j-plugin</artifactId>
-    <version>0.4</version>
+    <version>0.5</version>
     <name>Cytoscape Neo4j Plugin</name>
 
     <properties>
@@ -17,7 +17,7 @@
         <cytoscape.version>3.8.0</cytoscape.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <org.osgi.core.version>6.0.0</org.osgi.core.version>
-        <neo4j-java-driver.version>4.0.2</neo4j-java-driver.version>
+        <neo4j-java-driver.version>4.4.1</neo4j-java-driver.version>
         <junit.version>4.13.1</junit.version>
         <log4j.version>1.2.17</log4j.version>
         <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>

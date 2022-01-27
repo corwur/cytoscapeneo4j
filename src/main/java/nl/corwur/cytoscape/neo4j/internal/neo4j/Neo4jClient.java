@@ -4,12 +4,7 @@ import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
 
 import java.util.List;
 
-import org.neo4j.driver.AuthTokens;
-import org.neo4j.driver.Driver;
-import org.neo4j.driver.GraphDatabase;
-import org.neo4j.driver.Record;
-import org.neo4j.driver.Session;
-import org.neo4j.driver.Result;
+import org.neo4j.driver.*;
 import org.neo4j.driver.exceptions.AuthenticationException;
 import org.neo4j.driver.exceptions.ServiceUnavailableException;
 
@@ -18,6 +13,7 @@ public class Neo4jClient {
 
     private Driver driver;
     private Neo4jGraphFactory neo4JGraphFactory = new Neo4jGraphFactory();
+    private String database;
 
     public boolean connect(ConnectionParameter connectionParameter) {
         try {
@@ -28,6 +24,7 @@ public class Neo4jClient {
                             connectionParameter.getPasswordAsString()
                     )
             );
+            database = connectionParameter.getDatabase();
             driver.verifyConnectivity();
             return true;
         } catch (AuthenticationException | ServiceUnavailableException e) {
@@ -36,8 +33,12 @@ public class Neo4jClient {
         }
     }
 
+    private Session getSession(){
+        return driver.session(SessionConfig.builder().withDatabase(database).build());
+    }
+
     public void executeQuery(CypherQuery cypherQuery) throws Neo4jClientException {
-        try (Session session = driver.session()) {
+        try (Session session = getSession()) {
             session.run(cypherQuery.getQuery(), cypherQuery.getParams());
         } catch (Exception e) {
             throw new Neo4jClientException(e.getMessage(), e);
@@ -45,7 +46,7 @@ public class Neo4jClient {
     }
 
     public Graph getGraph(CypherQuery cypherQuery) throws Neo4jClientException {
-        try (Session session = driver.session()) {
+        try (Session session = getSession()) {
             Result statementResult = session.run(cypherQuery.getQuery(), cypherQuery.getParams());
             return Graph.createFrom(statementResult.list(neo4JGraphFactory::create));
         } catch (Exception e) {
@@ -54,20 +55,17 @@ public class Neo4jClient {
     }
 
     public List<Record> getResults(CypherQuery cypherQuery) throws Neo4jClientException {
-    	if (driver == null) {
-            throw new Neo4jClientException("No Neo4j database connection or driver available.");
-    	}
-        try (Session session = driver.session()) {
+        try (Session session = getSession()) {
             Result statementResult = session.run(cypherQuery.getQuery(), cypherQuery.getParams());
             return statementResult.list();
         } catch (Exception e) {
-            throw new Neo4jClientException("No Neo4j session available or error getting results.");
+            throw new Neo4jClientException(e.getMessage(), e);
         }
     }
 
 
     public void explainQuery(CypherQuery cypherQuery) throws Neo4jClientException {
-        try (Session session = driver.session()) {
+        try (Session session = getSession()) {
             session.run(cypherQuery.getExplainQuery(), cypherQuery.getParams());
         } catch (Exception e) {
             throw new Neo4jClientException(e.getMessage(), e);
@@ -75,7 +73,7 @@ public class Neo4jClient {
     }
 
     public boolean isConnected() {
-        return driver != null && driver.session().isOpen();
+        return driver != null && getSession().isOpen();
     }
 
     public void close() {
