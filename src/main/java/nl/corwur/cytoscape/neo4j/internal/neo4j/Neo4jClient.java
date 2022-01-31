@@ -1,5 +1,7 @@
 package nl.corwur.cytoscape.neo4j.internal.neo4j;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import nl.corwur.cytoscape.neo4j.internal.graph.Graph;
 
 import java.util.List;
@@ -9,7 +11,7 @@ import org.neo4j.driver.exceptions.AuthenticationException;
 import org.neo4j.driver.exceptions.ServiceUnavailableException;
 
 public class Neo4jClient {
-    private static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(Neo4jClient.class);
+    private static Logger logger = LoggerFactory.getLogger(Neo4jClient.class);
 
     private Driver driver;
     private Neo4jGraphFactory neo4JGraphFactory = new Neo4jGraphFactory();
@@ -18,7 +20,7 @@ public class Neo4jClient {
     public boolean connect(ConnectionParameter connectionParameter) {
         try {
             driver = GraphDatabase.driver(
-                    connectionParameter.getBoltUrl(),
+                    connectionParameter.getUrl(),
                     AuthTokens.basic(
                             connectionParameter.getUsername(),
                             connectionParameter.getPasswordAsString()
@@ -34,7 +36,11 @@ public class Neo4jClient {
     }
 
     private Session getSession(){
-        return driver.session(SessionConfig.builder().withDatabase(database).build());
+        if(driver.supportsMultiDb()) {
+            return driver.session(SessionConfig.builder().withDatabase(database).build());
+        } else {
+            return driver.session(SessionConfig.builder().build());
+        }
     }
 
     public void executeQuery(CypherQuery cypherQuery) throws Neo4jClientException {

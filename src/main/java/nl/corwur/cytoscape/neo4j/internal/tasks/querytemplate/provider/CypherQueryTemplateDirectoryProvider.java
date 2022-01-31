@@ -4,7 +4,8 @@ import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.CypherQueryTemplat
 import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.template.Reader;
 import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.template.ReaderException;
 import nl.corwur.cytoscape.neo4j.internal.tasks.querytemplate.template.Writer;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 
 public class CypherQueryTemplateDirectoryProvider {
 
-    private static Logger logger = Logger.getLogger(CypherQueryTemplateDirectoryProvider.class);
+    private static Logger logger = LoggerFactory.getLogger(CypherQueryTemplateDirectoryProvider.class);
 
     private Map<Long, TemplateMapEntry> cypherQueryTemplateMap = new HashMap<>();
 

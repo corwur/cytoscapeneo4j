@@ -1,6 +1,7 @@
 package nl.corwur.cytoscape.neo4j.internal;
 
 import nl.corwur.cytoscape.neo4j.internal.configuration.AppConfiguration;
+import nl.corwur.cytoscape.neo4j.internal.neo4j.ConnectionParameter;
 import org.apache.sling.testing.mock.osgi.MockOsgi;
 import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
 import org.cytoscape.application.CyApplicationManager;
@@ -86,6 +87,8 @@ public class CyActivatorTest {
 
         AppConfiguration appConfiguration = (AppConfiguration) getField(CyActivator.class,"appConfiguration").get(cyActivator);
 
+        assertEquals(ConnectionParameter.Protocol.BOLT, appConfiguration.getNeo4jProtocol());
+        assertEquals(7687, appConfiguration.getNeo4jPort());
         assertEquals("localhost", appConfiguration.getNeo4jHost());
         assertEquals("neo4j", appConfiguration.getNeo4jUsername());
         assertEquals("", appConfiguration.getTemplateDirectory());

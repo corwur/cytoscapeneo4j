@@ -11,18 +11,28 @@ class ConnectDialog extends JDialog { //NOSONAR , hierarchy level > 5
 
     private static final String CANCEL_CMD = "cancel";
     private static final String OK_CMD = "ok";
+
+    private JComboBox protocolCombobox = new JComboBox(ConnectionParameter.Protocol.values());
     private JTextField usernameField = new JTextField("neo4j");
     private JTextField hostnameField = new JTextField("localhost");
+    private JTextField portField = new JTextField("7687");
     private JTextField databaseField = new JTextField("database");
     private JPasswordField password = new JPasswordField();
     private boolean ok = false;
     private final transient Predicate<ConnectionParameter> connectionCheck;
 
-    ConnectDialog(JFrame jFrame, Predicate<ConnectionParameter> connectionCheck, String hostname, String username, String database) {
+    ConnectDialog(JFrame jFrame, Predicate<ConnectionParameter> connectionCheck,
+                  ConnectionParameter.Protocol protocol,
+                  int port,
+                  String hostname,
+                  String username,
+                  String database) {
         super(jFrame);
         this.connectionCheck = connectionCheck;
+        protocolCombobox.setSelectedItem(protocol);
         usernameField.setText(username);
         hostnameField.setText(hostname);
+        portField.setText(String.valueOf(port));
         databaseField.setText(database);
     }
 
@@ -33,7 +43,7 @@ class ConnectDialog extends JDialog { //NOSONAR , hierarchy level > 5
         setModal(true);
         setResizable(true);
         pack();
-        setSize(380, 240);
+        setSize(380, 280);
         setVisible(true);
     }
 
@@ -54,7 +64,13 @@ class ConnectDialog extends JDialog { //NOSONAR , hierarchy level > 5
     }
 
     private ConnectionParameter getParameters() {
-        return new ConnectionParameter(hostnameField.getText(), usernameField.getText(), password.getPassword(), databaseField.getText());
+        return new ConnectionParameter(
+                (ConnectionParameter.Protocol) protocolCombobox.getSelectedItem(),
+                hostnameField.getText(),
+                Integer.parseInt(portField.getText()),
+                usernameField.getText(),
+                password.getPassword(),
+                databaseField.getText());
     }
 
     private void init() {
@@ -72,7 +88,9 @@ class ConnectDialog extends JDialog { //NOSONAR , hierarchy level > 5
         cancelButton.addActionListener(ae -> dispose());
         cancelButton.setActionCommand(CANCEL_CMD);
 
+        JLabel protocolLabel = new JLabel("Protocol");
         JLabel hostnameLabel = new JLabel("Hostname");
+        JLabel portLabel = new JLabel("Port");
         JLabel databaseLabel = new JLabel("Database");
         JLabel usernameLabel = new JLabel("Username");
         JLabel passwordLabel = new JLabel("Password");
@@ -84,53 +102,83 @@ class ConnectDialog extends JDialog { //NOSONAR , hierarchy level > 5
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
 
-        //Hostname
+        int y = 0;
+        //Protocol
         gbc.gridx = 0;
-        gbc.gridy = 0;
+        gbc.gridy = y;
+        gbc.weightx = 0;
+        topPanel.add(protocolLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = y;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1;
+        topPanel.add(protocolCombobox, gbc);
+
+        //Hostname
+        y++;
+        gbc.gridx = 0;
+        gbc.gridy = y;
         gbc.weightx = 0;
         topPanel.add(hostnameLabel, gbc);
 
         gbc.gridx = 1;
-        gbc.gridy = 0;
+        gbc.gridy = y;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1;
         topPanel.add(hostnameField, gbc);
 
-        //Database name
+        //Port
+        y++;
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = y;
+        gbc.weightx = 0;
+        topPanel.add(portLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = y;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1;
+        topPanel.add(portField, gbc);
+
+        //Database name
+        y++;
+        gbc.gridx = 0;
+        gbc.gridy = y;
         gbc.fill = GridBagConstraints.NONE;
         gbc.weightx = 0;
         topPanel.add(databaseLabel, gbc);
 
         gbc.gridx = 1;
-        gbc.gridy = 1;
+        gbc.gridy = y;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 0;
         topPanel.add(databaseField, gbc);
 
         //Username
+        y++;
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = y;
         gbc.fill = GridBagConstraints.NONE;
         gbc.weightx = 0;
         topPanel.add(usernameLabel, gbc);
 
         gbc.gridx = 1;
-        gbc.gridy = 2;
+        gbc.gridy = y;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 0;
         topPanel.add(usernameField, gbc);
 
         //Password
+        y++;
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = y;
         gbc.fill = GridBagConstraints.NONE;
         gbc.weightx = 0;
         topPanel.add(passwordLabel, gbc);
 
         gbc.gridx = 1;
-        gbc.gridy = 3;
+        gbc.gridy = y;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 0;
         topPanel.add(password, gbc);
@@ -151,7 +199,9 @@ class ConnectDialog extends JDialog { //NOSONAR , hierarchy level > 5
     }
 
     public static void main(String[] args) {
-        ConnectDialog connectDialog = new ConnectDialog(null, connectionParameter -> true, "localhost", "neo4j", "neo4j");
+        ConnectDialog connectDialog = new ConnectDialog(null, connectionParameter -> true,
+                ConnectionParameter.Protocol.BOLT, 7687,
+                "localhost", "neo4j", "neo4j");
         connectDialog.showConnectDialog();
 
     }
@@ -166,5 +216,9 @@ class ConnectDialog extends JDialog { //NOSONAR , hierarchy level > 5
 
     public String getDatabase() {
         return databaseField.getText();
+    }
+
+    public String getProtocol() {
+        return protocolCombobox.getSelectedItem().toString();
     }
 }
