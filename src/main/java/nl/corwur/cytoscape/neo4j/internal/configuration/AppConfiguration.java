@@ -81,7 +81,7 @@ public class AppConfiguration {
     }
 
     private void setDefaultProperties() {
-        properties.setProperty(NEO4J_PROTOCOL, "bolt");
+        properties.setProperty(NEO4J_PROTOCOL, "BOLT");
         properties.setProperty(NEO4J_PORT, "7687");
         properties.setProperty(NEO4J_HOST, "localhost");
         properties.setProperty(NEO4J_USERNAME, "neo4j");
