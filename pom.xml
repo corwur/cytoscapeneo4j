@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>nl.corwur</groupId>
     <artifactId>cytoscape-neo4j-plugin</artifactId>
-    <version>0.5</version>
+    <version>0.5.1</version>
     <name>Cytoscape Neo4j Plugin</name>
 
     <properties>
