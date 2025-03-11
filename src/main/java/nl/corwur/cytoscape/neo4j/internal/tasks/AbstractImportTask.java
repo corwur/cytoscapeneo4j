@@ -48,8 +48,16 @@ public abstract class AbstractImportTask extends AbstractTask {
         try {
 
             taskMonitor.setStatusMessage("Execute query");
-            explainQuery(cypherQuery);
+            //explainQuery(cypherQuery);
+            taskMonitor.setStatusMessage(cypherQuery.getQuery());
             CompletableFuture<Graph> result = CompletableFuture.supplyAsync(() -> getGraph(cypherQuery));
+            result.whenComplete((results, ex) -> {
+                if (ex != null) {
+                	taskMonitor.setStatusMessage("Exception occurred: " + ex.getCause());
+                } else {
+                	taskMonitor.setStatusMessage("Result: " + results);
+                }
+            });
 
             while (!result.isDone()) {
                 if (this.cancelled) {
@@ -57,7 +65,10 @@ public abstract class AbstractImportTask extends AbstractTask {
                 }
                 Thread.sleep(400);
             }
+            
+            
             if (result.isCompletedExceptionally()) {
+            	
                 throw new IllegalStateException("Error executing cypher query");
             }
 

@@ -20,7 +20,7 @@ public class CypherQuery {
         return params;
     }
 
-    String getQuery() {
+    public String getQuery() {
         return query;
     }
 
