@@ -60,7 +60,7 @@ public class Neo4jClient {
         }
     }
 
-    public List<Record> getResults(CypherQuery cypherQuery) throws Neo4jClientException {
+    public List<org.neo4j.driver.Record> getResults(CypherQuery cypherQuery) throws Neo4jClientException {
         try (Session session = getSession()) {
             Result statementResult = session.run(cypherQuery.getQuery(), cypherQuery.getParams());
             return statementResult.list();
